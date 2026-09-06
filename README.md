@@ -18,10 +18,16 @@ and shareable. In a clone of somebody else's repository it is a pile of untracke
 directory you cannot push. You also get the two things a fork is actually for: pulling updates as
 this kit changes, and opening a pull request if you fix something.
 
-Then open your clone in an MCP-capable coding agent and ask it to **install**. It finds your 3ds Max,
-checks what is missing, places the plugin, verifies the endpoint answers, and connects itself to it.
-Then ask it to **bootstrap** a cartridge and you have a working plugin in the host with a panel and a
-button, before you have written a line.
+Then open your clone in an MCP-capable coding agent and ask it to **install**. It:
+
+1. finds your 3ds Max
+2. checks what is missing, and tells you the command that fixes it
+3. places the plugin, verifying the download before it unpacks anything
+4. waits while you start 3ds Max, then checks the endpoint answers
+5. connects itself to it
+
+Then ask it to **bootstrap** a cartridge, and you have a working plugin in the host — with a panel
+and a button — before you have written a line.
 
 *(Just looking? Clone it and read. The kit will mention the fork once, when it starts to matter, and
 then leave you alone.)*
@@ -75,9 +81,15 @@ This is being built in the open and the parts land in order. What is true **toda
 So the flow above describes where this is going, and the table says how far it has got. Nothing here
 is written from how it is presumed to work.
 
-**What is missing and why** — CI, signing, more 3ds Max versions, more plugin kinds — is written
-down in [ROADMAP.md](ROADMAP.md), along with the things that were considered and deliberately
-rejected. Nothing on that list is an oversight.
+**What is missing and why** is written down in [ROADMAP.md](ROADMAP.md):
+
+1. continuous integration
+2. signed binaries
+3. more 3ds Max versions
+4. more kinds of plugin
+
+along with the things that were considered and deliberately rejected. Nothing on that list is an
+oversight.
 
 ## What you need
 
@@ -94,8 +106,14 @@ not for either lane. Nothing you write links it.
 
 ## The three verbs
 
-**install** — once per machine. Find 3ds Max, check prerequisites, place the plugin, start Max,
-verify the endpoint, connect your agent to it.
+**install** — once per machine:
+
+1. find 3ds Max
+2. check prerequisites
+3. place the plugin
+4. start 3ds Max
+5. verify the endpoint answers
+6. connect your agent to it
 
 **bootstrap** — once per cartridge. A named new cartridge with a default About rollout and a
 Hello World button, deployed and proven in the running host.

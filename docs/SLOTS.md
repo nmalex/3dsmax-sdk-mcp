@@ -19,10 +19,17 @@ policy.** Each slot is a compiled 3ds Max plugin of one specific kind, so the se
 that has been built — not a subset someone chose to permit. An importer slot is the expected fourth
 and does not exist yet.
 
-3ds Max can be extended in far more ways than these — geometry objects, helpers, shapes, lights,
-cameras, materials, texmaps, controllers. None of them is available as a cartridge today, and asking
-for one is a reasonable thing to do: [ROADMAP.md](../ROADMAP.md) is where they are tracked, and what
-people ask for is what moves.
+3ds Max can be extended in far more ways than these:
+
+1. geometry objects
+2. helpers
+3. shapes
+4. lights and cameras
+5. materials and texmaps
+6. controllers
+
+None of them is available as a cartridge today, and asking for one is a reasonable thing to do:
+[ROADMAP.md](../ROADMAP.md) is where they are tracked, and what people ask for is what moves.
 
 **Authoring a new *kind* of slot yourself is a separate thing** with a different prerequisite — it
 needs the 3ds Max SDK, because a slot derives from SDK classes the host calls into directly. That
