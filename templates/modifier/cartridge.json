@@ -1,0 +1,44 @@
+{
+    "schema": "cartridge/2",
+
+    "_comment": [
+        "THE AUTHOR'S RECORD, NOT A CONTRACT. Nothing in the plugin reads this file. A slot is a",
+        "pre-compiled binary whose class id, list entry and payload module name are all fixed, so it",
+        "needs nothing from here - it loads the module name it was built with, from the cartridge",
+        "directory, and that is the whole binding.",
+        "",
+        "This exists so that YOU, and the tools in this kit, can answer questions the plugin has no",
+        "reason to ask: which cartridge is currently in which slot, what you meant to call it, which",
+        "lane it uses, and what it should be named when it is eventually sealed as a product."
+    ],
+
+    "name": "@DISPLAY_NAME@",
+    "slug": "@SLUG@",
+    "version": "0.1.0-dev",
+
+    "slot": "@FLAVOUR@",
+
+    "_requires": [
+        "WHAT THIS CARTRIDGE WAS VERIFIED AGAINST. Required, and checked.",
+        "",
+        "cartridges/ is a shared, crowdsourced library: somebody who did not write this will one day",
+        "download it and try to run it. These three facts are what tells them whether it can work -",
+        "which 3ds Max, which plugin version, and which slot hosts it. Without them a cartridge that",
+        "fails on their machine is indistinguishable from a cartridge that is broken.",
+        "",
+        "They record what was TESTED, not what is hoped. Widen the list when you have run it there."
+    ],
+    "requires": {
+        "max": [@MAX_YEARS@],
+        "plugin": "@PLUGIN_VERSION@"
+    },
+
+    "payload": {
+        "lane": "python",
+        "module": "@MODULE@",
+        "deployedAs": "@SLOT_MODULE@"
+    },
+
+    "created": "@CREATED@",
+    "generator": "@GENERATOR@"
+}

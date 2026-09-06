@@ -1,0 +1,39 @@
+# Line endings are not cosmetic in this repository. A .cmd file checked out with LF endings fails
+# in ways that read as a syntax error, and PowerShell here-strings are sensitive to the same thing.
+# So the Windows-executable formats are pinned explicitly rather than left to a contributor's
+# core.autocrlf setting.
+* text=auto
+
+*.ps1      text eol=crlf
+*.psm1     text eol=crlf
+*.psd1     text eol=crlf
+*.cmd      text eol=crlf
+*.bat      text eol=crlf
+*.sln      text eol=crlf
+*.vcxproj  text eol=crlf
+*.props    text eol=crlf
+*.def      text eol=crlf
+*.rc       text eol=crlf
+
+# Sources and documents. Kept CRLF too, so a file opened in Notepad or the Visual Studio editor
+# looks the way its author left it.
+*.md       text eol=crlf
+*.py       text eol=crlf
+*.h        text eol=crlf
+*.cpp      text eol=crlf
+*.json     text eol=crlf
+*.xml      text eol=crlf
+
+# Never normalised, never diffed as text.
+*.png      binary
+*.jpg      binary
+*.ico      binary
+*.zip      binary
+*.dll      binary
+*.lib      binary
+*.pdb      binary
+*.gup      binary
+*.dlm      binary
+*.dlu      binary
+*.dle      binary
+*.max      binary

@@ -1,0 +1,47 @@
+# Build output. A payload builds beside its project; nothing built belongs in the repository.
+out/
+obj/
+*.obj
+*.pdb
+*.ilk
+*.exp
+*.idb
+*.tlog
+*.log
+*.binlog
+
+# Visual Studio local state, which is per-machine by design.
+.vs/
+*.user
+*.suo
+
+# Python bytecode, from the Python payload lane.
+__pycache__/
+*.py[cod]
+
+# What the installer downloads. The bundle is a release asset, fetched and verified at install
+# time - a 26 MB binary in git is a 26 MB binary in every fork, forever.
+*.zip
+downloads/
+
+# The headers and libraries a native payload builds against. THEY ARE RELEASE ARTIFACTS, exactly
+# like the plugin binaries, and they arrive with the release rather than living in this repository.
+#
+# Two reasons, and the second matters more. Committing a .lib repeats the mistake above - every fork
+# carries it forever. And a header committed here would version INDEPENDENTLY of the plugin you have
+# installed, so the contract you compile against and the binary you call could disagree while both
+# looked current. Shipping them together makes that impossible: the headers on your disk are the
+# ones that came with the binary on your disk.
+#
+# The README in each directory is tracked, because the contract is ours to state even when the
+# contents are not ours to commit.
+include/*
+!include/README.md
+lib/*
+!lib/README.md
+
+# Windows and editor litter.
+Thumbs.db
+desktop.ini
+*.swp
+*~

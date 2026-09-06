@@ -1,0 +1,100 @@
+name: CI
+
+# Runs on a hosted Windows runner with no 3ds Max on it, which shapes what these jobs can honestly
+# claim. See ROADMAP.md: CI here cannot build the slot binaries (that needs the licensed 3ds Max
+# SDK) and cannot drive a running 3ds Max (there is no host on a hosted runner). What it CAN do is
+# hold every script and document in this repository to its contract, and it does that on every push.
+#
+# Job names say what they cover, so a green badge is a claim about the scripts and the docs rather
+# than a vague claim about the product.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    name: PowerShell static analysis
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+
+      - name: Analyze
+        shell: pwsh
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path tools -Recurse -Severity Error,Warning
+          if ($results) {
+            $results | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
+            throw "PSScriptAnalyzer reported $($results.Count) issue(s)."
+          }
+          Write-Host 'No issues.'
+
+  cartridges:
+    name: Cartridge structure
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The bump rule compares against the base branch, so the history has to be here. A shallow
+          # clone makes that check quietly do nothing, which is worse than not running it.
+          fetch-depth: 0
+
+      - name: Check every cartridge, and that changed ones bumped their version
+        shell: pwsh
+        run: |
+          $since = ''
+          if ($env:GITHUB_BASE_REF) {
+            git fetch --no-tags --depth=0 origin $env:GITHUB_BASE_REF
+            $since = "origin/$env:GITHUB_BASE_REF"
+            Write-Host "Comparing against $since"
+          } else {
+            Write-Host 'Not a pull request - structure is checked, the version-bump rule is not.'
+          }
+          if ($since) {
+            powershell -NoProfile -ExecutionPolicy Bypass -File tools\check-cartridges.ps1 -Since $since -Human
+          } else {
+            powershell -NoProfile -ExecutionPolicy Bypass -File tools\check-cartridges.ps1 -Human
+          }
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  test:
+    name: Script tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Pester
+        shell: pwsh
+        run: |
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+          Install-Module Pester -Force -Scope CurrentUser -SkipPublisherCheck -MinimumVersion 5.5.0
+
+      - name: Run tests
+        shell: pwsh
+        run: |
+          Import-Module Pester -MinimumVersion 5.5.0
+          $config = New-PesterConfiguration
+          $config.Run.Path = 'tests'
+          $config.Run.Exit = $true
+          $config.Output.Verbosity = 'Detailed'
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = 'tests/results.xml'
+          Invoke-Pester -Configuration $config
+
+      - name: Publish results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: tests/results.xml
