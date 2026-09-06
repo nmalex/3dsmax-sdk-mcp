@@ -105,6 +105,7 @@ modifier Slot of that release did not call it.
 | `deform(points, box, tm, params)` | yes | — | every evaluation of the modifier stack |
 | `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | yes | once per export, per node, per group, per scene |
 | `declare_callbacks()` | yes | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
+| `describe_params()` | yes | **no** | modifier only, on load and on every Refresh — how a payload declares parameters the Slot then keeps. Needs `0.4.0-alpha.3` or newer |
 
 **Absent is a legal answer to all of them.** A Slot that asks for `describe_ui` and finds none does
 not fault; it concludes you want no panel. That is deliberate, and it is why a *missing* function
@@ -142,6 +143,116 @@ payload's `describe()`.
 Keep it anyway: it is the entry point the "a Slot shows the Cartridge's name" work will read, it
 costs nothing, and it is a useful place to record which version of your own payload is running when
 you are answering that question by hand. Just do not expect it on screen yet.
+
+## Parameters: your Cartridge names them, the Slot keeps them
+
+**A value your payload stores in a Python global is a value your user loses.** The interpreter is
+recreated on every Refresh, so a module-level variable does not survive one — and it is not saved
+with the scene, cannot be keyed, and cannot be read or written by a script. That is not a payload
+bug you can fix in the payload; there is nowhere in it for a durable value to live.
+
+So you **declare** parameters and the Slot holds them:
+
+```python
+def describe_params():
+    return {
+        "parameters": [
+            {"name": "scaleX", "type": "float", "default": 0.75},
+            {"name": "scaleY", "type": "float", "default": 0.75},
+            {"name": "scaleZ", "type": "float", "default": 0.75},
+            {"name": "uniform", "type": "bool", "default": False},
+        ],
+    }
+```
+
+Each entry becomes one parameter of the modifier itself, which means all four of these at once:
+
+- it is **saved with the scene** — and it loads on a machine that has neither your Cartridge nor
+  the plugin, because the value belongs to the Slot rather than to your payload;
+- it is **animatable** — a keyable track in Track View, under the name you gave it;
+- it is **scriptable** — `$.modifiers[1].scaleX = 2.0`;
+- it arrives as **`params`** on every call your Slot makes, sampled at the time being evaluated.
+
+`describe_params()` is asked for when your Cartridge opens and again on every Refresh. Like every
+other payload function it is optional: a Cartridge that does not define it declares no parameters
+and behaves exactly as it did before.
+
+### Reading and writing one
+
+Never store the value. Read it out of `params`, and let a control write it by naming it:
+
+```python
+def describe_ui(params=None):
+    p = params or {}
+    return ui.build(
+        ui.Field("X:", ui.Spinner(value=p.get("scaleX", 0.75),
+                                  minimum=-1000.0, maximum=1000.0, step=0.01,
+                                  param="scaleX")),
+    )
+
+def deform(points, box=None, tm=None, params=None):
+    x = (params or {}).get("scaleX", 0.75)
+    ...
+```
+
+`param="scaleX"` is the whole binding. The Slot writes the value when the control changes —
+**before** `on_ui_event` runs, so a handler that reads `params` sees the new truth — and the whole
+drag lands in the undo stack as one entry. Your payload never holds a copy, and nothing in it needs
+a handler at all unless the change is structural.
+
+### The four types, and where a range goes
+
+| `type` | Bound by | Keyable |
+| --- | --- | --- |
+| `float` | a spinner or a slider | yes |
+| `int` | a spinner, or a radio group through its `param_value` | yes |
+| `bool` | a checkbox | yes |
+| `string` | an edit box | no — 3ds Max has no controller for one |
+
+A colour swatch is the one control with no parameter type yet; it is the gap to know about.
+
+**A range belongs on the CONTROL, not on the parameter** — `minimum` and `maximum` on the spinner
+above. A declaration that carries `min`, `max` or `range` is **refused**, with that sentence, rather
+than half-honoured: the Slot cannot clamp one parameter differently from the next, and a spinner you
+believed was clamped and is not would be worse than being told.
+
+Two more rules worth knowing before they surprise you:
+
+- **`default` applies once**, when the parameter first appears. It is what the value STARTS at, not
+  what it returns to — re-applying it on every Refresh would overwrite what your user set every time
+  you saved the file you are editing.
+- **A parameter you stop declaring is kept, not deleted.** Its value and its animation are your
+  user's work, and a Cartridge being edited is not permission to discard them. It stops appearing in
+  `params` and stays in the scene.
+
+**A whole declaration is refused or applied — never half of it.** One bad entry refuses the lot, and
+says which entry and why. That is deliberate: applying the good half would leave your own
+`params.get("scaleY", 0.75)` quietly answering its fallback for the parameter that did not make it,
+which is a Cartridge that looks like it works and silently drops one axis. Refusals go to the log.
+
+### What MAXScript shows, which is not quite what you would guess
+
+Reading and writing by name work as you would expect:
+
+```maxscript
+$.modifiers[1].scaleX = 2.0        -- moves the mesh, and the panel's spinner
+```
+
+**`getPropNames` does not list your names.** It answers about a plugin CLASS, and your parameters
+belong to one modifier, so what it returns is the Slot's own storage — `mcpFloat`, `mcpFloatName`
+and their siblings. To enumerate what a modifier declares, read the names beside the values:
+
+```maxscript
+$.modifiers[1].mcpFloatName        -- #("scaleX", "scaleY", "scaleZ")
+$.modifiers[1].mcpBoolName         -- #("uniform")
+```
+
+Those are read-only. Track View is the other way round and shows exactly what you declared, because
+a track's name is asked per modifier rather than per class.
+
+Names are MAXScript identifiers: a letter or underscore, then letters, digits and underscores, at
+most 64 characters. `mcp` is reserved as a prefix, for the storage above. A name that cannot be
+typed is refused rather than accepted and left unreachable.
 
 ## `cartridge.json` is your record, not a contract
 

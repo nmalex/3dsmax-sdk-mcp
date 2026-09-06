@@ -177,6 +177,11 @@ Two things follow, and both matter for your test scenes:
 
 [docs/SLOTS.md](docs/SLOTS.md) explains both.
 
+**A Cartridge declares its parameters; the Slot keeps them.** A value your payload stores in a
+Python global does not survive a Refresh and is never saved with the scene. `describe_params()`
+is how you get one that is saved, keyable in Track View and reachable from a script — see
+[docs/SLOTS.md](docs/SLOTS.md). It needs `0.4.0-alpha.3` or newer.
+
 Two lanes, one behaviour:
 
 | | Python payload | Native payload |

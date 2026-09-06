@@ -20,12 +20,44 @@ contract for a modifier.
 
 WHERE PARAMETERS DO NOT GO: HERE. State owned by this module dies with the interpreter, and an
 interpreter is reloaded on every refresh - so a value kept in a global here is a value your user
-loses without being told. A real parameter belongs in the slot's parameter block, which saves with
-the scene, animates, and answers MAXScript. Until you have one, take the value from `params`.
+loses without being told, never saved with the scene, never keyable and never reachable from a
+script.
+
+So you DECLARE a parameter and the slot keeps it. `describe_params()` below is the whole of it:
+each entry becomes a real parameter of the modifier - saved, animatable, scriptable - and arrives
+back as `params` on every call, sampled at the time being evaluated. A control names the one it
+drives with `param=`, and the slot writes it before your handler ever runs. Nothing in this file
+holds a value; the scaffold below shows the shape with one parameter it does not yet use.
+
+`describe_params()` needs plugin 0.4.0-alpha.3 or newer. An older slot never calls it, and this
+cartridge still loads and still works - it simply has no parameters. The types, the rules and what
+MAXScript shows are in docs/SLOTS.md.
 """
 
 import mcp_bootstrap
 import mcp_ui as ui
+
+
+# -- the parameters ------------------------------------------------------------------------------
+#
+# One entry per parameter, and the slot keeps every one of them: saved with the scene, keyable in
+# Track View, and reachable from a script as $.modifiers[1].amount. They come back as `params` on
+# describe_ui, on_ui_event and deform, read at whatever time is being evaluated.
+#
+# `type` is float, int, bool or string, and is REQUIRED - a missing one is far more often a typo
+# than an intention. `default` is what the parameter STARTS at, applied once when it first appears
+# and never again, so a Refresh does not overwrite what your user set. A RANGE does not go here:
+# it belongs on the control that drives the parameter, as `minimum` and `maximum` below.
+#
+# Delete this function if your cartridge has no parameters; it is optional like every other one.
+
+def describe_params():
+    """The parameters this cartridge declares. Read when it opens, and on every Refresh."""
+    return {
+        "parameters": [
+            {"name": "amount", "type": "float", "default": 1.0},
+        ],
+    }
 
 
 # -- the panel -----------------------------------------------------------------------------------
@@ -44,9 +76,17 @@ import mcp_ui as ui
 
 def describe_ui(params=None):
     """The command-panel rollout for this cartridge."""
+    p = params or {}
     return ui.build(
         ui.VBox(
             ui.Label("@DISPLAY_NAME@"),
+            ui.Spacer(),
+            # BOUND, not stored: `param=` names the parameter this spinner drives, and the slot
+            # writes it before _say_hello or any other handler runs. `value=` is only where the
+            # control OPENS, which is why it is read from params rather than from a constant.
+            ui.Field("Amount:", ui.Spinner(value=p.get("amount", 1.0),
+                                           minimum=-1000.0, maximum=1000.0, step=0.01,
+                                           param="amount")),
             ui.Spacer(),
             ui.Button("Hello World", on_click=_say_hello),
         )
