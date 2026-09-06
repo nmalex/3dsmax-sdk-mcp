@@ -180,7 +180,7 @@ Two things follow, and both matter for your test scenes:
 **A Cartridge declares its parameters; the Slot keeps them.** A value your payload stores in a
 Python global does not survive a Refresh and is never saved with the scene. `describe_params()`
 is how you get one that is saved, keyable in Track View and reachable from a script — see
-[docs/SLOTS.md](docs/SLOTS.md). It needs `0.4.0-alpha.3` or newer, which is the current release.
+[docs/SLOTS.md](docs/SLOTS.md). It needs `0.4.0-alpha.3` or newer.
 
 Two lanes, one behaviour:
 
@@ -206,7 +206,7 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 
 ## Status
 
-`0.4.0-alpha.3`. [STATUS.md](STATUS.md) says which parts work today and
+`0.4.0-alpha.4`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Reporting a bug
