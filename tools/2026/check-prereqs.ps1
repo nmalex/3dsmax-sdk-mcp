@@ -64,7 +64,7 @@ if (Test-Path -LiteralPath $StateFile) {
         $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json
         $BundleDir = [string]$State.bundleDir
         $InstalledName = [string]$State.productName
-    } catch { }
+    } catch { Write-Verbose "install state unreadable; bundle directory and product name left unset" }
 }
 
 # tools\2026\ -> tools\ -> the clone.
@@ -160,7 +160,7 @@ if (-not $Writable) {
     $Installed = ''
     $Manifest = Join-Path $BundleDir 'PackageContents.xml'
     if (Test-Path -LiteralPath $Manifest) {
-        try { $Installed = ([xml](Get-Content -LiteralPath $Manifest -Raw)).ApplicationPackage.AppVersion } catch { }
+        try { $Installed = ([xml](Get-Content -LiteralPath $Manifest -Raw)).ApplicationPackage.AppVersion } catch { Write-Verbose "PackageContents.xml unreadable; installed version left unknown" }
     }
     $What = if ($Installed) { "$InstalledName $Installed installed" } else { 'present, version unreadable' }
     Add-Row -Id 'bundle-root' -Title 'Plugin location' -State 'Ok' -Detail "$BundleDir - $What"
@@ -174,7 +174,7 @@ if (-not $Writable) {
 $Listener = $null
 try {
     $Listener = Get-NetTCPConnection -LocalPort $DefaultPort -State Listen -ErrorAction SilentlyContinue | Select-Object -First 1
-} catch { }
+} catch { Write-Verbose "port query unavailable; no listener recorded" }
 
 if ($null -eq $Listener) {
     Add-Row -Id 'port' -Title "Port $DefaultPort" -State 'Ok' -Detail 'free'
@@ -183,7 +183,7 @@ if ($null -eq $Listener) {
     try {
         $Process = Get-Process -Id $Listener.OwningProcess -ErrorAction SilentlyContinue
         if ($Process) { $Owner = "$($Process.ProcessName) (pid $($Process.Id))" }
-    } catch { }
+    } catch { Write-Verbose "owning process not resolvable; the listener is reported without an owner" }
     if (-not $Owner) { $Owner = "pid $($Listener.OwningProcess)" }
     Add-Row -Id 'port' -Title "Port $DefaultPort" -State 'Warning' `
             -Detail "held by $Owner" `

@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Runs the CI jobs before a commit is made, minus the slow one.
+#
+# WHY: CI runs after a push, which is the wrong time to find out. This repository's first red build
+# on main was a set of static-analysis findings that had been in the tree for days with nothing
+# locally able to report them.
+#
+# -Fast skips the Pester suite. A pre-commit hook that takes ten seconds is a hook people disable,
+# and the tests run in the pre-push hook beside this one, before anything leaves the machine.
+#
+# Installed by tools\install-hooks.ps1, which points core.hooksPath here. To commit past it once:
+#     git commit --no-verify
+
+root=$(git rev-parse --show-toplevel) || exit 1
+exec powershell -NoProfile -ExecutionPolicy Bypass -File "$root/tools/check-all.ps1" -Fast

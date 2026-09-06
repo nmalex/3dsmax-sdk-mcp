@@ -72,7 +72,7 @@ foreach ($Dir in (Get-ChildItem -LiteralPath $CartridgeRoot -Directory -ErrorAct
         continue
     }
     $Manifest = $null
-    try { $Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json } catch { }
+    try { $Manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json } catch { Write-Verbose "cartridge.json could not be parsed; reported as a malformed manifest" }
     if ($null -eq $Manifest) {
         Note $Name 'cartridge.json does not parse as JSON' 'Open it and fix the syntax; nothing else here can be checked until it reads.'
         continue
@@ -229,7 +229,6 @@ if (-not (Test-Path -LiteralPath $InventoryPath)) {
         if (-not $InFence -and $Line.TrimStart().StartsWith('|')) { [void]$Rows.Add($Line) }
     }
     $Rows = @($Rows)
-    $InventoryText = ($Rows -join "`n")
 
     # slug -> the version the table claims, so the two places that carry it can be held together.
     $Listed = @{}
@@ -257,7 +256,7 @@ if (-not (Test-Path -LiteralPath $InventoryPath)) {
                     Note $Dir.Name "cartridge.json says version $($M.version); the table says $($Listed[$Dir.Name])" `
                          'Both move together. A reader trusts the table and a tool trusts the manifest; when they disagree one of them is lying to somebody.'
                 }
-            } catch { }
+            } catch { Write-Verbose "cartridge.json could not be parsed; version comparison skipped for this cartridge" }
         }
     }
 
@@ -282,7 +281,7 @@ if (-not (Test-Path -LiteralPath $InventoryPath)) {
 # from.
 if ($Since) {
     $Changed = @()
-    try { $Changed = @(& git -C $KitRoot diff --name-only "$Since...HEAD" -- 'cartridges' 2>$null) } catch { }
+    try { $Changed = @(& git -C $KitRoot diff --name-only "$Since...HEAD" -- 'cartridges' 2>$null) } catch { Write-Verbose "git diff unavailable; no cartridge is treated as changed" }
 
     if ($LASTEXITCODE -ne 0) {
         Note '(bump)' "could not diff against '$Since'" 'Fetch it first, or pass a ref this clone has. The bump rule was NOT checked.'
@@ -295,14 +294,14 @@ if ($Since) {
             $Current = ''
             $ManifestPath = Join-Path (Join-Path $CartridgeRoot $Slug) 'cartridge.json'
             if (Test-Path -LiteralPath $ManifestPath) {
-                try { $Current = [string](Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json).version } catch { }
+                try { $Current = [string](Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json).version } catch { Write-Verbose "cartridge.json could not be parsed; current version left unknown" }
             }
 
             $Before = ''
             try {
                 $BaseText = (& git -C $KitRoot show "${Since}:cartridges/$Slug/cartridge.json" 2>$null | Out-String)
                 if ($BaseText.Trim()) { $Before = [string]($BaseText | ConvertFrom-Json).version }
-            } catch { }
+            } catch { Write-Verbose "base revision unreadable; previous version left unknown" }
 
             if (-not $Before) { continue }   # new in this branch
             if ($Current -and $Current -eq $Before) {

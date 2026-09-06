@@ -75,7 +75,7 @@ if ($Running.Count -gt 0) {
 # -- What this kit installed, and anything claiming the same identity ---------------------------------------
 $State = $null
 if (Test-Path -LiteralPath $StateFile) {
-    try { $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json } catch { }
+    try { $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json } catch { Write-Verbose "install state unreadable; falling back to the default bundle location" }
 }
 
 $Targets = New-Object System.Collections.ArrayList

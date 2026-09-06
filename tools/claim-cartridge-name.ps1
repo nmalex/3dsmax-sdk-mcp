@@ -195,7 +195,7 @@ foreach ($Root in @((Join-Path $KitRoot 'cartridges'), $DeployRoot)) {
         try {
             $Json = Get-Content -LiteralPath $File.FullName -Raw | ConvertFrom-Json
             if ($Json.name) { [void]$Existing.Add([pscustomobject]@{ name = [string]$Json.name; from = 'cartridge' }); $Found++ }
-        } catch { }
+        } catch { Write-Verbose "cartridge.json could not be parsed; that name is skipped for collision checking" }
     }
     if ($Found -gt 0) { [void]$Sources.Add("$Root : $Found cartridge(s)") }
 }

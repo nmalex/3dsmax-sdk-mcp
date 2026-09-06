@@ -97,7 +97,7 @@ if ($Lane -eq 'native' -and -not (Test-Path -LiteralPath (Join-Path $TemplateRoo
 # -- Is the slot free -------------------------------------------------------------------------------
 $Slots = $null
 if (Test-Path -LiteralPath $SlotsFile) {
-    try { $Slots = Get-Content -LiteralPath $SlotsFile -Raw | ConvertFrom-Json } catch { }
+    try { $Slots = Get-Content -LiteralPath $SlotsFile -Raw | ConvertFrom-Json } catch { Write-Verbose "slots.json unreadable; treated as no slot occupied" }
 }
 $Occupant = $null
 if ($null -ne $Slots -and $Slots.slots -and $Slots.slots.$Flavour) { $Occupant = $Slots.slots.$Flavour }
@@ -170,7 +170,7 @@ foreach ($Record in (Get-ChildItem -LiteralPath $StateDir -Filter 'install-*.jso
         $State = Get-Content -LiteralPath $Record.FullName -Raw | ConvertFrom-Json
         if ($State.targetYear) { $MaxYears += [int]$State.targetYear }
         if ($State.version -and -not $PluginVersion) { $PluginVersion = [string]$State.version }
-    } catch { }
+    } catch { Write-Verbose "install state unreadable; 3ds Max year and plugin version left unset" }
 }
 if ($MaxYears.Count -eq 0) {
     # Not fatal: you can scaffold before installing. It IS fatal to contributing - the structure

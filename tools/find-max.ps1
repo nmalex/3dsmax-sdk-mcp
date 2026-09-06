@@ -83,7 +83,7 @@ function Resolve-MaxYear {
 # One install, in the shape the JSON reports. Everything derived here is derived from the root,
 # so a registry entry pointing at a directory that no longer exists is caught by `exists`
 # rather than by whatever fails later.
-function New-MaxRecord {
+function Resolve-MaxRecord {
     param([string]$InstallDir, [string]$ProductName, [string]$Release, [string]$KeyName, [string]$Source)
 
     $Root = $InstallDir.TrimEnd('\')
@@ -93,7 +93,7 @@ function New-MaxRecord {
     $Exists = Test-Path -LiteralPath $Exe
     $FileVersion = ''
     if ($Exists) {
-        try { $FileVersion = (Get-Item -LiteralPath $Exe).VersionInfo.FileVersion } catch { }
+        try { $FileVersion = (Get-Item -LiteralPath $Exe).VersionInfo.FileVersion } catch { Write-Verbose "file version unavailable; reported as empty" }
     }
 
     # The per-user configuration tree, named for the YEAR rather than the release. Reported
@@ -156,7 +156,7 @@ foreach ($Hive in @('HKLM:\SOFTWARE\Autodesk\3dsMax', 'HKLM:\SOFTWARE\WOW6432Nod
         $Dir = $Values.Installdir
         if ([string]::IsNullOrWhiteSpace($Dir)) { $Dir = $Values.Location }
         if ([string]::IsNullOrWhiteSpace($Dir)) { continue }
-        Add-Found (New-MaxRecord -InstallDir $Dir -ProductName $Values.ProductName `
+        Add-Found (Resolve-MaxRecord -InstallDir $Dir -ProductName $Values.ProductName `
                                  -Release $Values.Release -KeyName $Key.PSChildName -Source 'registry')
     }
 }
@@ -169,7 +169,7 @@ foreach ($Parent in $WellKnownParents) {
     foreach ($Dir in (Get-ChildItem -LiteralPath $Parent -Directory -ErrorAction SilentlyContinue |
                       Where-Object { $_.Name -like '3ds Max*' })) {
         if (-not (Test-Path -LiteralPath (Join-Path $Dir.FullName '3dsmax.exe'))) { continue }
-        Add-Found (New-MaxRecord -InstallDir $Dir.FullName -ProductName $Dir.Name `
+        Add-Found (Resolve-MaxRecord -InstallDir $Dir.FullName -ProductName $Dir.Name `
                                  -Release '' -KeyName '' -Source 'filesystem')
     }
 }
