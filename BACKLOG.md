@@ -107,6 +107,32 @@ Done when:
   the JSON array the claim already accepts.
 - `bootstrap` uses it, and a modules-only claim is reported as the weaker answer it is.
 
+### CTG-014 - [Task] Teach declared parameters, in the template and in the docs
+Status: Done
+Type:   Task
+Priority: High
+
+Why: **the kit taught that a Cartridge has nowhere to put a parameter, because until now it did
+not.** The scaffolded payload's own header said so in capitals, [docs/SLOTS.md](docs/SLOTS.md)'s
+table of what a Slot calls had no row for one, and the only advice available was to read a value
+out of `params` that nothing ever put there. An author who wanted a spinner that survived a
+Refresh had to find out by trying it - which is what
+[#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7) is.
+
+Depends on a released capability: `describe_params()` is called by the modifier Slot from
+`0.4.0-alpha.3`. Every line written here says so, because a document that describes a call an
+installed release does not make is the same failure as the one it is fixing.
+
+Done when:
+
+- the modifier template declares a parameter and binds a control to it, so the shape is shown
+  rather than described, and still scaffolds a Cartridge that loads against an older Slot
+- `docs/SLOTS.md` carries the row in the call table and a section covering the four types, where
+  a range goes, what `default` means, what happens to a parameter you stop declaring, and what
+  MAXScript does and does not list
+- `README.md` and `STATUS.md` say which release it needs
+
+
 ### CTG-013 - [Feature] A probe that proves the endpoint serves MCP, not just that it answers
 Status: Backlog
 Type:   Feature
