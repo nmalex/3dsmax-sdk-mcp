@@ -204,6 +204,143 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 `0.4.0-alpha.1` — the first pre-release. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
+## Reporting a bug
+
+**Open an issue here.** [github.com/nmalex/3dsmax-sdk-mcp/issues](https://github.com/nmalex/3dsmax-sdk-mcp/issues)
+
+This section is written for an agent as much as for a person. If you are driving this repository
+with Claude, Codex or anything else, it can gather every fact below itself and file the issue for
+you — the commands are literal, they only read, and none of them touches your scene.
+
+### First, decide which half is broken, because only one of them is yours
+
+| | A **Cartridge** bug | A **Slot** bug |
+| --- | --- | --- |
+| What it is | your payload — the Python or the native DLL you wrote | the compiled plugin that hosts it |
+| Who can fix it | you, in seconds, with a refresh | only a new release |
+| What a report is worth | a question, usually answered by the log | **the reason this repository has issues at all** |
+
+**A Slot cannot be patched in the field.** It is a compiled `.dlm`/`.dlu`/`.dle`, so a fix means a
+new binary and a 3ds Max restart for everyone. That is the whole reason a Slot bug is worth a
+careful report and a Cartridge bug usually is not.
+
+**The distinction is not a judgement call, and you should not make it by reading code.** Ask what
+the Slot was asked and what it answered — that is what the evidence below is for. A real example:
+[#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/2) looked like a broken payload, because a
+payload's panel did not appear. Every payload-side signal was green: the module loaded, its exports
+were listed, its `deform()` ran. The Slot was never calling `describe_ui` at all. **Nothing was
+asking**, and no amount of staring at the payload would have shown that.
+
+### The evidence, and why each line of it is load-bearing
+
+Gather all five. A report missing the first two usually needs a second round trip before anyone can
+start, which costs more of your time than collecting them did.
+
+**1. Which binary is actually in memory.** Not which one you installed — which one is *running*.
+
+```
+max_capabilities
+```
+
+The MCP tool, and its own description says to trust it over any document. It answers the `buildId`
+of the DLL 3ds Max has loaded. A plugin file on disk and a plugin in memory are different claims,
+and 3ds Max cannot unload a native plugin — so an install that "definitely worked" can be sitting
+behind a session that started before it.
+
+**2. Which Slot version, from the Slot itself.** Every Slot's **About** rollout carries its version
+and build stamp. Read them off the panel and paste them verbatim. This is how a report survives
+being read six weeks later: `0.2.2-dev, built 2026-09-06 10:46:41 UTC` names one binary and nothing
+else.
+
+**3. What the Slot thinks it is holding.**
+
+```
+max_cartridges          — every open instance, its module, and whether its interpreter is up
+max_cartridge_refresh   — reloads from disk and reports the exports it found
+```
+
+`max_cartridge_refresh` is the one that separates "my file is not being read" from "my file is being
+read and something else is wrong": it names the functions it actually found.
+
+**4. The log, which says what happened rather than what was supposed to.**
+
+```
+cartridge_logs
+```
+
+Every crossing into Python, every payload print and every raise, timestamped and tagged with the
+instance that produced it. On disk it is
+`%LOCALAPPDATA%\maxsdk-mcp\logs\<module>_logs\<module>.log`, so you can attach it without an
+agent. Set `MAXMCP_LOG_VERBOSITY` if you need the verbose lines; they are suppressed by default.
+
+**5. The machine, as JSON, not as prose.**
+
+```
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\find-max.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\2026\check-prereqs.ps1
+```
+
+Every installed 3ds Max, and every readiness row with its remedy. **Paste the JSON.** A tool's own
+output is evidence; a summary of it is a claim, and the field that turns out to matter is always
+the one the summary dropped.
+
+### What never goes in an issue
+
+Your scene is yours and this repository does not want it. Leave out scene contents and asset paths,
+anything naming a client or a project, licence or serial numbers, and machine or user names beyond
+what the tool output above already carries. **If a path names your work rather than the kit, replace
+it** — `C:\...\<project>\scene.max` reads perfectly well.
+
+A minimal repro beats a real scene every time, and for this kit it is usually one primitive: a
+sphere, one Cartridge, one click.
+
+### Say what you expected, separately from what happened
+
+Two headings, never merged into a paragraph. **Expected** is the promise you were relying on —
+quote it, and say where you read it: a line in `docs/`, a comment in the scaffolded payload, a
+message the tool printed. Half of what makes a report good is naming the promise, because a bug is
+the gap between a promise and a behaviour, and the maintainer may not know which promise you read.
+
+**Actual** is what the host did, with the evidence above under it. Include what you already ruled
+out and how — a discounted theory saves the next person from spending an hour on it.
+
+### The template
+
+Copy this. An agent can fill every field of it without asking you anything.
+
+```markdown
+## Environment
+- Installed release:            <from tools\2026\release.json, or the tag you installed>
+- Build id in memory:           <max_capabilities → buildId>
+- Slot version and build stamp: <the About rollout, verbatim>
+- 3ds Max:                      <version, from tools\find-max.ps1>
+- Lane:                         <python | native>
+
+## Expected
+<the promise, quoted, and where it is written>
+
+## Actual
+<what the host did>
+
+## Reproduction
+1. <numbered, from a fresh scene, ending at the moment it goes wrong>
+
+## Evidence
+<max_cartridges, max_cartridge_refresh, cartridge_logs, check-prereqs.ps1 — as output, not prose>
+
+## Already ruled out
+<theories tested, and what disproved them>
+```
+
+**One report per bug.** Two problems in one issue get one answer, and it is usually the wrong one.
+
+### If you can also fix it
+
+Say so in the issue and read [CONTRIBUTING.md](CONTRIBUTING.md) before you branch. Note that a Slot
+fix is not something a pull request here can carry — the Slot sources are not published, so a Slot
+issue is fixed upstream and reaches you as a release. A report is not a lesser contribution than a
+patch for that half of the system; it is the only contribution there is.
+
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) first. Branch naming, commit form, the pull-request flow and

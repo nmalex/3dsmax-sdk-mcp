@@ -35,11 +35,12 @@ import mcp_ui as ui
 # they stay on this side in a registry keyed by control id, and the slot reports events back by id.
 #
 # There is no About rollout here because you do not write one: the slot contributes it, pinned last.
-# What it can say about THIS cartridge comes from `describe()` at the bottom of this file - the slot
-# itself only knows what was compiled into it, which is why the entry in the Modifier List carries
-# the SLOT's name rather than yours (docs\SLOTS.md). So if you want the About rollout to identify
-# the thing you are editing, `describe()` is where you say so, and it is also how you tell whether
-# the file you just saved is the file that is running.
+# It shows what was COMPILED INTO THE SLOT and nothing else - the slot's name, its version, its
+# build stamp - which is also why the entry in the Modifier List carries the SLOT's name rather than
+# yours (docs\SLOTS.md). `describe()` at the bottom of this file is NOT read by it today, and
+# nothing else reads it either; it is kept because it is where the naming work will look, and
+# because it is a good place to record which version of your payload is running. To tell whether the
+# file you just saved is the file that is running, click Hello World and watch the listener.
 
 def describe_ui(params=None):
     """The command-panel rollout for this cartridge."""
