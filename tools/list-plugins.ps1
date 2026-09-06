@@ -63,7 +63,7 @@ if (-not $InstallRoot) {
             $Supported = @($Report.installs | Where-Object { $_.supported }) | Select-Object -First 1
             if ($Supported) { $InstallRoot = $Supported.installRoot }
             elseif ($Report.installCount -gt 0) { $InstallRoot = @($Report.installs)[0].installRoot }
-        } catch { }
+        } catch { Write-Verbose "find-max report unusable; install root left unset" }
     }
 }
 
@@ -125,7 +125,7 @@ foreach ($Dir in $Dirs) {
                 $Info = (Get-Item -LiteralPath $File.FullName).VersionInfo
                 $Description = $Info.FileDescription
                 $Product = $Info.ProductName
-            } catch { }
+            } catch { Write-Verbose "version info unavailable; description and product left empty" }
             [void]$Modules.Add([ordered]@{
                 module      = $File.BaseName
                 extension   = $File.Extension.ToLowerInvariant()

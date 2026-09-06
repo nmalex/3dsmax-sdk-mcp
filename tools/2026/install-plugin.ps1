@@ -90,7 +90,7 @@ Step 1 "Looking for 3ds Max $TargetYear"
 $FindMax = Join-Path $ToolsRoot 'find-max.ps1'
 $MaxReport = $null
 if (Test-Path -LiteralPath $FindMax) {
-    try { $MaxReport = (& powershell -NoProfile -ExecutionPolicy Bypass -File $FindMax 2>$null | Out-String) | ConvertFrom-Json } catch { }
+    try { $MaxReport = (& powershell -NoProfile -ExecutionPolicy Bypass -File $FindMax 2>$null | Out-String) | ConvertFrom-Json } catch { Write-Verbose "find-max returned nothing parseable; continuing without a host report" }
 }
 $Target = $null
 if ($null -ne $MaxReport) { $Target = @($MaxReport.installs | Where-Object { $_.year -eq $TargetYear -and $_.exists }) | Select-Object -First 1 }
@@ -116,7 +116,7 @@ if (Test-Path -LiteralPath $PinPath) { $Pin = Get-Content -LiteralPath $PinPath 
 $State = $null
 $Installed = ''
 if (Test-Path -LiteralPath $StateFile) {
-    try { $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json } catch { }
+    try { $State = Get-Content -LiteralPath $StateFile -Raw | ConvertFrom-Json } catch { Write-Verbose "install state unreadable; treated as a first install" }
 }
 if ($null -ne $State -and $State.bundleDir -and (Test-Path -LiteralPath (Join-Path $State.bundleDir 'PackageContents.xml'))) {
     $Identity = Get-BundleIdentity (Join-Path $State.bundleDir 'PackageContents.xml')

@@ -33,7 +33,10 @@ jobs:
       - name: Analyze
         shell: pwsh
         run: |
-          $results = Invoke-ScriptAnalyzer -Path tools -Recurse -Severity Error,Warning
+          # -Settings, explicitly: the settings file sits at the repository root while the path
+          # being analysed is tools\, so it is not discovered on its own. Severity lives in there
+          # too. Every rule this repository turns off, and the reason for it, is in that one file.
+          $results = Invoke-ScriptAnalyzer -Path tools -Recurse -Settings .\PSScriptAnalyzerSettings.psd1
           if ($results) {
             $results | Format-Table -AutoSize | Out-String -Width 200 | Write-Host
             throw "PSScriptAnalyzer reported $($results.Count) issue(s)."
