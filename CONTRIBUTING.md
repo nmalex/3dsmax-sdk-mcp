@@ -102,6 +102,33 @@ a cartridge.** The three rules it exists to make unmissable:
 3. **`requires` records what you ran it against**, not what you expect to work. A hopeful claim
    costs a stranger an afternoon and returns as a bug against something that was never broken.
 
+## Run the checks before you push, not after
+
+Install the hooks once per clone:
+
+```
+tools\install-hooks.ps1
+```
+
+That points `core.hooksPath` at `tools/hooks`, so the hooks git runs are the ones under version
+control — fix one and every clone that ran this has the fix. Then:
+
+1. **`pre-commit`** — static analysis and the Cartridge structure check. A few seconds.
+2. **`pre-push`** — those, plus the full test suite and the version-bump rule against `origin/main`.
+
+Both call `tools\check-all.ps1`, which runs **the same jobs as CI, in the same order, with the same
+settings file**. Run it yourself any time. If it passes and CI does not, the two have drifted and
+that is the bug — a job added to `.github/workflows/ci.yml` gets added there in the same change.
+
+**Why this exists rather than trusting CI:** CI runs after a push, which is too late to be the first
+thing that tells you a branch is broken. This repository's first red build on `main` was a pile of
+static-analysis findings that had sat in the tree for days with nothing local able to report them.
+
+The hooks **fail rather than pass quietly when a tool is missing**, because a check that did not run
+is not a check that passed. They need `PSScriptAnalyzer` and `Pester` 5.5+; `install-hooks.ps1` says
+so if either is absent. To get past a hook once, when you know why: `git commit --no-verify`,
+`git push --no-verify`. To stop entirely: `tools\install-hooks.ps1 -Remove`.
+
 ## Commits
 
 Conventional Commits for the subject line: `type(scope): what changed`, imperative, no trailing

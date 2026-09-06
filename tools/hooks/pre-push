@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Runs every CI job before anything leaves this machine - static analysis, cartridge structure and
+# the full Pester suite. This is the last point at which a failure is still private.
+#
+# -Since origin/main when that ref exists, so the rule that a changed Cartridge must bump its
+# version is enforced here the same way a pull request enforces it.
+#
+# Installed by tools\install-hooks.ps1. To push past it once:
+#     git push --no-verify
+
+root=$(git rev-parse --show-toplevel) || exit 1
+
+if git rev-parse --verify --quiet origin/main >/dev/null 2>&1; then
+    exec powershell -NoProfile -ExecutionPolicy Bypass -File "$root/tools/check-all.ps1" -Since origin/main
+fi
+
+exec powershell -NoProfile -ExecutionPolicy Bypass -File "$root/tools/check-all.ps1"
