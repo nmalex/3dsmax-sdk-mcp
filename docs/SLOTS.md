@@ -8,16 +8,21 @@ no compiler to produce a working plugin.
 
 ## One Slot per plugin type
 
-| Slot | What 3ds Max sees | Where it appears |
-| --- | --- | --- |
-| `modifier` | an object-space modifier | the Modifier List |
-| `utility` | a utility plugin | the Utilities rollout |
-| `exporter` | a scene exporter | File ▸ Export, "Save as type" |
+| Slot | Module | What 3ds Max sees | Where it appears |
+| --- | --- | --- | --- |
+| `modifier` | `ModifierSlot.dlm` | an object-space modifier | the Modifier List |
+| `exporter` | `ExporterSlot.dle` | a scene exporter | File ▸ Export, "Save as type" |
 
-**These three are what you can build a Cartridge for. That is the whole list, and it is not a
+**These two are what you can build a Cartridge for. That is the whole list, and it is not a
 policy.** Each Slot is a compiled 3ds Max plugin of one specific kind, so the set is exactly the set
-that has been built — not a subset someone chose to permit. An importer Slot is the expected fourth
-and does not exist yet.
+that has been built — not a subset someone chose to permit. A utility Slot and an importer Slot are
+the expected third and fourth, and neither exists yet.
+
+**The module column is the check, and you can run it.** The release asset stages one file per Slot
+into `Contents\Bin`, so `tools\list-plugins.ps1` against your install answers this table from your
+own disk rather than from this page. If they ever disagree, the disk is right and this is a bug
+worth [reporting](../README.md#reporting-a-bug) — a document that lists a Slot nobody built sends
+you looking for a bug in your payload.
 
 3ds Max can be extended in far more ways than these:
 
@@ -73,13 +78,52 @@ not an identity.
 %LOCALAPPDATA%\3dsmax-sdk-mcp\
     cartridges\
         slot_modifier.py            whatever occupies the modifier Slot
-        slot_utility.py
+        slot_exporter.py            whatever occupies the exporter Slot
     slots.json                      which Cartridge is in which Slot
 ```
 
 **The deployed layout is flat and the file names are fixed**, because a Slot loads the module name
 it was compiled with. Deploying copies your payload into place under that name; the file you edit
 keeps yours.
+
+## What your Slot actually calls, and what it does not
+
+**A payload function nothing calls is not a payload function.** A Slot is compiled, so the set of
+names it asks your payload for was fixed when the binary was built — you cannot add one, and
+defining a function the Slot has never heard of does nothing at all. There is no error, because
+there is no call.
+
+This is the table to check first when something you wrote does not appear to run. It is also the
+table whose absence caused [#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/2): a scaffolded
+`describe_ui()` did nothing, every payload-side signal was green, and the reason was that the
+modifier Slot of that release did not call it.
+
+| Function | `modifier` | `exporter` | When it is called |
+| --- | --- | --- | --- |
+| `describe_ui(params)` | yes | yes | modifier: opening the command panel, and on every Refresh. Exporter: opening the export options dialog |
+| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | yes | a control on your panel changed |
+| `deform(points, box, tm, params)` | yes | — | every evaluation of the modifier stack |
+| `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | yes | once per export, per node, per group, per scene |
+| `declare_callbacks()` | yes | yes | on load and on every Refresh — how a payload subscribes to host notifications |
+
+**Absent is a legal answer to all of them.** A Slot that asks for `describe_ui` and finds none does
+not fault; it concludes you want no panel. That is deliberate, and it is why a *missing* function
+and a *misspelled* one behave identically — check the spelling before you check anything else.
+
+**`max_cartridge_refresh` names the exports it actually found.** Call it and read the list: a
+function you wrote that is not in it never made it into the module, and a function that is in it but
+never runs is not being asked for. Those are two different bugs and this is what separates them.
+
+### `describe()` is not called by anything today
+
+The scaffolded payload defines `describe()` and describes it as what the About rollout would show
+about your Cartridge. **It does not.** The About rollout carries only what was compiled into the
+Slot — the Slot's name, its version, its build stamp, and which lanes are loaded. Nothing reads a
+payload's `describe()`.
+
+Keep it anyway: it is the entry point the "a Slot shows the Cartridge's name" work will read, it
+costs nothing, and it is a useful place to record which version of your own payload is running when
+you are answering that question by hand. Just do not expect it on screen yet.
 
 ## `cartridge.json` is your record, not a contract
 
