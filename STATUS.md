@@ -1,6 +1,6 @@
 # Status
 
-`0.4.0-alpha.2`.
+`0.4.0-alpha.3`.
 
 **Alpha means what it says.** This has been exercised on exactly one machine, and things will change. Every public build from here bumps the alpha
 counter, so no two are ever the same version.
@@ -17,9 +17,9 @@ This is being built in the open and the parts land in order. What is true **toda
 | `tools/2026/install-plugin.ps1` | works — fetch, verify the hash, place, verify again |
 | `tools/2026/uninstall-plugin.ps1` | works — removes what was installed; your Cartridges are kept |
 | The `install` skill and `.mcp.json` | works — a fork drives its own setup |
-| The release asset it installs | `0.4.0-alpha.2` — the modifier Slot renders its Cartridge's panel ([#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/2)) |
+| The release asset it installs | `0.4.0-alpha.3` — a Cartridge declares its parameters and the Slot keeps them ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
 | The `bootstrap` skill | works — interview, name claim, Slot, scaffold, verify |
-| Declared parameters | **not in a release yet** — `describe_params()` lands in `0.4.0-alpha.3` ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)); the kit's template and [docs/SLOTS.md](docs/SLOTS.md) already teach it |
+| Declared parameters | works — `describe_params()` gives a Cartridge durable, animatable, scriptable parameters; see [docs/SLOTS.md](docs/SLOTS.md) |
 
 Nothing in that table is written from how something is presumed to work.
 
