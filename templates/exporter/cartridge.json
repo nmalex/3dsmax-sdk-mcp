@@ -1,0 +1,40 @@
+{
+    "schema": "cartridge/2",
+
+    "_comment": [
+        "THE AUTHOR'S RECORD. Nothing in the plugin reads this file - a slot loads the module name it",
+        "was compiled with, and that is the whole binding.",
+        "",
+        "ONE EXCEPTION, AND IT IS SPECIFIC TO EXPORTERS: the two fields under 'exporter' below are",
+        "deployed as a sidecar beside your payload, and the slot DOES read that. An exporter's file",
+        "extension cannot be compiled into the slot - a slot with one baked in would host your OBJ",
+        "cartridge and write .ase. So you declare it, and the slot asks when the host builds the",
+        "File > Export type list."
+    ],
+
+    "name": "@DISPLAY_NAME@",
+    "slug": "@SLUG@",
+    "version": "0.1.0-dev",
+
+    "slot": "@FLAVOUR@",
+
+    "exporter": {
+        "_comment": "ext: the file extension, WITHOUT a dot, as it appears in Save as type. shortDesc: what that list shows.",
+        "ext": "TXT",
+        "shortDesc": "@DISPLAY_NAME@"
+    },
+
+    "requires": {
+        "max": [@MAX_YEARS@],
+        "plugin": "@PLUGIN_VERSION@"
+    },
+
+    "payload": {
+        "lane": "python",
+        "module": "@MODULE@",
+        "deployedAs": "@SLOT_MODULE@"
+    },
+
+    "created": "@CREATED@",
+    "generator": "@GENERATOR@"
+}

@@ -1,0 +1,21 @@
+root = true
+
+[*]
+charset = utf-8
+# CRLF throughout: this repository is Windows-only by nature - PowerShell and .cmd scripts driving
+# 3ds Max - and a .cmd file with LF endings fails in ways that read as a syntax error.
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.md]
+# Two trailing spaces are a hard line break in Markdown; trimming them silently reflows a document.
+trim_trailing_whitespace = false
+
+[*.{yml,yaml,json}]
+indent_size = 2
+
+[*.py]
+indent_size = 4

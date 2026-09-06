@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- THE version for this cartridge. Authored here and nowhere else.
+
+     The native payload project reads it to stamp its binary and its About line, so the version a
+     running payload reports and the version in cartridge.json cannot drift - provided you change
+     BOTH when you change either. They are two files by necessity (MSBuild cannot read JSON) and one
+     fact.
+
+     Every pull request that changes this cartridge bumps it, here, in cartridge.json, and in the
+     row in cartridges/README.md. That is not optional - see docs/CARTRIDGE_PR.md. -->
+<Project>
+  <PropertyGroup Label="Version">
+    <CartridgeVersion>0.1.0-dev</CartridgeVersion>
+    <CartridgeVersionComma>0,1,0,0</CartridgeVersionComma>
+  </PropertyGroup>
+</Project>

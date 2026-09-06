@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- @DISPLAY_NAME@ - the NATIVE payload. A plain DLL the slot loads; 3ds Max never sees it.
+
+     NO 3DS MAX SDK ANYWHERE IN THIS PROJECT, and that is the architecture rather than a shortcut.
+     There is no MaxSdkDir, no /external:I into the SDK, no core.lib, no module-definition file, and
+     no resource script. A payload that never touches the SDK loads into a bare interpreter for
+     testing, can be hot-swapped while the host is running, and is not tied to the 3ds Max version it
+     was built against. Everything the SDK is needed for happens on the other side of the boundary,
+     in the slot.
+
+     If you find yourself adding an SDK include path here, the thing you are reaching for belongs in
+     the slot and should arrive through the facade instead.
+
+     WHAT IT LINKS: lib\mcpjson.lib, which arrives with the plugin. Not the slot library - that one
+     carries the facade implementation and would drag SDK symbols into a payload that must not have
+     any. Two libraries ship for exactly this reason. -->
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{@PROJECT_GUID@}</ProjectGuid>
+    <RootNamespace>@MODULE@payload</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(ProjectDir)..\Version.props" />
+
+  <!-- THE TOOLSET IS PINNED AND IS NOT YOURS TO CHOOSE. The payload, the slot and the host share a C
+       ABI and one /MD heap discipline; a mismatched toolset does not fail to compile, it fails
+       later and somewhere else. tools\<year>\check-prereqs.ps1 names the exact component. -->
+  <PropertyGroup Label="Payload">
+    <VCToolsVersion Condition="'$(VCToolsVersion)'==''">14.38.33130</VCToolsVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <PropertyGroup>
+    <!-- The name the slot loads. It must match payload.deployedAs in cartridge.json plus the
+         _native suffix, or the slot will not find it. -->
+    <TargetName>@SLOT_MODULE@_native</TargetName>
+    <TargetExt>.dll</TargetExt>
+    <OutDir>$(ProjectDir)out\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)out\obj\$(Configuration)\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>WINVER=0x0601;_WIN32_WINNT=0x0601;WIN32_LEAN_AND_MEAN;NOMINMAX;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ConformanceMode>true</ConformanceMode>
+      <!-- Matching the slot and the host. One heap across the ABI, or a value allocated on one side
+           and freed on the other takes the process down. -->
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <!-- IntDir carries VersionGenerated.h; ..\..\..\include is what the plugin installed. -->
+      <AdditionalIncludeDirectories>$(IntDir);$(ProjectDir)..\..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/Zc:__cplusplus /Zc:lambda /Zc:inline %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+
+    <Link>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mcpjson.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <!-- FULL link-time codegen, NEVER incremental. MSBuild defaults the linker to
+           /LTCG:incremental when WholeProgramOptimization is on, and its per-function codegen cache
+           can serve function bodies from a previous build - shipping OLD code under a green "Build
+           succeeded". A payload whose green build ships stale code defeats the entire hot-swap loop,
+           because the thing you are testing is whether your edit took effect. -->
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemGroup Label="Sources">
+    <ClCompile Include="src\payload.cpp" />
+  </ItemGroup>
+
+  <!-- Stamps the version and a build timestamp into a generated header. The timestamp is how you
+       see, at a glance, whether the payload the host has loaded is the one you just built. -->
+  <Target Name="StampVersion" BeforeTargets="ClCompile">
+    <MakeDir Directories="$(IntDir);$(OutDir)" />
+    <PropertyGroup>
+      <BuildStamp>$([System.DateTime]::UtcNow.ToString("yyyy-MM-dd HH:mm:ss"))</BuildStamp>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(IntDir)VersionGenerated.h"
+                      Lines="// Generated. Do not edit, do not commit.;#pragma once;#define CARTRIDGE_VERSION_STRING &quot;$(CartridgeVersion)&quot;;#define CARTRIDGE_BUILD_STAMP    &quot;$(BuildStamp) UTC&quot;"
+                      Overwrite="true" WriteOnlyWhenDifferent="true" />
+    <Message Importance="high" Text="@DISPLAY_NAME@ native payload: $(CartridgeVersion)" />
+  </Target>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>
