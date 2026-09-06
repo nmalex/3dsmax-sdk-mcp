@@ -269,9 +269,10 @@ cartridge_logs
 ```
 
 Every crossing into Python, every payload print and every raise, timestamped and tagged with the
-instance that produced it. On disk it is
-`%LOCALAPPDATA%\maxsdk-mcp\logs\<module>_logs\<module>.log`, so you can attach it without an
-agent. Set `MAXMCP_LOG_VERBOSITY` if you need the verbose lines; they are suppressed by default.
+instance that produced it. **The reply carries the `path` of the file it read**, so attach that file
+rather than transcribing lines out of it — and ask the tool for the path rather than assuming one,
+because it is a detail of the build you are running and not a promise. Set `MAXMCP_LOG_VERBOSITY`
+if you need the verbose lines; they are suppressed by default.
 
 **5. The machine, as JSON, not as prose.**
 
