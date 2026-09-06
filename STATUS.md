@@ -1,9 +1,8 @@
 # Status
 
-`0.4.0-alpha.1`.
+`0.4.0-alpha.2`.
 
-**Alpha means what it says.** This is the first build anyone outside has seen, it has been exercised
-on exactly one machine, and things will change. Every public build from here bumps the alpha
+**Alpha means what it says.** This has been exercised on exactly one machine, and things will change. Every public build from here bumps the alpha
 counter, so no two are ever the same version.
 
 This is being built in the open and the parts land in order. What is true **today**:
@@ -18,7 +17,7 @@ This is being built in the open and the parts land in order. What is true **toda
 | `tools/2026/install-plugin.ps1` | works — fetch, verify the hash, place, verify again |
 | `tools/2026/uninstall-plugin.ps1` | works — removes what was installed; your Cartridges are kept |
 | The `install` skill and `.mcp.json` | works — a fork drives its own setup |
-| The release asset it installs | `0.4.0-alpha.1` — the first public pre-release |
+| The release asset it installs | `0.4.0-alpha.2` — the modifier Slot renders its Cartridge's panel ([#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/2)) |
 | The `bootstrap` skill | works — interview, name claim, Slot, scaffold, verify |
 
 Nothing in that table is written from how something is presumed to work.

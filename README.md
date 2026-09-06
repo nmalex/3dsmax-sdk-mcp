@@ -201,7 +201,7 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 
 ## Status
 
-`0.4.0-alpha.1` — the first pre-release. [STATUS.md](STATUS.md) says which parts work today and
+`0.4.0-alpha.2`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Contributing
