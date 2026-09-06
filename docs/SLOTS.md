@@ -101,10 +101,10 @@ modifier Slot of that release did not call it.
 | Function | `modifier` | `exporter` | When it is called |
 | --- | --- | --- | --- |
 | `describe_ui(params)` | yes | yes | modifier: opening the command panel, and on every Refresh. Exporter: opening the export options dialog |
-| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | yes | a control on your panel changed |
+| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | **no** | modifier only, when a control on your panel changed. The exporter never calls it — see below |
 | `deform(points, box, tm, params)` | yes | — | every evaluation of the modifier stack |
 | `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | yes | once per export, per node, per group, per scene |
-| `declare_callbacks()` | yes | yes | on load and on every Refresh — how a payload subscribes to host notifications |
+| `declare_callbacks()` | yes | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
 
 **Absent is a legal answer to all of them.** A Slot that asks for `describe_ui` and finds none does
 not fault; it concludes you want no panel. That is deliberate, and it is why a *missing* function
@@ -113,6 +113,24 @@ and a *misspelled* one behave identically — check the spelling before you chec
 **`max_cartridge_refresh` names the exports it actually found.** Call it and read the list: a
 function you wrote that is not in it never made it into the module, and a function that is in it but
 never runs is not being asked for. Those are two different bugs and this is what separates them.
+
+### The exporter has a panel, but no events
+
+Your `describe_ui()` builds the export options dialog and the controls in it are real. The exporter
+Slot then **never calls `on_ui_event`**. It reads the control values when it needs them and hands
+them to every other call as `params` — `format_header`, `format_node` and the rest all receive the
+options as they stood when the export ran.
+
+So the two kinds of control behave very differently, and only one of them works:
+
+1. **A control that holds a value** — a checkbox, a spinner, a dropdown — works exactly as you would
+   expect. You do not get told it changed; you read it out of `params`.
+2. **A control that only fires** — a button — does nothing. Its handler is never reached, because
+   nothing is listening for the event.
+
+Put a `Button` in an exporter panel and you get the same silence [#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/2)
+was about: the payload is loaded, the function is exported, and no call arrives. This is that same
+trap in the column next door, which is why it is written down rather than left to be discovered.
 
 ### `describe()` is not called by anything today
 
