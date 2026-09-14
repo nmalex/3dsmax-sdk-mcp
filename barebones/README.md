@@ -55,6 +55,22 @@ extra interfaces and `ClassDesc` answers (`IsManipulator()`, `SubClassID() == PF
 They are three different slots — three different barebones — under one superclass. The `manipulator`
 and `pfoperator` examples are that story.
 
+## The rest of the census — templates, slot pending
+
+The nine above **run** (a slot ships for each). The [super-class census](../docs/SUPERCLASS_CENSUS.md)
+lists *every* plugin type the SDK declares, and the registerable ones it turned up that had no example
+now have a **template** barebones — the author shape for when its slot is built. They are marked
+`template: true` in their `cartridge.json` and cannot run in the host yet.
+
+- **Bucket B (17)** — registerable types the original set missed: `videopost-filter`,
+  `aa-filter-kernel`, `bitmap-storage`, `bitmap-filter`, `bitmap-dither`, `bitmap-colorcut`,
+  `uv-generator`, `xyz-generator`, `texture-output`, `color-picker`, `schematicview-utility`,
+  `bake-map`, `bake-map-operator`, `radiosity`, `fragment`, `datachannel-engine`, `fluid-solver`.
+- **Bucket C** — [`controller`](controller/): one family for the whole `CTRL_*` value-type matrix.
+
+See [`docs/SUPERCLASS_CENSUS.md`](../docs/SUPERCLASS_CENSUS.md) for the full bucketed list, including
+the types deliberately excluded (with reasons).
+
 ## How to run one
 
 1. **Deploy** the payload as its `deployedAs` module name (see the example's `cartridge.json`) into

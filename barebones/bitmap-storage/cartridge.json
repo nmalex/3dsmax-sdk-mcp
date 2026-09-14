@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Bitmap Storage",
+    "slug": "barebones-bitmap-storage",
+    "version": "0.1.0",
+    "slot": "bitmap-storage",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_bmmstorage",
+        "deployedAs": "slot_bmmstorage"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

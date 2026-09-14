@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Data Channel Engine",
+    "slug": "barebones-datachannel-engine",
+    "version": "0.1.0",
+    "slot": "datachannel-engine",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_dcengine",
+        "deployedAs": "slot_dcengine"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

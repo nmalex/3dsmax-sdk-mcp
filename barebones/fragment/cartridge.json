@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Fragment",
+    "slug": "barebones-fragment",
+    "version": "0.1.0",
+    "slot": "fragment",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_fragment",
+        "deployedAs": "slot_fragment"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

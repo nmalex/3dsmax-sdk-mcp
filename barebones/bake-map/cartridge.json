@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Bake Map",
+    "slug": "barebones-bake-map",
+    "version": "0.1.0",
+    "slot": "bake-map",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_bakemap",
+        "deployedAs": "slot_bakemap"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Bake Map Operator",
+    "slug": "barebones-bake-map-operator",
+    "version": "0.1.0",
+    "slot": "bake-map-operator",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_bakemapop",
+        "deployedAs": "slot_bakemapop"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

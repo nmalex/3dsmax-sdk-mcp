@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Radiosity",
+    "slug": "barebones-radiosity",
+    "version": "0.1.0",
+    "slot": "radiosity",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_radiosity",
+        "deployedAs": "slot_radiosity"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}
