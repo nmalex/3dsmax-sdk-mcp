@@ -198,6 +198,28 @@ Two lanes, one behaviour:
 | Edit-to-see loop | refresh | build, then refresh |
 | Where it goes | `python/<module>.py` | `native/` |
 
+## Barebones examples
+
+**Start here.** [`barebones/`](barebones/) has the smallest working cartridge for every plugin type —
+each one registers, appears where that type appears, and says **hello** in a log line you read back
+with `cartridge_logs`. Fork the one whose type matches what you are building; every example is
+written to be copied, and each carries a README listing **all the SuperClassIDs that slot can bear**.
+
+| Plugin type | Python | C++ | What it is |
+| --- | --- | --- | --- |
+| Modifier | [python](barebones/modifier/python/slot_modifier.py) | [native](barebones/modifier/native/src/payload.cpp) | reads the mesh, hands it back (`OSM_CLASS_ID`) |
+| Exporter | [python](barebones/exporter/python/slot_exporter.py) | [native](barebones/exporter/native/src/payload.cpp) | formats text the slot writes (`SCENE_EXPORT_CLASS_ID`) |
+| Utility | [python](barebones/utility/python/slot_utility.py) | [native](barebones/utility/native/src/payload.cpp) | a Utilities-panel tool (`UTILITY_CLASS_ID`) |
+| Render effect | [python](barebones/effect/python/slot_effect.py) | [native](barebones/effect/native/src/payload.cpp) | post-processes a rendered frame (`RENDER_EFFECT_CLASS_ID`) |
+| Renderer | [python](barebones/renderer/python/slot_renderer.py) | [native](barebones/renderer/native/src/payload.cpp) | a Choose-Renderer plugin (`RENDERER_CLASS_ID`) |
+| IK solver | [python](barebones/iksolver/python/slot_iksolver.py) | [native](barebones/iksolver/native/src/payload.cpp) | solves an IK chain (`IK_SOLVER_CLASS_ID`) |
+| Object snap | [python](barebones/osnap/python/slot_osnap.py) | [native](barebones/osnap/native/src/payload.cpp) | a snap in the Snaps settings (`OSNAP_CLASS_ID`) |
+| Manipulator | [python](barebones/manipulator/python/slot_manipulator.py) | [native](barebones/manipulator/native/src/payload.cpp) | a viewport gizmo (`HELPER_CLASS_ID`) |
+| ParticleFlow operator | [python](barebones/pfoperator/python/slot_pfoperator.py) | [native](barebones/pfoperator/native/src/payload.cpp) | a Particle View operator (`HELPER_CLASS_ID`) |
+
+The full index — every type, the SuperClassIDs each bears, and which examples are live-verified — is
+[`barebones/README.md`](barebones/README.md).
+
 ## Limitations
 
 - **3ds Max 2026 only.** Other versions need a binary that does not exist yet.

@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Utility",
+    "slug": "barebones-utility",
+    "version": "0.1.0",
+    "slot": "utility",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.6.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_utility",
+        "deployedAs": "slot_utility"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones"
+}

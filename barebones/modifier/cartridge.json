@@ -1,0 +1,23 @@
+{
+    "schema": "cartridge/2",
+
+    "name": "Barebones Modifier",
+    "slug": "barebones-modifier",
+    "version": "0.1.0",
+
+    "slot": "modifier",
+
+    "requires": {
+        "max": [2026],
+        "plugin": "0.6.0"
+    },
+
+    "payload": {
+        "lane": "python",
+        "module": "slot_modifier",
+        "deployedAs": "slot_modifier"
+    },
+
+    "created": "2026-09-15",
+    "generator": "barebones"
+}

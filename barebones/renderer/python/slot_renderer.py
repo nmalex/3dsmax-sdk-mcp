@@ -1,0 +1,46 @@
+"""Barebones Renderer (Python lane) - a Choose-Renderer plugin; here, renders nothing.
+
+WHAT A RENDERER CARTRIDGE IS. The user picks it in the Render Setup > Renderer rollout (Choose
+Renderer). When a render runs, 3ds Max opens the renderer, asks it to render each frame, and closes
+it; the slot forwards those as `RenderOpen` and `RenderRender`. A real renderer produces an image; a
+barebones renderer leaves the output untouched and says hello, so you can prove the plugin is picked
+and driven before writing a single ray.
+
+WHICH SLOT HOSTS IT. The payload the `Cartridge Renderer` slot loads by its fixed module name,
+`slot_renderer`, registering one SuperClassID: RENDERER_CLASS_ID. It is deliberately its own slot,
+separate from the render EFFECT (see barebones/effect): they are different plugin kinds the user
+picks in different places.
+
+THE HELLO. Logged once from a dispatched function - `RenderOpen` fires when a render begins. Trigger
+it by starting any render with this renderer chosen, then read `cartridge_logs -module slot_renderer`.
+"""
+
+import mcp_bootstrap
+
+_said_hello = False
+
+
+def _hello_once(where):
+    global _said_hello
+    if not _said_hello:
+        _said_hello = True
+        mcp_bootstrap.log("display",
+                          "Hello World - Barebones Renderer (Python) is live; this line came from "
+                          "its payload on the first %s." % where)
+
+
+def RenderOpen(**event):
+    """Called once when a render begins, before any frame."""
+    _hello_once("render open (RenderOpen)")
+    return {"ok": True, "lane": "python"}
+
+
+def RenderRender(**event):
+    """Called once per frame. A real renderer writes the output bitmap here; this one does not."""
+    _hello_once("frame (RenderRender)")
+    return {"rendered": False, "lane": "python"}
+
+
+def describe(params=None):
+    return {"payload": "slot_renderer", "version": "0.1.0", "lane": "python",
+            "example": "barebones/renderer"}

@@ -1,0 +1,29 @@
+{
+    "schema": "cartridge/2",
+
+    "name": "Barebones Exporter",
+    "slug": "barebones-exporter",
+    "version": "0.1.0",
+
+    "slot": "exporter",
+
+    "exporter": {
+        "_comment": "ext: the file extension WITHOUT a dot, as it appears in Save as type. shortDesc: what that list shows. Deployed as a sidecar the slot reads.",
+        "ext": "TXT",
+        "shortDesc": "Barebones Exporter"
+    },
+
+    "requires": {
+        "max": [2026],
+        "plugin": "0.6.0"
+    },
+
+    "payload": {
+        "lane": "python",
+        "module": "slot_exporter",
+        "deployedAs": "slot_exporter"
+    },
+
+    "created": "2026-09-15",
+    "generator": "barebones"
+}
