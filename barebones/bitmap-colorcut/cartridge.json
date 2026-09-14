@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Bitmap Color Cut",
+    "slug": "barebones-bitmap-colorcut",
+    "version": "0.1.0",
+    "slot": "bitmap-colorcut",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_bmmcolorcut",
+        "deployedAs": "slot_bmmcolorcut"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

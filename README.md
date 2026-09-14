@@ -218,7 +218,9 @@ written to be copied, and each carries a README listing **all the SuperClassIDs 
 | ParticleFlow operator | [python](barebones/pfoperator/python/slot_pfoperator.py) | [native](barebones/pfoperator/native/src/payload.cpp) | a Particle View operator (`HELPER_CLASS_ID`) |
 
 The full index — every type, the SuperClassIDs each bears, and which examples are live-verified — is
-[`barebones/README.md`](barebones/README.md).
+[`barebones/README.md`](barebones/README.md); [`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md)
+is the complete census of every plugin type the SDK declares (which run today, which are templates,
+and which are excluded and why).
 
 ## Limitations
 

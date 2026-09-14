@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Controller",
+    "slug": "barebones-controller",
+    "version": "0.1.0",
+    "slot": "controller",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_controller",
+        "deployedAs": "slot_controller"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

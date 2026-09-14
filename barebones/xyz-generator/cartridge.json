@@ -1,0 +1,21 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones XYZ Generator",
+    "slug": "barebones-xyz-generator",
+    "version": "0.1.0",
+    "slot": "xyz-generator",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.7.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_xyzgen",
+        "deployedAs": "slot_xyzgen"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones-census",
+    "template": true
+}

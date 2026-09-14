@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="Version">
+    <CartridgeVersion>0.1.0</CartridgeVersion>
+    <CartridgeVersionComma>0,1,0,0</CartridgeVersionComma>
+  </PropertyGroup>
+</Project>
