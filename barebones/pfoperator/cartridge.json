@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones PF Operator",
+    "slug": "barebones-pfoperator",
+    "version": "0.1.0",
+    "slot": "pfoperator",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.6.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_pfoperator",
+        "deployedAs": "slot_pfoperator"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones"
+}

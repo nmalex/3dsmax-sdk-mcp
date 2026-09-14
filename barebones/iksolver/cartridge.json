@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones IK Solver",
+    "slug": "barebones-iksolver",
+    "version": "0.1.0",
+    "slot": "iksolver",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.6.0"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_iksolver",
+        "deployedAs": "slot_iksolver"
+    },
+    "created": "2026-09-15",
+    "generator": "barebones"
+}
