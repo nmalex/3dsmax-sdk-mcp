@@ -1,8 +1,16 @@
 # 3ds Max SDK MCP
 
-A 3ds Max plugin that serves a local [Model Context Protocol](https://modelcontextprotocol.io/)
+**This is for building 3ds Max plugins with a coding agent** — Claude, Codex, or anything else that
+speaks MCP — writing the code, running it against your live session, and iterating on what actually
+happened, instead of you hand-writing C++ against the SDK yourself.
+
+Mechanically: a 3ds Max plugin that serves a local [Model Context Protocol](https://modelcontextprotocol.io/)
 server from inside a running 3ds Max — and the kit for building **Cartridges**: your own 3ds Max
 plugins, written as a payload and hosted by a Slot that ships as a binary.
+
+**Not sure this fits what you're doing? Ask your agent.** Paste it this README (or point it at your
+fork) and ask what it could build for you here — that answer costs you nothing and tells you more
+than a feature list will.
 
 ## How it works
 
@@ -206,7 +214,7 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 
 ## Status
 
-`0.4.0-alpha.5`. [STATUS.md](STATUS.md) says which parts work today and
+`0.6.0-rc.1`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Reporting a bug
@@ -216,6 +224,12 @@ which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 This section is written for an agent as much as for a person. If you are driving this repository
 with Claude, Codex or anything else, it can gather every fact below itself and file the issue for
 you — the commands are literal, they only read, and none of them touches your scene.
+
+**Bug, gap, or feature request? They are three different reports.** A *bug* is a facade entry that
+misbehaves; a *gap* is a 3ds Max SDK function the facade does not wrap yet; a *feature request* is a
+capability beyond one call. [docs/REPORTING.md](docs/REPORTING.md) tells the three apart and gives the
+exact evidence each needs — start there if it is not plainly a bug. The rest of this section is the
+deep-dive for a **bug**.
 
 ### First, decide which half is broken, because only one of them is yours
 
