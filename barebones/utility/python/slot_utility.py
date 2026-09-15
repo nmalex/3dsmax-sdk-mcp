@@ -35,7 +35,7 @@ def _hello_once(where):
                           "its payload on the first %s." % where)
 
 
-def describe_ui(params=None):
+def describe_ui(params=None, **kwargs):
     """The Utilities-panel rollout: one labelled line and a Hello World button."""
     _hello_once("panel open")
     return ui.build(

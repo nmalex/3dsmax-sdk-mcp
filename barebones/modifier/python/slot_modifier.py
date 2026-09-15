@@ -58,7 +58,7 @@ def describe_params():
     }
 
 
-def describe_ui(params=None):
+def describe_ui(params=None, **kwargs):
     """The command-panel rollout: one labelled line and a Hello World button."""
     _hello_once("panel open")
     p = params or {}

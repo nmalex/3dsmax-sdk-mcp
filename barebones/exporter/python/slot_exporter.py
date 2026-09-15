@@ -46,7 +46,7 @@ def _hello_once(where):
                           "its payload on the first %s of an export." % where)
 
 
-def describe_ui(params=None):
+def describe_ui(params=None, **kwargs):
     """The modal options dialog, shown before an export when the host is prompting."""
     return ui.build(
         ui.VBox(
