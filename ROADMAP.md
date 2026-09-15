@@ -55,9 +55,15 @@ Status vocabulary, and it is short on purpose:
 - **More 3ds Max versions.** 2026 only today. Each version needs its own binary, and shipping one
   installer that serves all of them is a packaging job that has not been done.
 - **An MSI installer**, so installation is a download-and-run rather than a script.
-- **More kinds of plugin.** A cartridge can be a modifier, a utility or an exporter. The list of
-  what 3ds Max can be extended with is far longer — geometry objects, helpers, shapes, lights,
-  cameras and more — and each needs a slot binary of its own.
+- **More kinds of slot.** Eighteen slots ship today — see [SLOTS.md](docs/SLOTS.md) for the list and
+  [SUPERCLASS_CENSUS.md](docs/SUPERCLASS_CENSUS.md) for the complete map. The list of what 3ds Max can
+  be extended with is longer still — geometry objects, cameras, lights, shapes, materials and texmaps,
+  more controller value types and more — and those are **real, registerable types whose slots are
+  simply not built yet**, each needing a slot binary of its own. This is the ongoing programme, not a
+  closed door: a request for any of them is legitimate, and what people ask for is what moves. (A
+  separate handful of super-class IDs can never be a third-party slot at all, because the SDK does not
+  let anyone register one; the census lists those with the reason for each, so the two are never
+  confused.)
 
 - **Authoring a new *kind* of slot yourself.** Today the plugin types you can build cartridges for
   are the ones we ship slots for, so a new type is our work and you wait for it. The intended answer

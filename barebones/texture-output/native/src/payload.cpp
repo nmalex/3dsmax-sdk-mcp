@@ -1,6 +1,6 @@
-// Barebones Texture Output (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Texture Output (C++ native lane) - ships today.
 //
-// A texture output filter - the output curve/level filter on a texmap. SuperClassID TEXOUTPUT_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A texture output filter - the output curve/level filter on a texmap. SuperClassID TEXOUTPUT_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

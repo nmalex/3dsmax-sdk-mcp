@@ -1,4 +1,4 @@
-"""Barebones Bake Map (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bake Map (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A Bake To Texture common bake map - one bakeable channel in the Bake To Texture dialog.
 

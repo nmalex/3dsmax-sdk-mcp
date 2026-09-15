@@ -1,6 +1,6 @@
-// Barebones Controller (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Controller (C++ native lane) - ships today.
 //
-// An animation controller (Control base) - assigned to a track; the same shape serves every CTRL_* value type. SuperClassID CTRL_FLOAT_CLASS_ID. No slot ships for this type yet; this is the shape.
+// An animation controller (Control base) - assigned to a track; the same shape serves every CTRL_* value type. SuperClassID CTRL_FLOAT_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

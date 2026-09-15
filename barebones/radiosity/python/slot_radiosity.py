@@ -1,11 +1,10 @@
-"""Barebones Radiosity (Python lane) - TEMPLATE, slot pending.
+"""Barebones Radiosity (Python lane) - an advanced-lighting (radiosity) solution plugin; here, one that just says hello.
 
-An advanced-lighting / global-illumination plugin - the advanced-lighting engine in Render Setup.
+WHICH SLOT HOSTS IT. The payload the `Cartridge Radiosity` slot loads by its fixed module name,
+`slot_radiosity`, registering one SuperClassID: RADIOSITY_CLASS_ID. See this example's README.md.
 
-This plugin type is in the super-class census (SuperClassID RADIOSITY_CLASS_ID) but no slot ships for it yet, so
-this payload cannot be loaded in the host today. It shows the shape: a hello logged from a dispatched
-function (never at import - only a dispatched call's output is captured into cartridge_logs). When a
-radiosity slot ships, wire this hello into the function that slot dispatches, and add your behaviour.
+THE HELLO. Logged once from `run`, which the slot calls when 3ds Max drives this plugin. Trigger it
+as the README describes, then read `cartridge_logs -module slot_radiosity`.
 """
 
 import mcp_bootstrap
@@ -22,7 +21,39 @@ def _hello_once(where):
                           "its payload on the first %s." % where)
 
 
+def run(**event):
+    """Called when 3ds Max drives this plugin. A real cartridge does its work here; this one says
+    hello once and holds nothing."""
+    _hello_once("solve (run)")
+    return {"ok": True}
+
+
 def describe(params=None):
     return {"payload": "slot_radiosity", "version": "0.1.0", "lane": "python",
-            "example": "barebones/radiosity", "template": True,
-            "superClassId": "RADIOSITY_CLASS_ID"}
+            "example": "barebones/radiosity", "superClassId": "RADIOSITY_CLASS_ID"}
+
+
+def init(**env):
+    """Load-time crossing (FR-0006). The slot calls this at 3ds Max startup (NOTIFY_SYSTEM_STARTUP),
+    before any host action, handing the environment only the slot can see. This is the INIT REPORT: it
+    records that the cartridge loaded and the world it loaded into. It is deliberately NOT the
+    cartridge's greeting - the greeting is logged only by the cartridge's own behaviour (the body
+    above), so a load report is never mistaken for the thing working. `env` carries: maxRelease, slot,
+    slotVersion, cartridgeAbi, gup."""
+    mcp_bootstrap.log(
+        "display",
+        "%s payload (Python) init on load. Environment: 3ds Max %s, slot v%s, cartridge ABI %s, "
+        "gup present=%s. This is the init report, not the cartridge greeting."
+        % (env.get("slot"), env.get("maxRelease"), env.get("slotVersion"),
+           env.get("cartridgeAbi"), env.get("gup")))
+    return {"ok": True, "acknowledged": dict(env)}
+
+
+def shutdown(**_env):
+    """The symmetric unload crossing: the slot calls this from LibShutdown. This is the UNLOAD REPORT -
+    the cartridge records that it is being torn down and releases anything it held. Like init, it never
+    logs the greeting; only the cartridge's own behaviour does that."""
+    mcp_bootstrap.log("display",
+                      "%s payload (Python) shutdown on slot unload. This is the unload report."
+                      % (_env.get("slot") or "cartridge"))
+    return {"ok": True}

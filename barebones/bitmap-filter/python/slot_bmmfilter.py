@@ -1,4 +1,4 @@
-"""Barebones Bitmap Filter (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bitmap Filter (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 An image (bitmap) filter - a filter the bitmap manager applies when sampling an image.
 

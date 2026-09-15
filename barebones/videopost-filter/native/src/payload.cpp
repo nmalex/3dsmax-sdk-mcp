@@ -1,6 +1,6 @@
-// Barebones Video Post Filter (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Video Post Filter (C++ native lane) - ships today.
 //
-// A Video Post image-processing filter - runs in the Video Post queue over a rendered image. SuperClassID FLT_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A Video Post image-processing filter - runs in the Video Post queue over a rendered image. SuperClassID FLT_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

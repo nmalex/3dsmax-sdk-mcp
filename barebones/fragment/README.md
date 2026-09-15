@@ -2,13 +2,15 @@
 
 A Fragment super-class plugin — a render-pipeline fragment; works through ViewExp/GraphicsWindow.
 
-> **Template — slot pending.** This plugin type is in the [super-class census](../../docs/SUPERCLASS_CENSUS.md)
-> (Bucket B/C) but **no slot ships for it yet**, so this example cannot run in the host today. It is
-> the shape an author starts from, and what its slot will host once built. The runnable, live-verified
-> examples are the ones marked ✅ in [`../README.md`](../README.md).
-
-**Hello surface (when the slot ships):** log — and always a log line readable with
-`cartridge_logs -module slot_fragment`.
+> **Deferred — registers, but its greeting is not yet reachable.** A slot **is** built and the class
+> **registers**: `Cartridge_Fragment` is enumerable in a live host, which proves the shell loads. But
+> a `ViewFragment` is not a MAXScript value type (creating it returns `undefined`), and its only
+> callback, `DoEvaluate`, runs inside the viewport display fragment-graph — which no scriptable path
+> and no standalone manual action triggers for a bare fragment. So its `Hello World` cannot yet be
+> observed. It is kept as **proof of registration** and a starting point, and graduates the day the
+> slot model can drive a display-pipeline fragment. This is neither a shipping slot nor a failure — the
+> one honest in-between. The [super-class census](../../docs/SUPERCLASS_CENSUS.md) lists it under
+> *deferred*.
 
 ## The SuperClassID it registers under
 
@@ -23,9 +25,8 @@ A Fragment super-class plugin — a render-pipeline fragment; works through View
 | Python | [`python/slot_fragment.py`](python/slot_fragment.py) | `slot_fragment` |
 | C++ (native) | [`native/src/payload.cpp`](native/src/payload.cpp) | `slot_fragment_native.dll` |
 
-## Fork it
+## Using this example
 
-1. Copy this directory to `cartridges/<your-name>/` once a `fragment` slot ships (track it in the
-   census / ROADMAP).
-2. Put your behaviour in the payload; log your hello from a dispatched function so it lands in
-   `cartridge_logs -module slot_fragment`.
+The slot is built and the class registers, but its greeting is unreachable today (see above), so this
+example is kept as proof of registration and a starting point rather than a runnable hello. It
+graduates when the slot model can drive a display-pipeline fragment.

@@ -1,6 +1,6 @@
-// Barebones Color Picker (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Color Picker (C++ native lane) - ships today.
 //
-// A color picker - the modal color chooser the host opens when a swatch is clicked. SuperClassID COLPICK_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A color picker - the modal color chooser the host opens when a swatch is clicked. SuperClassID COLPICK_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

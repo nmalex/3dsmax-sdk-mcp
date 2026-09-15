@@ -1,4 +1,4 @@
-"""Barebones Bake Map Operator (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bake Map Operator (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A Bake To Texture bake-map operator - an operator over a common bake map.
 

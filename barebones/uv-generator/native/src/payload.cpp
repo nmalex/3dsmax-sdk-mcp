@@ -1,6 +1,6 @@
-// Barebones UV Generator (C++ native lane) - TEMPLATE, slot pending.
+// Barebones UV Generator (C++ native lane) - ships today.
 //
-// A UV coordinate generator (2D map input) - supplies the UV coordinates a 2D texmap samples in. SuperClassID UVGEN_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A UV coordinate generator (2D map input) - supplies the UV coordinates a 2D texmap samples in. SuperClassID UVGEN_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

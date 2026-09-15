@@ -1,6 +1,6 @@
-// Barebones AA Filter Kernel (C++ native lane) - TEMPLATE, slot pending.
+// Barebones AA Filter Kernel (C++ native lane) - ships today.
 //
-// An anti-aliasing filter kernel - the reconstruction kernel a renderer samples with. SuperClassID FILTER_KERNEL_CLASS_ID. No slot ships for this type yet; this is the shape.
+// An anti-aliasing filter kernel - the reconstruction kernel a renderer samples with. SuperClassID FILTER_KERNEL_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

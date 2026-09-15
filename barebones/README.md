@@ -1,10 +1,12 @@
 # Barebones — a hello-world cartridge for every plugin type
 
-**This is the starting point.** Each folder here is the smallest working cartridge for one 3ds Max
-plugin type: it registers, it appears where that type appears, and it says **hello** — a log line
-(and, for single-shot types, a message box) you can read back with `cartridge_logs`. It does nothing
-else, on purpose: an inert cartridge proves the whole crossing works *before* your behaviour is in
-the way of reading the result.
+**This is the starting point.** Each folder here is the smallest cartridge for one 3ds Max plugin
+type. For the eighteen types with a shipping slot it **registers, appears where that type appears, and
+says hello** — a log line (and, for single-shot types, a message box) you read back with
+`cartridge_logs`; it does nothing else, on purpose, so an inert cartridge proves the whole crossing
+works *before* your behaviour is in the way of reading the result. A handful of other folders document
+the *shape* of a type that has no slot (and cannot get one) — the
+[super-class census](../docs/SUPERCLASS_CENSUS.md) is the authoritative map of which is which.
 
 Fork one and start writing. Every example is written to be copied.
 
@@ -17,8 +19,10 @@ says which. The rule underneath every row: **a cartridge does not choose its Sup
 it is deployed into does.** You pick the type by picking the slot; the payload shape is what these
 examples give you.
 
-The `Verified` column means the example's hello was observed in a live 3ds Max via
-`cartridge_logs -module <deployedAs>`, not merely that it compiles.
+The `Verified` column reports how each example's hello is confirmed. `✅` — the probe drove the
+example and saw its hello. `🔵` — the example **reports alive on load** (its `init` is logged the
+moment 3ds Max loads the slot) and its greeting fires under a named host action (listed below). Both
+ship and run; read either with `cartridge_logs -module <deployedAs>`.
 
 ## The gallery
 
@@ -26,26 +30,27 @@ The `Verified` column means the example's hello was observed in a live 3ds Max v
 | --- | --- | --- | --- | --- | --- | :-: |
 | Modifier | `Modifier` | UI panel + log | `OSM_CLASS_ID` (·`WSM_CLASS_ID`) | [modifier/python](modifier/python/slot_modifier.py) | [modifier/native](modifier/native/src/payload.cpp) | ✅ |
 | Exporter | `SceneExport` | message box + log | `SCENE_EXPORT_CLASS_ID` (·`SCENE_IMPORT_CLASS_ID` ·`BMM_IO_CLASS_ID`) | [exporter/python](exporter/python/slot_exporter.py) | [exporter/native](exporter/native/src/payload.cpp) | ✅ |
-| Utility | `UtilityObj` | UI panel + log | `UTILITY_CLASS_ID` (·`TRACKVIEW_UTILITY_CLASS_ID`) | [utility/python](utility/python/slot_utility.py) | [utility/native](utility/native/src/payload.cpp) | ◻ |
-| Render effect | `Effect` | UI + log on render | `RENDER_EFFECT_CLASS_ID` (·`ATMOSPHERIC_CLASS_ID` ·`TONE_OPERATOR_CLASS_ID` ·`SHADOW_TYPE_CLASS_ID`) | [effect/python](effect/python/slot_effect.py) | [effect/native](effect/native/src/payload.cpp) | ◻ |
+| Utility | `UtilityObj` | UI panel + log | `UTILITY_CLASS_ID` (·`TRACKVIEW_UTILITY_CLASS_ID`) | [utility/python](utility/python/slot_utility.py) | [utility/native](utility/native/src/payload.cpp) | 🔵 |
+| Render effect | `Effect` | UI + log on render | `RENDER_EFFECT_CLASS_ID` (·`ATMOSPHERIC_CLASS_ID` ·`TONE_OPERATOR_CLASS_ID` ·`SHADOW_TYPE_CLASS_ID`) | [effect/python](effect/python/slot_effect.py) | [effect/native](effect/native/src/payload.cpp) | 🔵 |
 | Renderer | `Renderer` | UI + log on render | `RENDERER_CLASS_ID` | [renderer/python](renderer/python/slot_renderer.py) | [renderer/native](renderer/native/src/payload.cpp) | ✅ |
-| IK solver | `IKSolver` | log on solve | `IK_SOLVER_CLASS_ID` | [iksolver/python](iksolver/python/slot_iksolver.py) | [iksolver/native](iksolver/native/src/payload.cpp) | ◻ |
-| Object snap | `Osnap` | log on snap | `OSNAP_CLASS_ID` | [osnap/python](osnap/python/slot_osnap.py) | [osnap/native](osnap/native/src/payload.cpp) | ◻ |
+| IK solver | `IKSolver` | log on solve | `IK_SOLVER_CLASS_ID` | [iksolver/python](iksolver/python/slot_iksolver.py) | [iksolver/native](iksolver/native/src/payload.cpp) | 🔵 |
+| Object snap | `Osnap` | log on snap | `OSNAP_CLASS_ID` | [osnap/python](osnap/python/slot_osnap.py) | [osnap/native](osnap/native/src/payload.cpp) | 🔵 |
 | Manipulator | `SimpleManipulator` | viewport gizmo + log | `HELPER_CLASS_ID` *(as a manipulator)* | [manipulator/python](manipulator/python/slot_manipulator.py) | [manipulator/native](manipulator/native/src/payload.cpp) | ✅ |
-| ParticleFlow operator | `PFSimpleOperator` | Particle View + log | `HELPER_CLASS_ID` *(as a PF operator)* | [pfoperator/python](pfoperator/python/slot_pfoperator.py) | [pfoperator/native](pfoperator/native/src/payload.cpp) | ◻ |
+| ParticleFlow operator | `PFSimpleOperator` | Particle View + log | `HELPER_CLASS_ID` *(as a PF operator)* | [pfoperator/python](pfoperator/python/slot_pfoperator.py) | [pfoperator/native](pfoperator/native/src/payload.cpp) | 🔵 |
 
-`·` marks a sibling SuperClassID the same payload shape can serve when deployed into that slot. A `◻`
-in *Verified* means the example is authored against the slot's dispatch contract (the function the
-slot forwards its work to) and compiles, but its hello has not yet been confirmed in the test host
-because the plugin's work only happens under conditions a boot script cannot cheaply create:
+`·` marks a sibling SuperClassID the same payload shape can serve when deployed into that slot. All
+nine slots above **ship and run**. A `🔵` in *Verified* means the example reports its `init` on load —
+proof it is alive — while its `Hello World` **greeting** fires only under a host action a headless
+probe cannot synthesise, so that is the step to run by hand:
 
-- **effect** — `EffectApply` fires only in a full render-effects pass;
-- **iksolver** — `IKSolve` fires only once a chain is bound to this solver and driven;
-- **osnap** — `OsnapSnap` fires only during interactive snapping;
-- **pfoperator** — `PFProceed` fires only inside an active Particle Flow with particles;
-- **utility** — its slot (`UTILITY_CLASS_ID`) does not ship yet (see the roadmap / defect D1).
+- **effect** — the greeting fires in a full render-effects pass (render with the effect, F9);
+- **iksolver** — once a chain is bound to this solver and solved;
+- **osnap** — during interactive snapping;
+- **pfoperator** — inside an active Particle Flow with particles;
+- **utility** — when it is opened in the Utilities panel.
 
-Each example's README says exactly how to make its hello fire by hand.
+A `🔵` is a property of the plugin kind, never a failure. Each example's README says exactly how to
+make its greeting fire by hand.
 
 ### One SuperClassID, several plugin kinds
 
@@ -55,21 +60,30 @@ extra interfaces and `ClassDesc` answers (`IsManipulator()`, `SubClassID() == PF
 They are three different slots — three different barebones — under one superclass. The `manipulator`
 and `pfoperator` examples are that story.
 
-## The rest of the census — templates, slot pending
+## The rest of the census — the other plugin types
 
-The nine above **run** (a slot ships for each). The [super-class census](../docs/SUPERCLASS_CENSUS.md)
-lists *every* plugin type the SDK declares, and the registerable ones it turned up that had no example
-now have a **template** barebones — the author shape for when its slot is built. They are marked
-`template: true` in their `cartridge.json` and cannot run in the host yet.
+The nine above are the core gallery, but **eighteen slots ship and run** in all. The other nine
+shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
+`texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
+`videopost-filter` — each with its own `README.md` and both lanes.
 
-- **Bucket B (17)** — registerable types the original set missed: `videopost-filter`,
-  `aa-filter-kernel`, `bitmap-storage`, `bitmap-filter`, `bitmap-dither`, `bitmap-colorcut`,
-  `uv-generator`, `xyz-generator`, `texture-output`, `color-picker`, `schematicview-utility`,
-  `bake-map`, `bake-map-operator`, `radiosity`, `fragment`, `datachannel-engine`, `fluid-solver`.
-- **Bucket C** — [`controller`](controller/): one family for the whole `CTRL_*` value-type matrix.
+The barebones directory also carries an example for plugin types that do **not** ship a slot, so the
+shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
+authoritative map and sorts every type into three states:
 
-See [`docs/SUPERCLASS_CENSUS.md`](../docs/SUPERCLASS_CENSUS.md) for the full bucketed list, including
-the types deliberately excluded (with reasons).
+- **Has a slot — ships and runs.** The eighteen above.
+- **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
+  slot is not built yet — a legitimate roadmap request. These have no directory here; the census
+  lists them.
+- **Not registerable.** `bake-map`, `bake-map-operator`, `bitmap-storage`, `bitmap-filter`,
+  `bitmap-dither`, `bitmap-colorcut`, `schematicview-utility`, `fluid-solver` — the SDK does not let a
+  third party register a plugin under these at all, so no slot will ever ship. Their directories
+  document the *shape* only, stay marked `template: true`, and each README carries the exact
+  SDK-checked reason. Plus **`fragment`**, *deferred*: its slot is built and the class registers, but
+  its greeting is not yet reachable.
+
+See [`docs/SUPERCLASS_CENSUS.md`](../docs/SUPERCLASS_CENSUS.md) for the full map, including every
+not-registerable type with its reason.
 
 ## How to run one
 

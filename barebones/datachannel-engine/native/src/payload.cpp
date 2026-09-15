@@ -1,6 +1,6 @@
-// Barebones Data Channel Engine (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Data Channel Engine (C++ native lane) - ships today.
 //
-// A Data Channel modifier engine (IDataChannelEngine) - one operator in the Data Channel modifier's stack. SuperClassID DATACHANNELENGINE_SUPER_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A Data Channel modifier engine (IDataChannelEngine) - one operator in the Data Channel modifier's stack. SuperClassID DATACHANNELENGINE_SUPER_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

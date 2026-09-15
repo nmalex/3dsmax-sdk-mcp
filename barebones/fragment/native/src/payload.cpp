@@ -1,6 +1,6 @@
-// Barebones Fragment (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Fragment (C++ native lane) - deferred - the slot is built and registers, but its greeting is unreachable.
 //
-// A Fragment super-class plugin - a render-pipeline fragment; works through ViewExp/GraphicsWindow. SuperClassID Fragment_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A Fragment super-class plugin - a render-pipeline fragment; works through ViewExp/GraphicsWindow. SuperClassID Fragment_CLASS_ID. The slot is built and the class registers, but the greeting is unreachable (see this example's README); this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"
