@@ -1,6 +1,6 @@
-// Barebones Bake Map (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Bake Map (C++ native lane) - documents the shape - this super-class is not third-party registerable.
 //
-// A Bake To Texture common bake map - one bakeable channel in the Bake To Texture dialog. SuperClassID COMMON_BAKE_MAP_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A Bake To Texture common bake map - one bakeable channel in the Bake To Texture dialog. SuperClassID COMMON_BAKE_MAP_CLASS_ID. No slot ships for this type, and none ever will - the super-class is not open to third-party registration (see this example's README for the SDK-checked reason); this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

@@ -1,4 +1,4 @@
-"""Barebones Bitmap Color Cut (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bitmap Color Cut (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A bitmap color-cut method - the color-cut method used when quantizing an image.
 

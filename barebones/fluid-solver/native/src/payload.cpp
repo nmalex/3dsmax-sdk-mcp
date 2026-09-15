@@ -1,6 +1,6 @@
-// Barebones Fluid Solver (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Fluid Solver (C++ native lane) - documents the shape - this super-class is not third-party registerable.
 //
-// A fluid solver (liquid / smoke / fire) - the solver behind a fluid simulation. SuperClassID MAXFLUID_SOLVER_SUPERCLASS_ID. No slot ships for this type yet; this is the shape.
+// A fluid solver (liquid / smoke / fire) - the solver behind a fluid simulation. SuperClassID MAXFLUID_SOLVER_SUPERCLASS_ID. No slot ships for this type, and none ever will - the super-class is not open to third-party registration (see this example's README for the SDK-checked reason); this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

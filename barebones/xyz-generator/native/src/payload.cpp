@@ -1,6 +1,6 @@
-// Barebones XYZ Generator (C++ native lane) - TEMPLATE, slot pending.
+// Barebones XYZ Generator (C++ native lane) - ships today.
 //
-// An XYZ coordinate generator (3D map input) - supplies the object/world XYZ a 3D texmap samples in. SuperClassID XYZGEN_CLASS_ID. No slot ships for this type yet; this is the shape.
+// An XYZ coordinate generator (3D map input) - supplies the object/world XYZ a 3D texmap samples in. SuperClassID XYZGEN_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

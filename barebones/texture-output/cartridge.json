@@ -16,6 +16,5 @@
         "deployedAs": "slot_texoutput"
     },
     "created": "2026-09-15",
-    "generator": "barebones-census",
-    "template": true
+    "generator": "barebones-census"
 }

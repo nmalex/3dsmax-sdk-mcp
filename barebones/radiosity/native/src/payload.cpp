@@ -1,6 +1,6 @@
-// Barebones Radiosity (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Radiosity (C++ native lane) - ships today.
 //
-// An advanced-lighting / global-illumination plugin - the advanced-lighting engine in Render Setup. SuperClassID RADIOSITY_CLASS_ID. No slot ships for this type yet; this is the shape.
+// An advanced-lighting / global-illumination plugin - the advanced-lighting engine in Render Setup. SuperClassID RADIOSITY_CLASS_ID. A slot ships for this type; this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

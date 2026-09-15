@@ -1,4 +1,4 @@
-"""Barebones Fluid Solver (Python lane) - TEMPLATE, slot pending.
+"""Barebones Fluid Solver (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A fluid solver (liquid / smoke / fire) - the solver behind a fluid simulation.
 

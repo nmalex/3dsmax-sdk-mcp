@@ -2,13 +2,13 @@
 
 A Data Channel modifier engine (IDataChannelEngine) — one operator in the Data Channel modifier's stack.
 
-> **Template — slot pending.** This plugin type is in the [super-class census](../../docs/SUPERCLASS_CENSUS.md)
-> (Bucket B/C) but **no slot ships for it yet**, so this example cannot run in the host today. It is
-> the shape an author starts from, and what its slot will host once built. The runnable, live-verified
-> examples are the ones marked ✅ in [`../README.md`](../README.md).
+> **Ships today — runs in the host.** A slot ships for this type, so this example loads, registers,
+> and runs — it is not a template. It reports its `init` the moment 3ds Max loads the slot, and its
+> **`Hello World` greeting is driven automatically**: the probe exercises the plugin and sees it.
+> The [super-class census](../../docs/SUPERCLASS_CENSUS.md) is the authoritative map of where this
+> type sits among all plugin types.
 
-**Hello surface (when the slot ships):** log/UI — and always a log line readable with
-`cartridge_logs -module slot_dcengine`.
+**Hello surface:** log/UI — read the log line with `cartridge_logs -module slot_dcengine`.
 
 ## The SuperClassID it registers under
 
@@ -25,7 +25,6 @@ A Data Channel modifier engine (IDataChannelEngine) — one operator in the Data
 
 ## Fork it
 
-1. Copy this directory to `cartridges/<your-name>/` once a `datachannel-engine` slot ships (track it in the
-   census / ROADMAP).
+1. Copy this directory to `cartridges/<your-name>/` (or scaffold with `tools/new-cartridge.ps1`).
 2. Put your behaviour in the payload; log your hello from a dispatched function so it lands in
    `cartridge_logs -module slot_dcengine`.

@@ -1,4 +1,4 @@
-"""Barebones Schematic View Utility (Python lane) - TEMPLATE, slot pending.
+"""Barebones Schematic View Utility (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A Schematic View utility - a tool that acts on the Schematic View graph.
 

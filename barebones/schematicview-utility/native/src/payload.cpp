@@ -1,6 +1,6 @@
-// Barebones Schematic View Utility (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Schematic View Utility (C++ native lane) - documents the shape - this super-class is not third-party registerable.
 //
-// A Schematic View utility - a tool that acts on the Schematic View graph. SuperClassID SCHEMATICVIEW_UTILITY_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A Schematic View utility - a tool that acts on the Schematic View graph. SuperClassID SCHEMATICVIEW_UTILITY_CLASS_ID. No slot ships for this type, and none ever will - the super-class is not open to third-party registration (see this example's README for the SDK-checked reason); this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

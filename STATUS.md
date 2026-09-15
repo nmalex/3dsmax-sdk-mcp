@@ -1,6 +1,6 @@
 # Status
 
-`0.7.2-alpha.1`.
+`0.8.0-alpha.1`.
 
 **A pre-release means what it says.** This has been exercised on exactly one machine, and things will change. Every public build bumps its pre-release
 identifier, so no two are ever the same version.
@@ -17,7 +17,8 @@ This is being built in the open and the parts land in order. What is true **toda
 | `tools/2026/install-plugin.ps1` | works — fetch, verify the hash, place, verify again |
 | `tools/2026/uninstall-plugin.ps1` | works — removes what was installed; your Cartridges are kept |
 | The `install` skill and `.mcp.json` | works — a fork drives its own setup |
-| The release asset it installs | `0.7.2-alpha.1` — every binary in it carries the release's own identifier; declared parameters arrived in [alpha.3](https://github.com/nmalex/3dsmax-sdk-mcp/releases/tag/v0.4.0-alpha.3) ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
+| The release asset it installs | `0.8.0-alpha.1` — every binary in it carries the release's own identifier; declared parameters arrived in [alpha.3](https://github.com/nmalex/3dsmax-sdk-mcp/releases/tag/v0.4.0-alpha.3) ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
+| Slots shipping | 18 — a slot for every registerable plugin type it targets; every one reports itself on load (see [docs/SLOTS.md](docs/SLOTS.md), [docs/SUPERCLASS_CENSUS.md](docs/SUPERCLASS_CENSUS.md)) |
 | The `bootstrap` skill | works — interview, name claim, Slot, scaffold, verify |
 | Declared parameters | works — `describe_params()` gives a Cartridge durable, animatable, scriptable parameters; see [docs/SLOTS.md](docs/SLOTS.md) |
 

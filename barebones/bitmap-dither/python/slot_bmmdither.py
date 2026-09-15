@@ -1,4 +1,4 @@
-"""Barebones Bitmap Dither (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bitmap Dither (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A bitmap dithering method - the dither applied when reducing an image's bit depth.
 

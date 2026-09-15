@@ -1,6 +1,6 @@
-// Barebones Bitmap Dither (C++ native lane) - TEMPLATE, slot pending.
+// Barebones Bitmap Dither (C++ native lane) - documents the shape - this super-class is not third-party registerable.
 //
-// A bitmap dithering method - the dither applied when reducing an image's bit depth. SuperClassID BMM_DITHER_CLASS_ID. No slot ships for this type yet; this is the shape.
+// A bitmap dithering method - the dither applied when reducing an image's bit depth. SuperClassID BMM_DITHER_CLASS_ID. No slot ships for this type, and none ever will - the super-class is not open to third-party registration (see this example's README for the SDK-checked reason); this is the shape.
 // Says hello on load through the log sink once a slot hosts it. Links lib/mcpjson.lib only; no SDK.
 #include "CartridgePayloadApi.h"
 #include "Json.h"

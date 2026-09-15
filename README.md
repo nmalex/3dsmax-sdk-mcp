@@ -200,27 +200,45 @@ Two lanes, one behaviour:
 
 ## Barebones examples
 
-**Start here.** [`barebones/`](barebones/) has the smallest working cartridge for every plugin type —
-each one registers, appears where that type appears, and says **hello** in a log line you read back
-with `cartridge_logs`. Fork the one whose type matches what you are building; every example is
-written to be copied, and each carries a README listing **all the SuperClassIDs that slot can bear**.
+**Start here.** [`barebones/`](barebones/) has the smallest working cartridge for every plugin type.
+Each one registers and appears where that type appears, and says **hello** in a log line you read back
+with `cartridge_logs` — most greet as soon as the automated probe drives them; a few report alive on
+load and fire their `Hello World` under a host action (a render, a solve, a panel), which is a property
+of that plugin kind, not a failure. Fork the one whose type matches what you are building; every
+example is written to be copied, and each carries a README listing **all the SuperClassIDs that slot
+can bear**.
+
+**Eighteen slots ship today**, each with a Python and a C++ lane:
 
 | Plugin type | Python | C++ | What it is |
 | --- | --- | --- | --- |
 | Modifier | [python](barebones/modifier/python/slot_modifier.py) | [native](barebones/modifier/native/src/payload.cpp) | reads the mesh, hands it back (`OSM_CLASS_ID`) |
 | Exporter | [python](barebones/exporter/python/slot_exporter.py) | [native](barebones/exporter/native/src/payload.cpp) | formats text the slot writes (`SCENE_EXPORT_CLASS_ID`) |
-| Utility | [python](barebones/utility/python/slot_utility.py) | [native](barebones/utility/native/src/payload.cpp) | a Utilities-panel tool (`UTILITY_CLASS_ID`) |
-| Render effect | [python](barebones/effect/python/slot_effect.py) | [native](barebones/effect/native/src/payload.cpp) | post-processes a rendered frame (`RENDER_EFFECT_CLASS_ID`) |
 | Renderer | [python](barebones/renderer/python/slot_renderer.py) | [native](barebones/renderer/native/src/payload.cpp) | a Choose-Renderer plugin (`RENDERER_CLASS_ID`) |
+| Manipulator | [python](barebones/manipulator/python/slot_manipulator.py) | [native](barebones/manipulator/native/src/payload.cpp) | a viewport gizmo (`HELPER_CLASS_ID`) |
+| Controller | [python](barebones/controller/python/slot_controller.py) | [native](barebones/controller/native/src/payload.cpp) | an animation controller (`CTRL_FLOAT_CLASS_ID`) |
+| UV generator | [python](barebones/uv-generator/python/slot_uvgen.py) | [native](barebones/uv-generator/native/src/payload.cpp) | a texmap UV coordinate source (`UVGEN_CLASS_ID`) |
+| XYZ generator | [python](barebones/xyz-generator/python/slot_xyzgen.py) | [native](barebones/xyz-generator/native/src/payload.cpp) | a texmap XYZ coordinate source (`XYZGEN_CLASS_ID`) |
+| Texture output | [python](barebones/texture-output/python/slot_texoutput.py) | [native](barebones/texture-output/native/src/payload.cpp) | a texmap output filter (`TEXOUTPUT_CLASS_ID`) |
+| AA filter kernel | [python](barebones/aa-filter-kernel/python/slot_filterkernel.py) | [native](barebones/aa-filter-kernel/native/src/payload.cpp) | an anti-aliasing filter (`FILTER_KERNEL_CLASS_ID`) |
+| Radiosity | [python](barebones/radiosity/python/slot_radiosity.py) | [native](barebones/radiosity/native/src/payload.cpp) | an advanced-lighting plugin (`RADIOSITY_CLASS_ID`) |
+| Data Channel engine | [python](barebones/datachannel-engine/python/slot_dcengine.py) | [native](barebones/datachannel-engine/native/src/payload.cpp) | a Data Channel modifier engine (`DATACHANNELENGINE_SUPER_CLASS_ID`) |
+| Render effect | [python](barebones/effect/python/slot_effect.py) | [native](barebones/effect/native/src/payload.cpp) | post-processes a rendered frame (`RENDER_EFFECT_CLASS_ID`) |
 | IK solver | [python](barebones/iksolver/python/slot_iksolver.py) | [native](barebones/iksolver/native/src/payload.cpp) | solves an IK chain (`IK_SOLVER_CLASS_ID`) |
 | Object snap | [python](barebones/osnap/python/slot_osnap.py) | [native](barebones/osnap/native/src/payload.cpp) | a snap in the Snaps settings (`OSNAP_CLASS_ID`) |
-| Manipulator | [python](barebones/manipulator/python/slot_manipulator.py) | [native](barebones/manipulator/native/src/payload.cpp) | a viewport gizmo (`HELPER_CLASS_ID`) |
 | ParticleFlow operator | [python](barebones/pfoperator/python/slot_pfoperator.py) | [native](barebones/pfoperator/native/src/payload.cpp) | a Particle View operator (`HELPER_CLASS_ID`) |
+| Utility | [python](barebones/utility/python/slot_utility.py) | [native](barebones/utility/native/src/payload.cpp) | a Utilities-panel tool (`UTILITY_CLASS_ID`) |
+| Colour picker | [python](barebones/color-picker/python/slot_colpick.py) | [native](barebones/color-picker/native/src/payload.cpp) | a colour selector (`COLPICK_CLASS_ID`) |
+| Video Post filter | [python](barebones/videopost-filter/python/slot_flt.py) | [native](barebones/videopost-filter/native/src/payload.cpp) | a Video Post image filter (`FLT_CLASS_ID`) |
 
-The full index — every type, the SuperClassIDs each bears, and which examples are live-verified — is
-[`barebones/README.md`](barebones/README.md); [`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md)
-is the complete census of every plugin type the SDK declares (which run today, which are templates,
-and which are excluded and why).
+`manipulator` and `pfoperator` share `HELPER_CLASS_ID` and are still different slots — a super-class is
+a property of the class a slot registers, not a bucket that owns slots.
+
+The full index is [`barebones/README.md`](barebones/README.md).
+[`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md) is the complete census of every plugin type
+the SDK declares — which have a slot, which are registerable with a slot on the roadmap, and which can
+never be a third-party slot and why — and [`docs/COVERAGE_MAP.md`](docs/COVERAGE_MAP.md) accounts for
+how each of the 18 is verified.
 
 ## Limitations
 

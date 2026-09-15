@@ -1,4 +1,4 @@
-"""Barebones Bitmap Storage (Python lane) - TEMPLATE, slot pending.
+"""Barebones Bitmap Storage (Python lane) - documents the shape - this super-class is not third-party registerable.
 
 A bitmap storage type - how pixels are held in memory for the bitmap manager.
 

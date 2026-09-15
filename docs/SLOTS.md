@@ -6,39 +6,58 @@ You never build one; you occupy one.
 That is the whole reason this kit needs no 3ds Max SDK, no C++ toolchain for a Python payload, and
 no compiler to produce a working plugin.
 
-## One Slot per plugin type
+## The Slots that ship — 18 today
 
-| Slot | Module | What 3ds Max sees | Where it appears |
-| --- | --- | --- | --- |
-| `modifier` | `ModifierSlot.dlm` | an object-space modifier | the Modifier List |
-| `exporter` | `ExporterSlot.dle` | a scene exporter | File ▸ Export, "Save as type" |
+Each Slot is a compiled 3ds Max plugin of one specific kind. **Eighteen** ship today, so you can build
+a Cartridge for any of these:
 
-**These two are what you can build a Cartridge for. That is the whole list, and it is not a
-policy.** Each Slot is a compiled 3ds Max plugin of one specific kind, so the set is exactly the set
-that has been built — not a subset someone chose to permit. A utility Slot and an importer Slot are
-the expected third and fourth, and neither exists yet.
+| Slot | What 3ds Max sees | Where it appears |
+| --- | --- | --- |
+| `modifier` | an object-space modifier | the Modifier List |
+| `exporter` | a scene exporter | File ▸ Export, "Save as type" |
+| `renderer` | a renderer | the Render Setup dialog |
+| `manipulator` | a viewport manipulator | a helper, editable on the viewport gizmo |
+| `controller` | an animation controller | Track View / Assign Controller |
+| `uv-generator` | a UV coordinate generator | a texmap's Coordinates |
+| `xyz-generator` | an XYZ coordinate generator | a texmap's Coordinates |
+| `texture-output` | a texture output filter | a texmap's Output rollout |
+| `aa-filter-kernel` | an anti-aliasing filter kernel | the renderer's AA filter list |
+| `radiosity` | an advanced-lighting / radiosity plugin | the Advanced Lighting dialog |
+| `datachannel-engine` | a Data Channel modifier engine | the Data Channel modifier |
+| `effect` | a render effect | the Environment & Effects dialog |
+| `iksolver` | an IK solver | the IK solver list |
+| `osnap` | an object snap | the Snaps settings |
+| `pfoperator` | a Particle Flow operator | Particle View |
+| `utility` | a Utilities-panel tool | the Utilities panel |
+| `color-picker` | a colour picker | the colour selector |
+| `videopost-filter` | a Video Post image filter | the Video Post queue |
 
-**The module column is the check, and you can run it.** The release asset stages one file per Slot
-into `Contents\Bin`, so `tools\list-plugins.ps1` against your install answers this table from your
-own disk rather than from this page. If they ever disagree, the disk is right and this is a bug
-worth [reporting](../README.md#reporting-a-bug) — a document that lists a Slot nobody built sends
-you looking for a bug in your payload.
+`manipulator` and `pfoperator` are two different Slots that both register under `HELPER_CLASS_ID` — a
+super-class is a property of the class a Slot registers, not a bucket that owns Slots, so two Slots
+sharing one is normal. [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) is the complete map of every
+plugin type the SDK declares — which have a Slot, which are registerable with a Slot on the roadmap,
+and which can never be a third-party Slot and why; [docs/COVERAGE_MAP.md](COVERAGE_MAP.md) is the
+per-type accounting of how each of the 18 is verified.
 
-3ds Max can be extended in far more ways than these:
+**The install is the check, and you can run it.** The release asset stages one module file per Slot
+into `Contents\Bin` — the modifier as `ModifierSlot.dlm`, the exporter as `ExporterSlot.dle`, and the
+rest under their own fixed names — so `tools\list-plugins.ps1` against your install enumerates the
+Slots you actually have rather than trusting this page. If your disk and this list ever disagree, the
+disk is right and this is a bug worth [reporting](../README.md#reporting-a-bug) — a document that
+lists a Slot nobody built sends you looking for a bug in your payload.
 
-1. geometry objects
-2. helpers
-3. shapes
-4. lights and cameras
-5. materials and texmaps
-6. controllers
-
-None of them is available as a Cartridge today, and asking for one is a reasonable thing to do:
-[ROADMAP.md](../ROADMAP.md) is where they are tracked, and what people ask for is what moves.
+**More kinds are the roadmap, not the whole list.** 3ds Max can be extended in far more ways than the
+18 above — geometry objects, cameras, lights, shapes, materials and texmaps, more controller value
+types, and others. Those are **real, registerable types whose Slots are simply not built yet**, not a
+door that is closed: each is tracked in [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) and on
+[ROADMAP.md](../ROADMAP.md), and asking for one is a legitimate request — what people ask for is what
+moves. (A handful of super-class IDs can *never* be a third-party Slot because the SDK does not let
+anyone register one; the census lists those separately, with the reason for each, so the two are never
+confused.)
 
 **Authoring a new *kind* of Slot yourself is a separate thing** with a different prerequisite — it
 needs the 3ds Max SDK, because a Slot derives from SDK classes the host calls into directly. That
-path is on the roadmap and is not open yet. Writing Cartridges for the three above needs none of it.
+path is on the roadmap and is not open yet. Writing Cartridges for the Slots above needs none of it.
 
 ## One Cartridge per Slot, at a time
 
@@ -79,6 +98,7 @@ not an identity.
     cartridges\
         slot_modifier.py            whatever occupies the modifier Slot
         slot_exporter.py            whatever occupies the exporter Slot
+        ...                         one fixed file name per Slot you occupy
     slots.json                      which Cartridge is in which Slot
 ```
 
