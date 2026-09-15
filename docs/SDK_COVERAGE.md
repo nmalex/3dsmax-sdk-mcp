@@ -7,7 +7,7 @@ modifier or an exporter needs." This page is a status report on how much of the 
 already covers, so you can judge, before writing a line, whether the thing you want to touch is
 already there.
 
-**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.7.1-alpha.1`.
+**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.7.2-alpha.1`.
 
 ## The shape of the facade, in one paragraph
 

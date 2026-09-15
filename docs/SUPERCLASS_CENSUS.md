@@ -52,6 +52,12 @@ whose slots are the ongoing programme.
 Real super-class IDs the SDK declares that the original set missed. Each now has a **template**
 barebones (author shape; slot pending).
 
+> **Registerability is asserted from the header, not host-verified.** Several of these are plausibly
+> internal or legacy — the SDK may refuse a third-party plugin under them in 2026. The bitmap family
+> (`BMM_STORAGE`/`FILTER`/`DITHER`/`COLORCUT`), `Fragment`, `DATACHANNELENGINE`, and the fluid solver
+> are flagged accordingly; any that a live registration is refused for will move to *excluded* with
+> that evidence, not by assumption.
+
 | Type | SuperClassID | Barebones |
 | --- | --- | --- |
 | Video Post image filter | `FLT_CLASS_ID` | [videopost-filter](../barebones/videopost-filter/) |
