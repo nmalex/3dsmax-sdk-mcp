@@ -1,0 +1,22 @@
+{
+    "schema": "cartridge/2",
+    "name": "Soap Bubble",
+    "slug": "soap-bubble",
+    "version": "0.1.0",
+    "slot": "material",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.8"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "soap_bubble",
+        "deployedAs": "slot_material",
+        "native": "native/src/payload.cpp"
+    },
+    "basedOn": "barebones/material",
+    "created": "2026-09-16T20:23:31Z",
+    "generator": "new-cartridge.ps1"
+}

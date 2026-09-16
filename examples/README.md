@@ -9,5 +9,6 @@ shipping slot and is kept working release by release.
 
 | Example | Slot | What it shows |
 | --- | --- | --- |
+| [soap-bubble](soap-bubble/) | `material` | a soap film computed per sample: thin-film interference over 16 wavelengths, in C++ (unmanaged) and a lighter Python look; renders in Scanline, with a demo scene script |
 | [modifier](modifier/) | `modifier` | the former modifier scaffold: a panel and a Hello World button (placeholders, not runnable as is) |
 | [exporter](exporter/) | `exporter` | the former exporter scaffold (placeholders, not runnable as is) |
