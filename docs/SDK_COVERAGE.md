@@ -44,7 +44,7 @@ that a payload cannot hold, and cannot corrupt, anything the host owns.
 | Colour management (OCIO) | pipeline construction and conversion, the active colour-management mode's identity/status/config path | broad |
 | IK | the full `LinkChain` solve context: joint frames, limits, an IK-solver dispatch hook, hosted by the shipping `Cartridge IK Solver` slot | broad |
 | Object Snap | snap-point queries and hit recording, an Osnap dispatch hook, hosted by the shipping `Cartridge Object Snap` slot | broad |
-| Manipulators (viewport gizmos) | building real interactive gizmo geometry, hosted by the shipping `Cartridge Manipulator` slot - whose barebones payload draws a wireframe tetrahedron through these entries (`barebones/manipulator`) | broad |
+| Manipulators (viewport gizmos) | building real interactive gizmo geometry, hosted by the shipping manipulator slot (**Tetra Dummy**) - whose barebones payload draws a wireframe tetrahedron through these entries (`barebones/manipulator`) | broad |
 | Asset management | asset lookup/reference counting, path-config search directories, a working asset-accessor hook | broad |
 | MAXScript integration | a payload can publish a callable global primitive or a typed function interface | full |
 | Modifier/WSM pipeline | the object-space and world-space modifier stack, in both of 3ds Max's own index spaces | broad |

@@ -7,8 +7,10 @@ shapes and to handle mouse interaction; the slot forwards those as `ManipUpdateS
 through the facade - not by the slot. That is the point of the example: the geometry you see in the
 viewport was described by Python, in a cartridge, and nothing here touches the 3ds Max SDK.
 
-WHICH SLOT HOSTS IT, AND THE ONE-SUPERCLASS-MANY-KINDS STORY. The payload the `Cartridge Manipulator`
-slot loads by its fixed module name, `slot_manipulator`. It registers under HELPER_CLASS_ID - the
+WHICH SLOT HOSTS IT, AND THE ONE-SUPERCLASS-MANY-KINDS STORY. The payload the manipulator slot
+loads by its fixed module name, `slot_manipulator`. In the Create panel and in the scene the helper is
+called **Tetra Dummy**, after what it draws; its internal name stays `Cartridge_Manipulator`, which is
+what a script assigns and what a .max file resolves. It registers under HELPER_CLASS_ID - the
 same SuperClassID as a plain helper and a ParticleFlow operator - and is told apart from them only by
 its ClassDesc answering `IsManipulator() == TRUE`. That is why a manipulator is its own slot and its
 own barebones even though it shares a superclass. See this example's README.md.

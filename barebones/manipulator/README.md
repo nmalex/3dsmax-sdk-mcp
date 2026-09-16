@@ -59,7 +59,7 @@ and to handle interaction; the slot forwards those as `ManipUpdateShapes` and `M
 
 | SuperClassID | Base class | What it is | Hello surface | Slot |
 | --- | --- | --- | --- | --- |
-| `HELPER_CLASS_ID` *(as a manipulator: `ClassDesc::IsManipulator() == TRUE`)* | `SimpleManipulator` | a custom viewport gizmo | viewport gizmo + log | **this example** (`Cartridge Manipulator`, `.dlo`) |
+| `HELPER_CLASS_ID` *(as a manipulator: `ClassDesc::IsManipulator() == TRUE`)* | `SimpleManipulator` | a custom viewport gizmo | viewport gizmo + log | **this example** (**Tetra Dummy**, internal name `Cartridge_Manipulator`, `.dlo`) |
 
 ### One SuperClassID, several plugin kinds
 
@@ -87,5 +87,6 @@ index and [`docs/SLOTS.md`](../../docs/SLOTS.md) for how a slot loads a payload 
 2. Put your behaviour in `ManipUpdateShapes`: replace the tetrahedron with your handles, and edit
    the target in `ManipMouse`.
 3. Declare any parameter in `describe_params` — the slot keeps it, saved and animatable.
-4. Create and select the manipulator helper in a viewport, then confirm your log line with
+4. Create and select the **Tetra Dummy** helper (Create > Helpers) in a viewport, then confirm your
+   log line with
    `cartridge_logs -module slot_manipulator`.
