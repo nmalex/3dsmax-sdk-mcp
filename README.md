@@ -156,6 +156,24 @@ another. So you will not get a broken plugin. You will get no plugin.
 
 You will not be left guessing either: `check-prereqs` tells you before you install.
 
+## Read these two first
+
+| | |
+| --- | --- |
+| **[LAW.md](LAW.md)** | what you may never do. Chiefly **LAW-1: a Cartridge calls the facade and never the 3ds Max SDK** - and what to do instead when the facade cannot reach something (you file it, and that is the encouraged move, not a defeat). |
+| **[ESSENTIALS.md](ESSENTIALS.md)** | the practice: Python rather than MAXScript and why, the 3ds Max SDK documentation to read for awareness, and how to enumerate the facade before concluding anything. |
+
+And when you need to know whether the facade reaches something, **ask, do not guess**:
+
+```bash
+python surface/max_facade_surface.py <what you are looking for>
+python surface/max_facade_surface.py --missing
+```
+
+[`surface/`](surface/README.md) is all 5,430 facade entries and every declared gap, generated from
+the same declaration the facade itself is generated from - so it cannot drift from what actually
+ships.
+
 ## The three verbs
 
 **install** — once per machine:

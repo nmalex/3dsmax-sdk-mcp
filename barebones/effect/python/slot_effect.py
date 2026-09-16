@@ -59,13 +59,13 @@ def init(**env):
     before any host action, handing the environment only the slot can see. This is the INIT REPORT: it
     records that the cartridge loaded and the world it loaded into. It is deliberately NOT the
     cartridge's greeting - the greeting is logged only by the cartridge's own behaviour (the body
-    above), so a load report is never mistaken for the thing working. `env` carries: maxRelease, slot,
+    above), so a load report is never mistaken for the thing working. `env` carries: maxRelease, slotName,
     slotVersion, cartridgeAbi, gup."""
     mcp_bootstrap.log(
         "display",
         "%s payload (Python) init on load. Environment: 3ds Max %s, slot v%s, cartridge ABI %s, "
         "gup present=%s. This is the init report, not the cartridge greeting."
-        % (env.get("slot"), env.get("maxRelease"), env.get("slotVersion"),
+        % (env.get("slotName"), env.get("maxRelease"), env.get("slotVersion"),
            env.get("cartridgeAbi"), env.get("gup")))
     return {"ok": True, "acknowledged": dict(env)}
 
@@ -76,5 +76,5 @@ def shutdown(**_env):
     logs the greeting; only the cartridge's own behaviour does that."""
     mcp_bootstrap.log("display",
                       "%s payload (Python) shutdown on slot unload. This is the unload report."
-                      % (_env.get("slot") or "cartridge"))
+                      % (_env.get("slotName") or "cartridge"))
     return {"ok": True}
