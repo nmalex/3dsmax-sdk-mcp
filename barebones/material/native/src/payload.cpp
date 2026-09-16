@@ -195,6 +195,19 @@ MaxMcpPayloadResult PayloadCall(void*, const char* Function, const char* Argumen
     }
     JsonValue Reply = JsonValue::Object();
     Reply.Set("ok", JsonValue::Bool(true));
+    {
+        // The viewport's colour: the slot shows it in the shaded viewport, where no per-sample
+        // call is made. The same hue and base the per-sample shading starts from.
+        const JsonValue& P = Args.At("params");
+        float Rgb[3];
+        Hsv(static_cast<float>(P.At("hue").AsNumber(0.58)), 0.75f,
+            static_cast<float>(P.At("base").AsNumber(0.8)), Rgb);
+        JsonValue Colour = JsonValue::Array();
+        for (float C : Rgb) { Colour.Push(JsonValue::Number(C)); }
+        JsonValue Result = JsonValue::Object();
+        Result.Set("color", Colour);
+        Reply.Set("result", Result);
+    }
     if (Args.At("event").At("probe").AsNumber(0.0) == 0.0)
     {
         static bool bSaid = false;

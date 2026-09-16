@@ -55,10 +55,19 @@ python surface/max_facade_surface.py --missing sampler
 
 ## See it work
 
+**The quickest way:** run [`../material_family_demo.py`](../material_family_demo.py) in 3ds Max. It
+builds one scene that uses all four material-family cartridges, animates them over three frames,
+and renders the result. See [the barebones index](../README.md) for what to look for. To try this
+one by hand:
+
 1. A Standard material → *SuperSampling* → clear **Use Global Settings**, tick **Enable Local
    Supersampler**, pick **Cartridge Sampler**.
 2. Render a high-contrast edge (the Texture Map barebones at a grazing angle) with `grid` 4, then
    `grid` 1: the difference is the sampler working.
+
+**Keyed Quality has no effect.** The Standard material passes Quality to its sampler only when
+the value is set, not on each frame, so an animated `samplerQuality` reaches no sampler, built-in
+ones included. To vary the sampling over time, key this cartridge's `grid` instead.
 
 ## What plugin type this is
 

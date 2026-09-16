@@ -2,13 +2,13 @@
     "schema": "cartridge/2",
     "name": "Barebones Material",
     "slug": "barebones-material",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "slot": "material",
     "requires": {
         "max": [
             2026
         ],
-        "plugin": "0.8.0-alpha.6"
+        "plugin": "0.8.0-alpha.7"
     },
     "payload": {
         "lane": "python",

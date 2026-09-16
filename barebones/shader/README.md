@@ -55,8 +55,22 @@ python surface/max_facade_surface.py --missing shader
 
 ## See it work
 
+**The quickest way:** run [`../material_family_demo.py`](../material_family_demo.py) in 3ds Max. It
+builds one scene that uses all four material-family cartridges, animates them over three frames,
+and renders the result. See [the barebones index](../README.md) for what to look for. To try this
+one by hand:
+
 1. A **Standard** material, Diffuse white → *Shader Basic Parameters* → **Cartridge Shader**.
 2. Assign to a Teapot and render: the teapot comes out in the tint colour.
+
+**In the viewport.** The Standard viewport preset shows the material's Diffuse colour and maps. The
+High Quality preset draws a Standard material whose shader is not one that ships with 3ds Max as flat
+white, whatever its colour and maps. The shader cannot change that; renders are unaffected. Use the
+Standard preset to see the shader in the viewport. The tint itself shows only in a render.
+
+**Its Standard parameters** (`ambient`, `diffuse`, `specular`, `glossiness`, `specularLevel`,
+`soften`, `selfIllumAmount`, `selfIllumColor`) are animatable and scriptable like Blinn's:
+`$.material.diffuse = red`, keyed from Auto Key, visible in Track View.
 
 ## What plugin type this is
 

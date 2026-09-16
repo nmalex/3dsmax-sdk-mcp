@@ -83,6 +83,25 @@ C++ lane runs **unmanaged** (pinned, called per sample through an opaque handle 
 | Shader | `SHADER_CLASS_ID` | a tinted Lambert (wrap + rim, native) | [shader/python](shader/python/slot_shader.py) | [shader/native](shader/native/src/payload.cpp) |
 | Sampler | `SAMPLER_CLASS_ID` | a stratified, jittered supersample | [sampler/python](sampler/python/slot_sampler.py) | [sampler/native](sampler/native/src/payload.cpp) |
 
+**Test all four in one scene: [`material_family_demo.py`](material_family_demo.py).** Run it in 3ds Max
+(*Scripting > Run Script…*) and it builds a new scene — offering to save yours first — with:
+
+- a floor carrying the Texture Map;
+- a teapot with the Material, and one with the Shader;
+- two long checkered strips with a low camera looking down them, one plain and one using the Sampler;
+- a three-frame animation (frames 0–2) keyed on each cartridge's own parameters.
+
+It sets Scanline as the renderer, saves `cartridge_demo.max`, and renders the three frames plus the
+sampler view into your render-output folder. What you should see:
+
+- **Frame 0 → 1 → 2:** the material goes red → green → blue, the shader tint goes
+  orange → cyan → magenta, and the floor checker goes from 4 to 8 to 12 tiles.
+- **Sampler view:** the plain strip breaks into moiré toward the horizon, while the Cartridge
+  Sampler strip settles to grey.
+
+It uses only parameters both lanes declare, so the same scene tests the Python lane (managed) and,
+with the native DLLs deployed, the C++ lane (unmanaged). Render it once each way and compare.
+
 The barebones directory also carries an example for plugin types that do **not** ship a slot, so the
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:

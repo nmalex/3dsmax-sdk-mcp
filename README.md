@@ -285,7 +285,7 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 
 ## Status
 
-`0.8.0-alpha.6`. [STATUS.md](STATUS.md) says which parts work today and
+`0.8.0-alpha.7`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Reporting a bug
