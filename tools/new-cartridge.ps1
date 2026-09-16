@@ -276,12 +276,24 @@ $SourceNative = Join-Path $SourceRoot 'native'
 if (Test-Path -LiteralPath $SourceNative) {
     New-Item -ItemType Directory -Path (Join-Path $SourceDir 'native\src') -Force | Out-Null
 
-    $PropsSource = Join-Path $SourceRoot 'Version.props'
-    if (Test-Path -LiteralPath $PropsSource) {
-        $PropsPath = Join-Path $SourceDir 'Version.props'
-        Copy-Item -LiteralPath $PropsSource -Destination $PropsPath
-        [void]$Written.Add($PropsPath)
-    }
+    # THE CARTRIDGE'S OWN VERSION, written fresh. Copying the barebones' Version.props gave every new
+    # cartridge the barebones' version, disagreeing with the manifest written above.
+    $PropsPath = Join-Path $SourceDir 'Version.props'
+    $Props = @"
+<?xml version="1.0" encoding="utf-8"?>
+<!-- THE version for this cartridge. The native payload project reads it to stamp its binary and its
+     About line. MSBuild cannot read JSON, so it lives here AND in cartridge.json: change both
+     together, on every pull request, with the row in the library index. tools\check-cartridges.ps1
+     refuses the two disagreeing. -->
+<Project>
+  <PropertyGroup Label="Version">
+    <CartridgeVersion>$($Manifest.version)</CartridgeVersion>
+    <CartridgeVersionComma>0,1,0,0</CartridgeVersionComma>
+  </PropertyGroup>
+</Project>
+"@
+    [System.IO.File]::WriteAllText($PropsPath, $Props, $Utf8)
+    [void]$Written.Add($PropsPath)
 
     # A fresh project GUID. Never reused from the barebones: two projects sharing one guid confuse
     # every tool that keys off it, and the confusion appears as builds that quietly do the wrong

@@ -163,6 +163,19 @@ foreach ($Dir in (Get-ChildItem -LiteralPath $CartridgeRoot -Directory -ErrorAct
         Note $Name "version '$Version' is not MAJOR.MINOR.PATCH" 'e.g. 0.1.0, or 0.1.0-dev while you work.'
     }
 
+    # -- Version.props and cartridge.json state one version ------------------------------------------
+    # A native lane stamps its binary from Version.props; the library reads cartridge.json. Two files
+    # by necessity, one fact - and a scaffolder once copied a barebones' Version.props verbatim, so a
+    # new cartridge reported someone else's version.
+    $PropsFile = Join-Path $Dir.FullName 'Version.props'
+    if ($Manifest -and $Manifest.version -and (Test-Path -LiteralPath $PropsFile)) {
+        $PropsText = Get-Content -LiteralPath $PropsFile -Raw
+        if ($PropsText -match '<CartridgeVersion>([^<]*)</CartridgeVersion>' -and $Matches[1].Trim() -ne [string]$Manifest.version) {
+            Note $Name "Version.props says $($Matches[1].Trim()); cartridge.json says $($Manifest.version)" `
+                 'They are one fact in two files. Set both to the same version.'
+        }
+    }
+
     # -- a README, because a contribution has to be reviewable ------------------------------------------
     $Readme = Join-Path $Dir.FullName 'README.md'
     if (-not (Test-Path -LiteralPath $Readme)) {
