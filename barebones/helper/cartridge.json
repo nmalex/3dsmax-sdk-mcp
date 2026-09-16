@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Helper",
+    "slug": "barebones-helper",
+    "version": "0.1.0",
+    "slot": "helper",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.9"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_helper",
+        "deployedAs": "slot_helper"
+    },
+    "created": "2026-09-16",
+    "generator": "barebones"
+}

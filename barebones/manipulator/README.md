@@ -18,6 +18,12 @@ announce once per load — readable with `cartridge_logs -module slot_manipulato
 reports the draw: *"drew a wireframe tetrahedron: 4 polyline run(s)…"*, so the geometry is verifiable
 from the log and not only by looking.
 
+## See it work
+
+**The quickest way:** run [`../tetra_demo.py`](../tetra_demo.py) in 3ds Max. It places a Tetra
+Dummy and a Tetra Helper side by side, labelled, under a camera, and saves a capture of the
+viewport - the two tetras are easiest to tell apart next to each other.
+
 ## How each lane reaches the facade
 
 This is the clearest example in the kit of the one real difference between the lanes:
