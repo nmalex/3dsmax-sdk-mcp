@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Sampler",
+    "slug": "barebones-sampler",
+    "version": "0.1.0",
+    "slot": "sampler",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.6"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_sampler",
+        "deployedAs": "slot_sampler"
+    },
+    "created": "2026-09-16",
+    "generator": "barebones"
+}

@@ -6,9 +6,9 @@ You never build one; you occupy one.
 That is the whole reason this kit needs no 3ds Max SDK, no C++ toolchain for a Python payload, and
 no compiler to produce a working plugin.
 
-## The Slots that ship — 18 today
+## The Slots that ship — 22 today
 
-Each Slot is a compiled 3ds Max plugin of one specific kind. **Eighteen** ship today, so you can build
+Each Slot is a compiled 3ds Max plugin of one specific kind. **Twenty-two** ship today, so you can build
 a Cartridge for any of these:
 
 | Slot | What 3ds Max sees | Where it appears |
@@ -31,24 +31,29 @@ a Cartridge for any of these:
 | `utility` | a Utilities-panel tool | the Utilities panel |
 | `color-picker` | a colour picker | the colour selector |
 | `videopost-filter` | a Video Post image filter | the Video Post queue |
+| `texmap` | a texture map (**Cartridge Texture Map**) | the Material/Map Browser, under *MCP Cartridges* |
+| `material` | a material (**Cartridge Material**) | the Material/Map Browser, under *MCP Cartridges* |
+| `shader` | a Standard-material shading model (**Cartridge Shader**) | the Standard material's Shader list |
+| `sampler` | a supersampler (**Cartridge Sampler**) | the Standard material's SuperSampling rollout |
 
 `manipulator` and `pfoperator` are two different Slots that both register under `HELPER_CLASS_ID` — a
 super-class is a property of the class a Slot registers, not a bucket that owns Slots, so two Slots
 sharing one is normal. [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) is the complete map of every
 plugin type the SDK declares — which have a Slot, which are registerable with a Slot on the roadmap,
 and which can never be a third-party Slot and why; [docs/COVERAGE_MAP.md](COVERAGE_MAP.md) is the
-per-type accounting of how each of the 18 is verified.
+per-type accounting of how each of the 22 is verified.
 
 **The install is the check, and you can run it.** The release asset stages one module file per Slot
 into `Contents\Bin` — the modifier as `ModifierSlot.dlm`, the exporter as `ExporterSlot.dle`, and the
-rest under their own fixed names — so `tools\list-plugins.ps1` against your install enumerates the
+rest under their own fixed names (the texture map as `TexmapSlot.dlt`, the material as
+`MaterialSlot.dlt`, the shader as `ShaderSlot.dlb`, the sampler as `SamplerSlot.dlh`) — so `tools\list-plugins.ps1` against your install enumerates the
 Slots you actually have rather than trusting this page. If your disk and this list ever disagree, the
 disk is right and this is a bug worth [reporting](../README.md#reporting-a-bug) — a document that
 lists a Slot nobody built sends you looking for a bug in your payload.
 
 **More kinds are the roadmap, not the whole list.** 3ds Max can be extended in far more ways than the
-18 above — geometry objects, cameras, lights, shapes, materials and texmaps, more controller value
-types, and others. Those are **real, registerable types whose Slots are simply not built yet**, not a
+22 above — geometry objects, cameras, lights, shapes, atmospherics, more controller value types, and
+others. Those are **real, registerable types whose Slots are simply not built yet**, not a
 door that is closed: each is tracked in [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) and on
 [ROADMAP.md](../ROADMAP.md), and asking for one is a legitimate request — what people ask for is what
 moves. (A handful of super-class IDs can *never* be a third-party Slot because the SDK does not let
@@ -138,6 +143,10 @@ build, which lanes are loaded, Refresh) beside it. The same controls, the same e
 | `aa-filter-kernel` | Render Setup, under the anti-aliasing filter | yes | no |
 | `renderer` | Render Setup (not the in-render progress dialog) | yes | no |
 | `texture-output`, `uv-generator`, `xyz-generator` | the Material Editor | yes | no |
+| `texmap` | the Material Editor, below the map's **Coordinates** rollout | yes | **yes** — saved, animatable, `$.<name>` |
+| `material` | the Material Editor, as the material's own rollout | yes | **yes** — saved, animatable, `$.<name>` |
+| `shader` | the Standard material's shader rollout: the Slot's About replaces the previous shader's page, your panel sits beside it | yes | **yes** — saved, animatable, `$.<name>` |
+| `sampler` | the Standard material's SuperSampling rollout, as its **Setup** dialog (modal); the rollout's Quality and Enable arrive in `params` as `quality` and `enabled` | yes | **yes** — saved, animatable, `$.<name>` |
 | `videopost-filter` | Video Post's **Setup** button (a modal dialog); **About** shows the Slot's facts | yes | no |
 | `exporter` | File > Export's options dialog; **About** shows the Slot's facts | **no** — see below | no |
 | `color-picker`, `osnap`, `iksolver`, `fragment` | **no UI place** — the picker *is* the dialog; a snap is listed by name; the SDK gives a solver no UI hook; a render fragment has no UI | — | — |
@@ -151,16 +160,17 @@ workaround — see [REPORTING.md](REPORTING.md).
 
 ### The functions each Slot calls
 
-| Function | `modifier` | `manipulator` | other UI slots (above) | `exporter` | When it is called |
-| --- | --- | --- | --- | --- | --- |
-| `describe_ui(params)` | yes | yes | yes | yes | when the panel opens, and on every Refresh. Exporter: opening the export options dialog |
-| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | yes | yes | **no** | when a control on your panel changed |
-| `describe_params()` | yes | yes | no | **no** | on load / creation and on every Refresh — declares parameters the Slot then keeps. Needs `0.4.0-alpha.3` (modifier) / `0.8.0-alpha.5` (manipulator) or newer |
-| `deform(points, box, tm, params)` | yes | — | — | — | every evaluation of the modifier stack |
-| `ManipUpdateShapes(event, slot, params)` | — | yes | — | — | whenever the gizmo is rebuilt (display, a parameter change). `params` since `0.8.0-alpha.5` |
-| `ManipMouse(event, slot, params)` | — | yes | — | — | pressing / dragging / releasing the gizmo in **Select and Manipulate** mode. **Not** the creation click — the Slot places the helper where you click |
-| `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | — | — | yes | once per export, per node, per group, per scene |
-| `declare_callbacks()` | yes | **no** | **no** | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
+| Function | `modifier` | `manipulator` | `texmap` `material` `shader` `sampler` | other UI slots (above) | `exporter` | When it is called |
+| --- | --- | --- | --- | --- | --- | --- |
+| `describe_ui(params)` | yes | yes | yes | yes | yes | when the panel opens, and on every Refresh. Exporter: opening the export options dialog |
+| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | yes | yes | yes | **no** | when a control on your panel changed |
+| `describe_params()` | yes | yes | yes | no | **no** | on load / creation and on every Refresh — declares parameters the Slot then keeps. Needs `0.4.0-alpha.3` (modifier) / `0.8.0-alpha.5` (manipulator) / `0.8.0-alpha.6` (material family) or newer |
+| `deform(points, box, tm, params)` | yes | — | — | — | — | every evaluation of the modifier stack |
+| `ManipUpdateShapes(event, slot, params)` | — | yes | — | — | — | whenever the gizmo is rebuilt (display, a parameter change). `params` since `0.8.0-alpha.5` |
+| `ManipMouse(event, slot, params)` | — | yes | — | — | — | pressing / dragging / releasing the gizmo in **Select and Manipulate** mode. **Not** the creation click — the Slot places the helper where you click |
+| `TexmapUpdate` / `MtlUpdate` / `ShaderUpdate` / `SamplerRenderBegin` | — | — | yes, one each | — | — | on the main thread, before sampling — the managed answer; see [the table below](#managed-and-unmanaged-per-sample-slots) |
+| `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | — | — | — | yes | once per export, per node, per group, per scene |
+| `declare_callbacks()` | yes | **no** | **no** | **no** | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
 
 **Every callback carries `slot`** — the facade table's address, for `mcp_facade.from_address(slot)` —
 and the ones marked above also carry `params`. `slot` means the facade address in every entry point;
@@ -173,6 +183,41 @@ and a *misspelled* one behave identically — check the spelling before you chec
 **`max_cartridge_refresh` names the exports it actually found.** Call it and read the list: a
 function you wrote that is not in it never made it into the module, and a function that is in it but
 never runs is not being asked for. Those are two different bugs and this is what separates them.
+
+### Managed and unmanaged per-sample slots
+
+The four material-family Slots — `texmap`, `material`, `shader`, `sampler` — are asked for an answer at
+every shading sample (every pixel, for a sampler), on the renderer's own threads, millions of times a
+frame. A Python call there would be the wrong cost and would block on the interpreter, so **Python
+never runs per sample**. Each of these Slots runs in one of two modes, chosen when it loads:
+
+- **Managed** — the default, and the mode of every Python cartridge. At its update call, on the main
+  thread, the cartridge returns **data**, and the Slot evaluates that data natively per sample.
+- **Unmanaged** — a native payload that exports `MaxMcpGetUnmanaged`. The Slot calls the payload per
+  sample with an **opaque handle**; the payload reads the sample through the facade's `ShadeSample*`
+  entries (`ShadeSampleRead`, `ShadeSampleUVW`, `ShadeSampleAmbient`, `ShadeSampleLight`,
+  `ShadeSampleIllumRead`, `ShadeSampleTakeSample`) and returns floats the Slot writes back. Those
+  entries answer only inside the per-sample call, with the handle it was given.
+
+| Slot | Managed call | What it returns | How the Slot evaluates it | Unmanaged per-sample call |
+| --- | --- | --- | --- | --- |
+| `texmap` | `TexmapUpdate` | `image` — `{width, height, rgb[]}` | nearest texel by UV, tiled | `TexmapColor` / `TexmapMono` / `TexmapBump` |
+| `material` | `MtlUpdate` | `color` — `[r, g, b]` | lit by the scene's lights plus ambient (Lambert) | `MtlShade` |
+| `shader` | `ShaderUpdate` | `tint` — `[r, g, b]` | a Lambert term over the lights, times the tint | `ShaderIllum` |
+| `sampler` | `SamplerRenderBegin` | `pattern` — `[[x, y], ...]`, up to 64 positions | takes exactly those samples in each pixel and averages | `SamplerSample` |
+
+**Unmanaged is not SDK access.** The payload includes no 3ds Max header, holds no Max pointer and never
+casts the handle — [LAW.md](../LAW.md) applies unchanged. What unmanaged changes:
+
+- the native payload is **pinned** once loaded — no hot swap; restart 3ds Max to replace or remove it;
+- the Python lane is **refused** for that Slot while the native payload is there;
+- the native lane must itself answer `describe_params`, `describe_ui` and `on_ui_event`;
+- a fault in the per-sample call becomes the Slot's neutral answer, reported once.
+
+Both modes are verified live in 3ds Max 2026 with the Scanline renderer. The barebones for each Slot
+([texmap](../barebones/texmap/README.md), [material](../barebones/material/README.md),
+[shader](../barebones/shader/README.md), [sampler](../barebones/sampler/README.md)) ship one lane in
+each mode and say which `ShadeSample*` entries the native lane uses.
 
 ### The exporter has a panel, but no events
 

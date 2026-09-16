@@ -226,7 +226,7 @@ of that plugin kind, not a failure. Fork the one whose type matches what you are
 example is written to be copied, and each carries a README listing **all the SuperClassIDs that slot
 can bear**.
 
-**Eighteen slots ship today**, each with a Python and a C++ lane:
+**Twenty-two slots ship today**, each with a Python and a C++ lane:
 
 | Plugin type | Python | C++ | What it is |
 | --- | --- | --- | --- |
@@ -248,15 +248,26 @@ can bear**.
 | Utility | [python](barebones/utility/python/slot_utility.py) | [native](barebones/utility/native/src/payload.cpp) | a Utilities-panel tool (`UTILITY_CLASS_ID`) |
 | Colour picker | [python](barebones/color-picker/python/slot_colpick.py) | [native](barebones/color-picker/native/src/payload.cpp) | a colour selector (`COLPICK_CLASS_ID`) |
 | Video Post filter | [python](barebones/videopost-filter/python/slot_flt.py) | [native](barebones/videopost-filter/native/src/payload.cpp) | a Video Post image filter (`FLT_CLASS_ID`) |
+| Texture map | [python](barebones/texmap/python/slot_texmap.py) | [native](barebones/texmap/native/src/payload.cpp) | a map for a material's map slot — colour, mono, bump (`TEXMAP_CLASS_ID`) |
+| Material | [python](barebones/material/python/slot_material.py) | [native](barebones/material/native/src/payload.cpp) | a material the renderer asks to shade every sample (`MATERIAL_CLASS_ID`) |
+| Shader | [python](barebones/shader/python/slot_shader.py) | [native](barebones/shader/native/src/payload.cpp) | a shading model in the Standard material's Shader list (`SHADER_CLASS_ID`) |
+| Sampler | [python](barebones/sampler/python/slot_sampler.py) | [native](barebones/sampler/native/src/payload.cpp) | a supersampler in the Standard material's SuperSampling rollout (`SAMPLER_CLASS_ID`) |
 
 `manipulator` and `pfoperator` share `HELPER_CLASS_ID` and are still different slots — a super-class is
 a property of the class a slot registers, not a bucket that owns slots.
+
+The four material-family slots — texture map, material, shader, sampler — are asked for an answer at
+every shading sample, so Python never runs per sample. A Python cartridge runs **managed**: it returns
+data once (an image, a colour, a tint, a sub-pixel pattern) and the slot evaluates it natively. A
+native payload exporting `MaxMcpGetUnmanaged` runs **unmanaged**: the slot calls it per sample with an
+opaque handle it reads through the facade's `ShadeSample*` entries — still no 3ds Max header, no raw
+pointer. See [docs/SLOTS.md](docs/SLOTS.md#managed-and-unmanaged-per-sample-slots).
 
 The full index is [`barebones/README.md`](barebones/README.md).
 [`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md) is the complete census of every plugin type
 the SDK declares — which have a slot, which are registerable with a slot on the roadmap, and which can
 never be a third-party slot and why — and [`docs/COVERAGE_MAP.md`](docs/COVERAGE_MAP.md) accounts for
-how each of the 18 is verified.
+how each of the 22 is verified.
 
 ## Limitations
 
@@ -274,7 +285,7 @@ every rule over the protocol alone. The copies in `docs/` ship beside the binary
 
 ## Status
 
-`0.7.2-alpha.1`. [STATUS.md](STATUS.md) says which parts work today and
+`0.8.0-alpha.6`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Reporting a bug

@@ -7,7 +7,7 @@ modifier or an exporter needs." This page is a status report on how much of the 
 already covers, so you can judge, before writing a line, whether the thing you want to touch is
 already there.
 
-**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.8.0-alpha.5`.
+**Version this reflects:** ABI 189, 5436 facade entries, current as of `v0.8.0-alpha.6`.
 
 > **This page is prose. For the machine-readable answer, use [`surface/`](../surface/README.md)** -
 > every entry by name, shape and purpose, plus the declared list of what is factually missing and
@@ -36,6 +36,7 @@ that a payload cannot hold, and cannot corrupt, anything the host owns.
 | Meshes, Editable Poly, Editable Mesh | verts, faces, normals, UVs, vertex colours, sub-object selection, chamfer/bridge/cut/turn-diagonal edit verbs | broad |
 | Splines / shapes | line and spline read/write, per-knot access, closed/open, bezier handles | broad |
 | Materials and maps | Standard/Multi material trees, texmaps, shaders, samplers, UV generators, the standard-material family | broad |
+| Per-sample shading | the `ShadeSample*` family — `ShadeSampleRead` (position, normal, view, time, material id, lights count), `ShadeSampleUVW`, `ShadeSampleAmbient`, `ShadeSampleLight`, `ShadeSampleIllumRead` (a Standard material's textured shader inputs), `ShadeSampleTakeSample` — read through an opaque handle inside an unmanaged per-sample call, hosted by the shipping `Cartridge Texture Map`, `Cartridge Material`, `Cartridge Shader` and `Cartridge Sampler` slots | the per-sample reads those four slots need |
 | Controllers and animation | keys, ranges, ORTs, IK joints and limits, the parameter-block family, the undo system | broad |
 | Cameras and lights | targeted/free cameras, all standard light types, exclusion lists | broad |
 | NURBS | CV surfaces and curves, the full set of dependent surface/curve types, trim/texture/set-ops, object creation | broad (a large, separate build in its own right) |
@@ -57,15 +58,10 @@ shapes), not a vague gap.
 
 ## What deliberately stays out of a Cartridge's reach
 
-Four things do not fit the facade's own safety rule — a payload can be swapped live under a running
+Three things do not fit the facade's own safety rule — a payload can be swapped live under a running
 host, so it may never hold a raw pointer into the SDK across a call — and are handled as **trades**,
 not gaps:
 
-- **Per-pixel shading** (a material's own `Shade`/`EvalColor`, a shader's `Illum`, a sampler's
-  `DoSample`). The call rate is too high and the object too transient for a safe handle to make
-  sense. The escape hatch: assemble and drive **stock materials** (Standard, Multi, the whole
-  `StdMat` family) through the facade instead of writing per-pixel math yourself — most real
-  material work is exactly that.
 - **A live GPU device handle** (`IDirect3DDevice9*` and similar). There is no safe, portable
   projection for a raw graphics-device pointer.
 - **Direct hardware I/O** (a joystick, a MIDI controller, a raw keyboard device) for motion-capture
@@ -76,12 +72,21 @@ not gaps:
   native bounds-tree, tablet pressure) — the *consuming* side (querying an existing painter
   interface) is covered; providing a new native paint surface is not.
 
-None of these four is a "we have not gotten to it yet." Each is a considered trade, made because the
+None of these three is a "we have not gotten to it yet." Each is a considered trade, made because the
 alternative would be unsafe by the facade's own rule, not because the SDK is hard to reach.
+
+**Per-pixel shading used to be on this list, and no longer is.** A material's `Shade`, a texture
+map's `EvalColor`, a shader's `Illum` and a sampler's `DoSample` are now reachable without breaking
+the rule: the `texmap`, `material`, `shader` and `sampler` Slots run a Python cartridge **managed**
+(it returns data once; the Slot evaluates it per sample) and a native payload exporting
+`MaxMcpGetUnmanaged` **unmanaged** (the Slot calls it per sample with an opaque handle it reads
+through the `ShadeSample*` entries above — no SDK header, no pointer). See
+[SLOTS.md](SLOTS.md#managed-and-unmanaged-per-sample-slots). Driving **stock materials** (Standard,
+Multi, the `StdMat` family) through the facade remains the shorter path for most material work.
 
 ## Where the header ends and your own Slot begins
 
 Everything above is reachable **from a Cartridge you write today**, inside whichever Slot kind hosts
-it (currently Modifier or Exporter — see [SLOTS.md](SLOTS.md)). Whether the SDK area you want *lives*
+it (any of the 22 that ship — see [SLOTS.md](SLOTS.md)). Whether the SDK area you want *lives*
 in a new plugin kind rather than being callable from an existing one is a separate question — see
 [PLUGIN_TYPES.md](PLUGIN_TYPES.md) for that.

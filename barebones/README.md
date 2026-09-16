@@ -1,7 +1,7 @@
 # Barebones — a hello-world cartridge for every plugin type
 
 **This is the starting point.** Each folder here is the smallest cartridge for one 3ds Max plugin
-type. For the eighteen types with a shipping slot it **registers, appears where that type appears, and
+type. For the twenty-two types with a shipping slot it **registers, appears where that type appears, and
 says hello** — a log line (and, for single-shot types, a message box) you read back with
 `cartridge_logs`; it does nothing else, on purpose, so an inert cartridge proves the whole crossing
 works *before* your behaviour is in the way of reading the result. A handful of other folders document
@@ -62,16 +62,32 @@ and `pfoperator` examples are that story.
 
 ## The rest of the census — the other plugin types
 
-The nine above are the core gallery, but **eighteen slots ship and run** in all. The other nine
-shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
+The nine above are the core gallery, but **twenty-two slots ship and run** in all. The other
+thirteen shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
 `texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
-`videopost-filter` — each with its own `README.md` and both lanes.
+`videopost-filter`, and the four per-sample kinds below — each with its own `README.md` and both
+lanes.
+
+### The per-sample kinds — they draw something real
+
+A material, a texture map, a Standard-material shader and a sampler are called by the renderer at
+every sample, so their barebones do not stop at hello: each renders something you can check. The
+Python lane runs **managed** (it returns data at update time, the slot evaluates it per sample); the
+C++ lane runs **unmanaged** (pinned, called per sample through an opaque handle and the
+`ShadeSample*` facade entries — still no SDK). See [`docs/SLOTS.md`](../docs/SLOTS.md).
+
+| Plugin type | SuperClassID | What it renders | Python | C++ |
+| --- | --- | --- | --- | --- |
+| Texture map | `TEXMAP_CLASS_ID` | a checker | [texmap/python](texmap/python/slot_texmap.py) | [texmap/native](texmap/native/src/payload.cpp) |
+| Material | `MATERIAL_CLASS_ID` | a lit colour (+ rim, native) | [material/python](material/python/slot_material.py) | [material/native](material/native/src/payload.cpp) |
+| Shader | `SHADER_CLASS_ID` | a tinted Lambert (wrap + rim, native) | [shader/python](shader/python/slot_shader.py) | [shader/native](shader/native/src/payload.cpp) |
+| Sampler | `SAMPLER_CLASS_ID` | a stratified, jittered supersample | [sampler/python](sampler/python/slot_sampler.py) | [sampler/native](sampler/native/src/payload.cpp) |
 
 The barebones directory also carries an example for plugin types that do **not** ship a slot, so the
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:
 
-- **Has a slot — ships and runs.** The eighteen above.
+- **Has a slot — ships and runs.** The twenty-two above.
 - **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
   slot is not built yet — a legitimate roadmap request. These have no directory here; the census
   lists them.

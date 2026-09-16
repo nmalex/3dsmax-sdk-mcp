@@ -1,27 +1,27 @@
 # Coverage map — every authored plugin type, and why each is where it is
 
-This kit authors a hello‑world barebone for **27** 3ds Max plugin types (the super‑class census, FR‑0002).
-Not all 27 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
+This kit authors a hello‑world barebone for **31** 3ds Max plugin types (the super‑class census, FR‑0002).
+Not all 31 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
 slot can only exist for a super‑class a third party can register a `ClassDesc` under, and only ships
-once its hello is verifiable. This page accounts for all 27 so you never have to wonder why one is
+once its hello is verifiable. This page accounts for all 31 so you never have to wonder why one is
 missing — every row is classified, and the classification is pinned to the super-class census and enforced by an anti-drift
 check in the factory, which fails the build if any of this drifts.
 
-**27 = 18 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
+**31 = 22 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
 
 ---
 
-## 18 types with a shipped slot
+## 22 types with a shipped slot
 
-Each registers a real plugin under its super‑class. **Every one of the 18 reports itself on load**: the
+Each registers a real plugin under its super‑class. **Every one of the 22 reports itself on load**: the
 slot calls its cartridge’s `init(env)` the moment 3ds Max loads the slot — handing over the environment
 it alone can see (the running Max release, the slot’s own version, the cartridge ABI, whether the server
-is present) — and calls `shutdown` on unload. So a freshly installed host shows all 18 cartridges having
+is present) — and calls `shutdown` on unload. So a freshly installed host shows all 22 cartridges having
 logged their init report before any host action; `init` reports init and `shutdown` reports unload — the
 `Hello World` **greeting** is logged only by the cartridge’s own behaviour, never by init, so a load
 report is never mistaken for the plugin actually working.
 
-On top of that load‑time proof, the greeting itself is checked two ways. **11 are greeting‑verified
+On top of that load‑time proof, the greeting itself is checked two ways. **15 are greeting‑verified
 automatically** — the probe drives the plugin and sees its own `Hello World`. **7 have their greeting
 behind a host/UI action** a headless probe cannot synthesise (a render pass, an IK solve, an interactive
 snap, a live particle sim, a panel, a modal, a Video Post execute); those ship **verified alive on load**
@@ -40,6 +40,10 @@ snap, a live particle sim, a panel, a modal, a Video Post execute); those ship *
 | aa‑filter‑kernel | `FILTER_KERNEL_CLASS_ID` | ✅ greeting driven |
 | radiosity | `RADIOSITY_CLASS_ID` | ✅ greeting driven |
 | datachannel‑engine | `DATACHANNELENGINE_SUPER_CLASS_ID` | ✅ greeting driven |
+| texmap | `TEXMAP_CLASS_ID` | ✅ greeting driven |
+| material | `MATERIAL_CLASS_ID` | ✅ greeting driven |
+| shader | `SHADER_CLASS_ID` | ✅ greeting driven |
+| sampler | `SAMPLER_CLASS_ID` | ✅ greeting driven |
 | effect | `RENDER_EFFECT_CLASS_ID` | 🔵 alive on load · greeting: render with the effect |
 | iksolver | `IK_SOLVER_CLASS_ID` | 🔵 alive on load · greeting: solve a chain |
 | osnap | `OSNAP_CLASS_ID` | 🔵 alive on load · greeting: interactive snap |
