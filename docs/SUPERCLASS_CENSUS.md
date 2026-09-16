@@ -8,7 +8,7 @@ not hand-curated, and a build gate fails if a new SDK super-class ever appears w
 Read this to answer *"what are all the plugin types, which can I occupy today, and — if I cannot — is
 that a roadmap item or a fact of the SDK?"* That last distinction is the one that matters most, and it
 is spelled out below so a missing type is never mistaken for an oversight. For the per-type
-verification detail behind the 18 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
+verification detail behind the 22 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
 
 ## `Class_ID` vs `SuperClassID` — the two numbers, and why people conflate them
 
@@ -34,7 +34,7 @@ the whole point of this page** — from the outside they look alike (no differen
 either) but they are opposite in meaning.
 
 - **Has a slot — ✅ / 🔵** — a slot ships, so its [`barebones/`](../barebones/) example loads into
-  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Eighteen** types are here.
+  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Twenty-two** types are here.
 - **Registerable, slot on the roadmap — ◻** — a real super-class a third party *can* register a
   plugin under, whose slot is simply **not built yet**. A feature request for one of these is
   **legitimate** and belongs on the [roadmap](../ROADMAP.md); it is work not yet done, not a door that
@@ -49,16 +49,16 @@ this page could be ambiguous, it says which of the two a type is.
 
 ---
 
-## Has a slot — the 18 that run today
+## Has a slot — the 22 that run today
 
 Each row registers a real plugin under its super-class; the [`barebones/`](../barebones/) example is
-the payload it loads. **Every one of the 18 reports itself on load:** the slot calls its cartridge's
+the payload it loads. **Every one of the 22 reports itself on load:** the slot calls its cartridge's
 `init(env)` the moment 3ds Max loads the slot — handing over the running Max release, the slot's own
 version, the cartridge ABI, and whether the server is present — and calls `shutdown` on unload. So
 `init` reports init and `shutdown` reports unload; the **`Hello World` greeting** is logged only by
 the cartridge's own behaviour, so a load report is never mistaken for the plugin actually working.
 (Because 3ds Max caches plugin classes and demand-loads slot DLLs, "on load" means "when 3ds Max loads
-the slot": a freshly installed host loads every slot and shows all 18 reporting on load; on a later
+the slot": a freshly installed host loads every slot and shows all 22 reporting on load; on a later
 restart a demand-loaded slot reports when the host next loads it.)
 
 On top of that load-time proof the greeting is checked two ways, and **neither marker is a failure**:
@@ -83,6 +83,10 @@ On top of that load-time proof the greeting is checked two ways, and **neither m
 | aa-filter-kernel | `FILTER_KERNEL_CLASS_ID` | [aa-filter-kernel](../barebones/aa-filter-kernel/) | ✅ greeting driven |
 | radiosity | `RADIOSITY_CLASS_ID` | [radiosity](../barebones/radiosity/) | ✅ greeting driven |
 | datachannel-engine | `DATACHANNELENGINE_SUPER_CLASS_ID` | [datachannel-engine](../barebones/datachannel-engine/) | ✅ greeting driven |
+| texmap | `TEXMAP_CLASS_ID` | [texmap](../barebones/texmap/) | ✅ greeting driven |
+| material | `MATERIAL_CLASS_ID` | [material](../barebones/material/) | ✅ greeting driven |
+| shader | `SHADER_CLASS_ID` | [shader](../barebones/shader/) | ✅ greeting driven |
+| sampler | `SAMPLER_CLASS_ID` | [sampler](../barebones/sampler/) | ✅ greeting driven |
 | effect | `RENDER_EFFECT_CLASS_ID` | [effect](../barebones/effect/) | 🔵 alive on load · greeting: render with the effect (F9) |
 | iksolver | `IK_SOLVER_CLASS_ID` | [iksolver](../barebones/iksolver/) | 🔵 alive on load · greeting: assign to a bone chain and solve |
 | osnap | `OSNAP_CLASS_ID` | [osnap](../barebones/osnap/) | 🔵 alive on load · greeting: interactive snap while moving |
@@ -91,7 +95,9 @@ On top of that load-time proof the greeting is checked two ways, and **neither m
 | color-picker | `COLPICK_CLASS_ID` | [color-picker](../barebones/color-picker/) | 🔵 alive on load · greeting: pick a colour |
 | videopost-filter | `FLT_CLASS_ID` | [videopost-filter](../barebones/videopost-filter/) | 🔵 alive on load · greeting: run it in Video Post |
 
-**Eleven greeting driven, seven alive on load.** Note that `manipulator` and `pfoperator` register
+**Fifteen greeting driven, seven alive on load.** The four material-family slots (`texmap`,
+`material`, `shader`, `sampler`) run in a managed or an unmanaged mode — see
+[SLOTS.md](SLOTS.md#managed-and-unmanaged-per-sample-slots). Note that `manipulator` and `pfoperator` register
 under the **same** `HELPER_CLASS_ID` and are different plugin kinds (manipulator via the Manipulator
 interface; pfoperator via `IPFAction` + the PFOperator sub-class) — the clearest proof that a
 super-class is a property of the one class a slot registers, not a bucket that owns slots.
@@ -134,10 +140,6 @@ legitimate roadmap item, not a type that was refused. What people ask for is wha
 | World-space modifier object | `WSM_OBJECT_CLASS_ID` |
 | Scene importer | `SCENE_IMPORT_CLASS_ID` |
 | Image loader/saver | `BMM_IO_CLASS_ID` |
-| Material | `MATERIAL_CLASS_ID` |
-| Texture map | `TEXMAP_CLASS_ID` |
-| Standard-material shader | `SHADER_CLASS_ID` |
-| Sampler | `SAMPLER_CLASS_ID` |
 | Atmospheric effect | `ATMOSPHERIC_CLASS_ID` |
 | Shadow generator | `SHADOW_TYPE_CLASS_ID` |
 | Tone operator | `TONE_OPERATOR_CLASS_ID` |
@@ -155,7 +157,7 @@ legitimate roadmap item, not a type that was refused. What people ask for is wha
 ### Controllers — the value-type matrix (roadmap)
 
 One controller family (`Control` base) serves every animatable value type, and **each value type is
-its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 18
+its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 22
 above). The other value-type super-classes are registerable and a controller slot could target them —
 they are on the roadmap, not excluded:
 

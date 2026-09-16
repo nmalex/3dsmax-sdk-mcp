@@ -1,18 +1,19 @@
 # Plugin types — what you can build today, and how far the rest already is
 
-**Eighteen Cartridge kinds ship today.** [SLOTS.md](SLOTS.md) lists the Slots and how each appears in
+**Twenty-two Cartridge kinds ship today.** [SLOTS.md](SLOTS.md) lists the Slots and how each appears in
 3ds Max; [SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) maps *every* plugin type the SDK declares into
 three states — has a Slot, registerable with a Slot on the roadmap, or not registerable at all (with
-the reason); [COVERAGE_MAP.md](COVERAGE_MAP.md) is the per-type accounting of how the 18 are verified.
+the reason); [COVERAGE_MAP.md](COVERAGE_MAP.md) is the per-type accounting of how the 22 are verified.
 
-The 18 that ship:
+The 22 that ship:
 
 `modifier` · `exporter` · `renderer` · `manipulator` · `controller` · `uv-generator` ·
 `xyz-generator` · `texture-output` · `aa-filter-kernel` · `radiosity` · `datachannel-engine` ·
-`effect` · `iksolver` · `osnap` · `pfoperator` · `utility` · `color-picker` · `videopost-filter`.
+`effect` · `iksolver` · `osnap` · `pfoperator` · `utility` · `color-picker` · `videopost-filter` ·
+`texmap` · `material` · `shader` · `sampler`.
 
 This page answers a different question: **for a kind that does not ship yet, how much of it is already
-done?** A large share of the 3ds Max plugin surface beyond these 18 is already mechanically proven,
+done?** A large share of the 3ds Max plugin surface beyond these 22 is already mechanically proven,
 which is what turns "why isn't type X covered?" into "type X is on the roadmap and most of the risk is
 already retired."
 
@@ -42,9 +43,9 @@ what people ask for is what moves.
 | Object | `SYSTEM_CLASS_ID` | `object.h` | system object |
 | WSModifier | `WSM_CLASS_ID` | `object.h` | world-space modifier |
 | WSMObject | `WSM_OBJECT_CLASS_ID` | `object.h` | world-space modifier object |
-| Mtl | `MATERIAL_CLASS_ID` | `imtl.h` | material |
-| Texmap | `TEXMAP_CLASS_ID` | `imtl.h` | texture map |
-| Shader | `SHADER_CLASS_ID` | `imtl.h` | standard-material shader |
+| Mtl | `MATERIAL_CLASS_ID` | `imtl.h` | material *(now ships as the `material` Slot)* |
+| Texmap | `TEXMAP_CLASS_ID` | `imtl.h` | texture map *(now ships as the `texmap` Slot)* |
+| Shader | `SHADER_CLASS_ID` | `imtl.h` | standard-material shader *(now ships as the `shader` Slot)* |
 | Atmospheric | `ATMOSPHERIC_CLASS_ID` | `imtl.h` | atmospheric effect |
 | ShadowType | `SHADOW_TYPE_CLASS_ID` | `shadgen.h` | shadow generator |
 | SceneImport | `SCENE_IMPORT_CLASS_ID` | `impexp.h` | importer |
@@ -52,7 +53,7 @@ what people ask for is what moves.
 | TrackViewUtility | `TRACKVIEW_UTILITY_CLASS_ID` | `iTrackViewUtility.h` | Track View utility |
 | IRenderElement | `RENDER_ELEMENT_CLASS_ID` | `renderelements.h` | render output element |
 | ToneOperator | `TONE_OPERATOR_CLASS_ID` | `tonemap.h` | tone operator |
-| Sampler | `SAMPLER_CLASS_ID` | `imtl.h` | sampler |
+| Sampler | `SAMPLER_CLASS_ID` | `imtl.h` | sampler *(now ships as the `sampler` Slot)* |
 | IMultiPassCameraEffect | `MPASS_CAM_EFFECT_CLASS_ID` | `object.h` | multi-pass camera effect |
 | SoundObj | `SOUNDOBJ_CLASS_ID` | `soundobj.h` | sound object |
 | BitmapIO | `BMM_IO_CLASS_ID` | `bitmap.h` | image file loader/saver |
@@ -74,7 +75,7 @@ next. **Reference maker / target and GUP** (`REF_MAKER_CLASS_ID`, `REF_TARGET_CL
 An earlier version of this page listed five plugin kinds as "proven only as far as compiling and
 registering, not yet hosted against a live payload" — Object Snap, the viewport manipulator, the IK
 solver, the render-effect pipeline hook, and the Particle Flow operator. **All five now ship as Slots**
-(they are `osnap`, `manipulator`, `iksolver`, `effect` and `pfoperator` among the 18), which is the
+(they are `osnap`, `manipulator`, `iksolver`, `effect` and `pfoperator` among the 22), which is the
 transition this page describes actually happening: a kind proven to register becomes a kind you can
 occupy once its Slot is built and released. The [coverage map](COVERAGE_MAP.md) records how each is
 verified — several of them report alive on load and fire their `Hello World` under a host action a
