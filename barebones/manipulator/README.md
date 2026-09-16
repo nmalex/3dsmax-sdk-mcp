@@ -1,13 +1,52 @@
 # Barebones: Manipulator
 
 A manipulator is a helper the user can manipulate directly in the viewport — a custom gizmo the host
-asks to rebuild its shapes when displayed and to handle the mouse when dragged. This example draws
-the slot's default and edits nothing on purpose: it is the smallest cartridge that proves the whole
-crossing (slot → interpreter → viewport event → log) before any behaviour is in the way of reading
-the result. Fork it and draw handles in `ManipUpdateShapes`.
+asks to rebuild its shapes when displayed and to handle the mouse when dragged.
+
+**This example draws a wireframe tetrahedron**, built edge by edge by the payload through the
+facade — four polyline runs into the `GizmoShape` the slot lends it for the span of the callback.
+Nothing in either lane touches the 3ds Max SDK. It is here because a barebones that drew nothing was
+read, repeatedly, as proof that a cartridge *could not* draw: an inert example is an argument, and it
+was making the wrong one.
+
+It still edits nothing in `ManipMouse`, on purpose — that is where your behaviour goes.
 
 **Hello signal:** a log line on `ManipUpdateShapes` — fired when the gizmo is displayed, guarded to
-announce once per load — readable with `cartridge_logs -module slot_manipulator`.
+announce once per load — readable with `cartridge_logs -module slot_manipulator`. A second line
+reports the draw: *"drew a wireframe tetrahedron: 4 polyline run(s)…"*, so the geometry is verifiable
+from the log and not only by looking.
+
+## How each lane reaches the facade
+
+This is the clearest example in the kit of the one real difference between the lanes:
+
+| Lane | How it is given the facade |
+| --- | --- |
+| **C++** | the shell hands the table straight over, once, through `SetFacade`. There is no address to look up. |
+| **Python** | every callback event carries **`slot`** — the table's address as a decimal string — and `mcp_facade.from_address(slot)` turns it back into the callable table. |
+
+Same table, same entries, same tetrahedron. `slot` means the facade address in **every** payload
+entry point; the load-time `init(**env)` calls the slot's name `slotName` for exactly that reason.
+
+## The facade entries it uses
+
+| Entry | What it does |
+| --- | --- |
+| `ManipCurrentGizmoBuild` | the empty `GizmoShape` the slot borrowed for this callback's span |
+| `GizmoShapeAppendPolyline` | one open or closed run of points |
+| `GizmoBuildSetAppearance` | the unselected colour and the gizmo flags |
+
+There are more (`StartNewLine`, `AppendPoint`, `MakeCircle`, `MakeRect`). Ask the index rather than
+guessing:
+
+```bash
+python surface/max_facade_surface.py Gizmo
+python surface/max_facade_surface.py --missing manipulator
+```
+
+That last one is honest about the remainder: a gizmo cannot yet set its own **tooltip**, append a
+**mesh**, or append a point **marker**. Those are `not-yet` records — which is to say, feature
+requests worth making.
 
 ## What plugin type this is
 
@@ -20,7 +59,7 @@ and to handle interaction; the slot forwards those as `ManipUpdateShapes` and `M
 
 | SuperClassID | Base class | What it is | Hello surface | Slot |
 | --- | --- | --- | --- | --- |
-| `HELPER_CLASS_ID` *(as a manipulator: `ClassDesc::IsManipulator() == TRUE`)* | `SimpleManipulator` | a custom viewport gizmo | viewport gizmo + log | **this example** (`Cartridge Manipulator`, `.dlo`) |
+| `HELPER_CLASS_ID` *(as a manipulator: `ClassDesc::IsManipulator() == TRUE`)* | `SimpleManipulator` | a custom viewport gizmo | viewport gizmo + log | **this example** (**Tetra Dummy**, internal name `Cartridge_Manipulator`, `.dlo`) |
 
 ### One SuperClassID, several plugin kinds
 
@@ -38,14 +77,16 @@ barebones, under one superclass.
 | Python | [`python/slot_manipulator.py`](python/slot_manipulator.py) | `slot_manipulator` |
 | C++ (native) | [`native/src/payload.cpp`](native/src/payload.cpp) | `slot_manipulator_native.dll` |
 
-Both lanes are behaviourally identical; pick Python for fast iteration and hot-swap, C++ when you
-need native speed. See the repository root [`README.md`](../../README.md) for the full barebones
+Both lanes are behaviourally identical - both draw the same tetrahedron. Pick Python for fast
+iteration and hot-swap, C++ when you need native speed. See the repository root [`README.md`](../../README.md) for the full barebones
 index and [`docs/SLOTS.md`](../../docs/SLOTS.md) for how a slot loads a payload by module name.
 
 ## Fork it
 
 1. Copy this directory to `cartridges/<your-name>/` (or scaffold with `tools/new-cartridge.ps1`).
-2. Put your behaviour in `ManipUpdateShapes`: build the handles, and edit the target in `ManipMouse`.
+2. Put your behaviour in `ManipUpdateShapes`: replace the tetrahedron with your handles, and edit
+   the target in `ManipMouse`.
 3. Declare any parameter in `describe_params` — the slot keeps it, saved and animatable.
-4. Create and select the manipulator helper in a viewport, then confirm your log line with
+4. Create and select the **Tetra Dummy** helper (Create > Helpers) in a viewport, then confirm your
+   log line with
    `cartridge_logs -module slot_manipulator`.

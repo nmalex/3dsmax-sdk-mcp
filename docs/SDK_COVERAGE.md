@@ -7,7 +7,18 @@ modifier or an exporter needs." This page is a status report on how much of the 
 already covers, so you can judge, before writing a line, whether the thing you want to touch is
 already there.
 
-**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.8.0-alpha.3`.
+**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.8.0-alpha.4`.
+
+> **This page is prose. For the machine-readable answer, use [`surface/`](../surface/README.md)** -
+> every entry by name, shape and purpose, plus the declared list of what is factually missing and
+> why, generated from the same declaration the facade is generated from:
+>
+> ```bash
+> python surface/max_facade_surface.py <what you are looking for>
+> python surface/max_facade_surface.py --missing
+> ```
+>
+> Do not conclude that something is absent from a table below. Ask the index.
 
 ## The shape of the facade, in one paragraph
 
@@ -28,12 +39,12 @@ that a payload cannot hold, and cannot corrupt, anything the host owns.
 | Controllers and animation | keys, ranges, ORTs, IK joints and limits, the parameter-block family, the undo system | broad |
 | Cameras and lights | targeted/free cameras, all standard light types, exclusion lists | broad |
 | NURBS | CV surfaces and curves, the full set of dependent surface/curve types, trim/texture/set-ops, object creation | broad (a large, separate build in its own right) |
-| ParticleFlow | the full per-particle read/write channel family (position, speed, orientation, shape, custom MAXScript-set channels, per-mapping UV data), channel creation, and a PF-operator dispatch hook proven to compile and register (not yet hosted by a shipping Slot) | broad |
-| Rendering | the render-context argument objects (`RenderGlobalContext`, `ViewParams`, `RendParams`, default lights), a Renderer/Effect dispatch hook proven to compile and register (not yet hosted by a shipping Slot) | broad, for the classic render pipeline |
+| ParticleFlow | the full per-particle read/write channel family (position, speed, orientation, shape, custom MAXScript-set channels, per-mapping UV data), channel creation, and a PF-operator dispatch hook, hosted by the shipping `Cartridge PF Operator` slot | broad |
+| Rendering | the render-context argument objects (`RenderGlobalContext`, `ViewParams`, `RendParams`, default lights), Renderer and Effect dispatch hooks, hosted by the shipping `Cartridge Renderer` and `Cartridge Effect` slots | broad, for the classic render pipeline |
 | Colour management (OCIO) | pipeline construction and conversion, the active colour-management mode's identity/status/config path | broad |
-| IK | the full `LinkChain` solve context: joint frames, limits, an IK-solver dispatch hook proven to compile and register (not yet hosted by a shipping Slot) | broad |
-| Object Snap | snap-point queries and hit recording, an Osnap dispatch hook proven to compile and register (not yet hosted by a shipping Slot) | broad |
-| Manipulators (viewport gizmos) | building real interactive gizmo geometry, a Manipulator dispatch hook proven to compile and register (not yet hosted by a shipping Slot) | broad |
+| IK | the full `LinkChain` solve context: joint frames, limits, an IK-solver dispatch hook, hosted by the shipping `Cartridge IK Solver` slot | broad |
+| Object Snap | snap-point queries and hit recording, an Osnap dispatch hook, hosted by the shipping `Cartridge Object Snap` slot | broad |
+| Manipulators (viewport gizmos) | building real interactive gizmo geometry, hosted by the shipping manipulator slot (**Tetra Dummy**) - whose barebones payload draws a wireframe tetrahedron through these entries (`barebones/manipulator`) | broad |
 | Asset management | asset lookup/reference counting, path-config search directories, a working asset-accessor hook | broad |
 | MAXScript integration | a payload can publish a callable global primitive or a typed function interface | full |
 | Modifier/WSM pipeline | the object-space and world-space modifier stack, in both of 3ds Max's own index spaces | broad |
