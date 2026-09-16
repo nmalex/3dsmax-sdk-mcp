@@ -17,6 +17,10 @@ A Video Post image-processing filter — runs in the Video Post queue over a ren
 | --- | --- | --- |
 | `FLT_CLASS_ID` | 0x000E00 | a Video Post image-processing filter |
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in Video Post: the event's **Setup** button (a modal dialog); **About** shows the slot's version, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

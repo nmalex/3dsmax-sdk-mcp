@@ -2,7 +2,7 @@
     "schema": "cartridge/2",
     "name": "Barebones Renderer",
     "slug": "barebones-renderer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "slot": "renderer",
     "requires": {
         "max": [

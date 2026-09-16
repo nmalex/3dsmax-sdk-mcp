@@ -30,6 +30,10 @@ a plain helper, a **manipulator** (see [`barebones/manipulator`](../manipulator/
 answers `IsManipulator() == TRUE`, a PF operator answers `SubClassID() == PFOperatorSubClassID` — so
 they are three different slots, and three different barebones, under one superclass.
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in Particle View's parameter panel, when the operator is selected in the flow, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

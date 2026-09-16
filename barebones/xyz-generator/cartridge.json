@@ -2,7 +2,7 @@
     "schema": "cartridge/2",
     "name": "Barebones XYZ Generator",
     "slug": "barebones-xyz-generator",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "slot": "xyz-generator",
     "requires": {
         "max": [

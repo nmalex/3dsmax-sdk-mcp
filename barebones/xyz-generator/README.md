@@ -16,6 +16,10 @@ An XYZ coordinate generator (3D map input) — supplies the object/world XYZ a 3
 | --- | --- | --- |
 | `XYZGEN_CLASS_ID` | 0x000C30 | an XYZ coordinate generator (3D map input) |
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in the Material Editor, when this generator is shown, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

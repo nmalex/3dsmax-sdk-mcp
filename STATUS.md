@@ -1,6 +1,6 @@
 # Status
 
-`0.8.0-alpha.4`.
+`0.8.0-alpha.5`.
 
 **A pre-release means what it says.** This has been exercised on exactly one machine, and things will change. Every public build bumps its pre-release
 identifier, so no two are ever the same version.
@@ -17,12 +17,13 @@ This is being built in the open and the parts land in order. What is true **toda
 | `tools/2026/install-plugin.ps1` | works — fetch, verify the hash, place, verify again |
 | `tools/2026/uninstall-plugin.ps1` | works — removes what was installed; your Cartridges are kept |
 | The `install` skill and `.mcp.json` | works — a fork drives its own setup |
-| The release asset it installs | `0.8.0-alpha.4` — every binary in it carries the release's own identifier; declared parameters arrived in [alpha.3](https://github.com/nmalex/3dsmax-sdk-mcp/releases/tag/v0.4.0-alpha.3) ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
+| The release asset it installs | `0.8.0-alpha.5` — every binary in it carries the release's own identifier; declared parameters arrived in [alpha.3](https://github.com/nmalex/3dsmax-sdk-mcp/releases/tag/v0.4.0-alpha.3) ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
 | Slots shipping | 18 — a slot for every registerable plugin type it targets; every one reports itself on load (see [docs/SLOTS.md](docs/SLOTS.md), [docs/SUPERCLASS_CENSUS.md](docs/SUPERCLASS_CENSUS.md)) |
 | [`surface/`](surface/README.md) | works - all 5430 facade entries and every declared gap, enumerable from this checkout (`python surface/max_facade_surface.py --missing`), generated from the facade's own declaration and gated against drift |
 | [LAW.md](LAW.md) / [ESSENTIALS.md](ESSENTIALS.md) | the binding rules and the practice - read both before writing a Cartridge |
 | The `bootstrap` skill | works — interview, name claim, Slot, scaffold, verify |
-| Declared parameters | works — `describe_params()` gives a Cartridge durable, animatable, scriptable parameters; see [docs/SLOTS.md](docs/SLOTS.md) |
+| Cartridge panels | works — every slot whose plugin kind has a UI place builds your `describe_ui()` panel there, with the slot's About beside it; see the table in [docs/SLOTS.md](docs/SLOTS.md) |
+| Declared parameters | works — `describe_params()` gives a Cartridge durable, animatable, scriptable parameters; see [docs/SLOTS.md](docs/SLOTS.md); the modifier and the manipulator (Tetra Dummy) keep them |
 
 Nothing in that table is written from how something is presumed to work.
 

@@ -2,7 +2,7 @@
     "schema": "cartridge/2",
     "name": "Barebones Render Effect",
     "slug": "barebones-effect",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "slot": "effect",
     "requires": {
         "max": [

@@ -7,7 +7,7 @@ modifier or an exporter needs." This page is a status report on how much of the 
 already covers, so you can judge, before writing a line, whether the thing you want to touch is
 already there.
 
-**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.8.0-alpha.4`.
+**Version this reflects:** ABI 188, 5430 facade entries, current as of `v0.8.0-alpha.5`.
 
 > **This page is prose. For the machine-readable answer, use [`surface/`](../surface/README.md)** -
 > every entry by name, shape and purpose, plus the declared list of what is factually missing and

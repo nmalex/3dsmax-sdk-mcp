@@ -118,14 +118,53 @@ table whose absence caused [#2](https://github.com/nmalex/3dsmax-sdk-mcp/issues/
 `describe_ui()` did nothing, every payload-side signal was green, and the reason was that the
 modifier Slot of that release did not call it.
 
-| Function | `modifier` | `exporter` | When it is called |
+### Every slot with a UI place builds your panel there
+
+Since `0.8.0-alpha.5` this is not a modifier privilege. **Every Slot whose plugin kind has a UI place
+in 3ds Max builds your `describe_ui()` panel in that place**, with the Slot's own About (version,
+build, which lanes are loaded, Refresh) beside it. The same controls, the same events, the same
+`params`; only the place differs:
+
+| Slot | Where your panel appears | `on_ui_event` | Keeps `describe_params()` values |
 | --- | --- | --- | --- |
-| `describe_ui(params)` | yes | yes | modifier: opening the command panel, and on every Refresh. Exporter: opening the export options dialog |
-| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | **no** | modifier only, when a control on your panel changed. The exporter never calls it — see below |
-| `deform(points, box, tm, params)` | yes | — | every evaluation of the modifier stack |
-| `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | yes | once per export, per node, per group, per scene |
-| `declare_callbacks()` | yes | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
-| `describe_params()` | yes | **no** | modifier only, on load and on every Refresh — how a payload declares parameters the Slot then keeps. Needs `0.4.0-alpha.3` or newer |
+| `modifier` | the Modify panel | yes | **yes** — saved, animatable, `$.modifiers[1].name` |
+| `manipulator` (Tetra Dummy) | the Create and Modify panels | yes | **yes** — saved, animatable, `$.size` |
+| `utility` | the Utilities panel | yes | no |
+| `pfoperator` | Particle View's parameter panel | yes | no |
+| `datachannel-engine` | the Data Channel modifier's engine panel | yes | no |
+| `controller` | Track View > right-click > **Properties** (a modal dialog), and the Motion panel for a transform | yes | no |
+| `effect` | Rendering > Environment and Effects | yes | no |
+| `radiosity` | Rendering > Advanced Lighting | yes | no |
+| `aa-filter-kernel` | Render Setup, under the anti-aliasing filter | yes | no |
+| `renderer` | Render Setup (not the in-render progress dialog) | yes | no |
+| `texture-output`, `uv-generator`, `xyz-generator` | the Material Editor | yes | no |
+| `videopost-filter` | Video Post's **Setup** button (a modal dialog); **About** shows the Slot's facts | yes | no |
+| `exporter` | File > Export's options dialog; **About** shows the Slot's facts | **no** — see below | no |
+| `color-picker`, `osnap`, `iksolver`, `fragment` | **no UI place** — the picker *is* the dialog; a snap is listed by name; the SDK gives a solver no UI hook; a render fragment has no UI | — | — |
+
+**"Keeps values: no"** means a control bound with `param=` still reaches `on_ui_event` with its new
+value, but the Slot does not save it with the scene. Only the Slots marked **yes** hold a parameter
+block today. A cartridge in any other Slot that needs a saved value is a feature request, not a
+workaround — see [REPORTING.md](REPORTING.md).
+
+**No `describe_ui` is still a legal answer**: that Slot then shows only its About.
+
+### The functions each Slot calls
+
+| Function | `modifier` | `manipulator` | other UI slots (above) | `exporter` | When it is called |
+| --- | --- | --- | --- | --- | --- |
+| `describe_ui(params)` | yes | yes | yes | yes | when the panel opens, and on every Refresh. Exporter: opening the export options dialog |
+| `on_ui_event(control_id, value, ctrl, shift, alt, settled, params)` | yes | yes | yes | **no** | when a control on your panel changed |
+| `describe_params()` | yes | yes | no | **no** | on load / creation and on every Refresh — declares parameters the Slot then keeps. Needs `0.4.0-alpha.3` (modifier) / `0.8.0-alpha.5` (manipulator) or newer |
+| `deform(points, box, tm, params)` | yes | — | — | — | every evaluation of the modifier stack |
+| `ManipUpdateShapes(event, slot, params)` | — | yes | — | — | whenever the gizmo is rebuilt (display, a parameter change). `params` since `0.8.0-alpha.5` |
+| `ManipMouse(event, slot, params)` | — | yes | — | — | pressing / dragging / releasing the gizmo in **Select and Manipulate** mode. **Not** the creation click — the Slot places the helper where you click |
+| `format_header` / `format_node` / `format_group_open` / `format_group_close` / `format_material_list` | — | — | — | yes | once per export, per node, per group, per scene |
+| `declare_callbacks()` | yes | **no** | **no** | **no** | modifier only, on load and on every Refresh — how a payload subscribes to host notifications |
+
+**Every callback carries `slot`** — the facade table's address, for `mcp_facade.from_address(slot)` —
+and the ones marked above also carry `params`. `slot` means the facade address in every entry point;
+the load-time `init(**env)` calls the Slot's name `slotName` for that reason.
 
 **Absent is a legal answer to all of them.** A Slot that asks for `describe_ui` and finds none does
 not fault; it concludes you want no panel. That is deliberate, and it is why a *missing* function

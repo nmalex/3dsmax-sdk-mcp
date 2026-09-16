@@ -16,6 +16,10 @@ A Data Channel modifier engine (IDataChannelEngine) — one operator in the Data
 | --- | --- | --- |
 | `DATACHANNELENGINE_SUPER_CLASS_ID` | 0x11992AC | a Data Channel modifier engine (IDataChannelEngine) |
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in the Data Channel modifier's engine panel, when this engine is selected, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

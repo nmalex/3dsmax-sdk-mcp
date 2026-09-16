@@ -16,6 +16,10 @@ An anti-aliasing filter kernel — the reconstruction kernel a renderer samples 
 | --- | --- | --- |
 | `FILTER_KERNEL_CLASS_ID` | 0x0010A0 | an anti-aliasing filter kernel |
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in Render Setup, under the anti-aliasing filter, when this filter is chosen, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

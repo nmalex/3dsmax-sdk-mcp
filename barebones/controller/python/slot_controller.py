@@ -17,6 +17,7 @@ read the value in MAXScript), then read `cartridge_logs -module slot_controller`
 """
 
 import mcp_bootstrap
+import mcp_ui as ui
 
 _said_hello = False
 
@@ -69,3 +70,39 @@ def shutdown(**_env):
                       "%s payload (Python) shutdown on slot unload. This is the unload report."
                       % (_env.get("slotName") or "cartridge"))
     return {"ok": True}
+
+
+# -- the panel -----------------------------------------------------------------------------------
+#
+# Shown in Track View > Properties (a modal dialog), and the Motion panel for a transform. The slot builds it from describe_ui() and puts its own About (version, build,
+# Refresh) beside it - every slot whose plugin kind has a UI place does, the same way. Declaring no
+# describe_ui is also fine: the slot then shows only About. A control bound with `param=` is saved
+# only by a slot that keeps a parameter block (docs/SLOTS.md lists which); this one's button just
+# proves the crossing.
+
+
+def describe_ui(params=None, **kwargs):
+    """The panel: one line and a Hello World button."""
+    return ui.build(
+        ui.VBox(
+            ui.Label("Barebones Controller"),
+            ui.Spacer(),
+            ui.Button("Hello World", on_click=_panel_hello),
+        )
+    )
+
+
+def _panel_hello():
+    mcp_bootstrap.log("display",
+                      "Hello World - the Barebones Controller panel is live and this line came from its "
+                      "Python payload, on a button click.")
+    return {}
+
+
+def on_ui_event(control_id, value=None, ctrl=False, shift=False, alt=False, settled=True,
+                params=None):
+    """One control changed. Nothing here changes what the plugin computes, so nothing is
+    invalidated."""
+    outcome = ui.dispatch(control_id, value)
+    return {"invalidate": False, "rebuild": bool(outcome.get("rebuild")),
+            "updates": outcome.get("updates") or []}

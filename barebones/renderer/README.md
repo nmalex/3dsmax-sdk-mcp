@@ -28,6 +28,10 @@ renderer already made. They are different plugin kinds the user picks in differe
 Setup's Renderer rollout versus the Effects dialog — so they are different slots and different
 barebones, not two rows here.
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in Render Setup, when this renderer is the current one, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

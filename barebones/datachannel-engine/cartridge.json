@@ -2,7 +2,7 @@
     "schema": "cartridge/2",
     "name": "Barebones Data Channel Engine",
     "slug": "barebones-datachannel-engine",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "slot": "datachannel-engine",
     "requires": {
         "max": [
