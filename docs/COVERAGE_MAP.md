@@ -1,19 +1,19 @@
 # Coverage map — every authored plugin type, and why each is where it is
 
-This kit authors a hello‑world barebone for **31** 3ds Max plugin types (the super‑class census, FR‑0002).
-Not all 31 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
+This kit authors a hello‑world barebone for **32** 3ds Max plugin types (the super‑class census, FR‑0002).
+Not all 32 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
 slot can only exist for a super‑class a third party can register a `ClassDesc` under, and only ships
-once its hello is verifiable. This page accounts for all 31 so you never have to wonder why one is
+once its hello is verifiable. This page accounts for all 32 so you never have to wonder why one is
 missing — every row is classified, and the classification is pinned to the super-class census and enforced by an anti-drift
 check in the factory, which fails the build if any of this drifts.
 
-**31 = 22 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
+**32 = 23 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
 
 ---
 
-## 22 types with a shipped slot
+## 23 types with a shipped slot
 
-Each registers a real plugin under its super‑class. **Every one of the 22 reports itself on load**: the
+Each registers a real plugin under its super‑class. **Every one of the 23 reports itself on load**: the
 slot calls its cartridge’s `init(env)` the moment 3ds Max loads the slot — handing over the environment
 it alone can see (the running Max release, the slot’s own version, the cartridge ABI, whether the server
 is present) — and calls `shutdown` on unload. So a freshly installed host shows all 22 cartridges having
@@ -33,6 +33,7 @@ snap, a live particle sim, a panel, a modal, a Video Post execute); those ship *
 | exporter | `SCENE_EXPORT_CLASS_ID` | ✅ greeting driven |
 | renderer | `RENDERER_CLASS_ID` | ✅ greeting driven |
 | manipulator | `HELPER_CLASS_ID` (Manipulator) | ✅ greeting driven |
+| helper | `HELPER_CLASS_ID` (plain) | ✅ greeting driven |
 | controller | `CTRL_FLOAT_CLASS_ID` | ✅ greeting driven |
 | uv‑generator | `UVGEN_CLASS_ID` | ✅ greeting driven |
 | xyz‑generator | `XYZGEN_CLASS_ID` | ✅ greeting driven |

@@ -87,6 +87,6 @@ Multi, the `StdMat` family) through the facade remains the shorter path for most
 ## Where the header ends and your own Slot begins
 
 Everything above is reachable **from a Cartridge you write today**, inside whichever Slot kind hosts
-it (any of the 22 that ship — see [SLOTS.md](SLOTS.md)). Whether the SDK area you want *lives*
+it (any of the 23 that ship — see [SLOTS.md](SLOTS.md)). Whether the SDK area you want *lives*
 in a new plugin kind rather than being callable from an existing one is a separate question — see
 [PLUGIN_TYPES.md](PLUGIN_TYPES.md) for that.

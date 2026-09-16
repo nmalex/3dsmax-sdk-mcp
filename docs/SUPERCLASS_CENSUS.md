@@ -8,7 +8,7 @@ not hand-curated, and a build gate fails if a new SDK super-class ever appears w
 Read this to answer *"what are all the plugin types, which can I occupy today, and — if I cannot — is
 that a roadmap item or a fact of the SDK?"* That last distinction is the one that matters most, and it
 is spelled out below so a missing type is never mistaken for an oversight. For the per-type
-verification detail behind the 22 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
+verification detail behind the 23 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
 
 ## `Class_ID` vs `SuperClassID` — the two numbers, and why people conflate them
 
@@ -49,16 +49,16 @@ this page could be ambiguous, it says which of the two a type is.
 
 ---
 
-## Has a slot — the 22 that run today
+## Has a slot — the 23 that run today
 
 Each row registers a real plugin under its super-class; the [`barebones/`](../barebones/) example is
-the payload it loads. **Every one of the 22 reports itself on load:** the slot calls its cartridge's
+the payload it loads. **Every one of the 23 reports itself on load:** the slot calls its cartridge's
 `init(env)` the moment 3ds Max loads the slot — handing over the running Max release, the slot's own
 version, the cartridge ABI, and whether the server is present — and calls `shutdown` on unload. So
 `init` reports init and `shutdown` reports unload; the **`Hello World` greeting** is logged only by
 the cartridge's own behaviour, so a load report is never mistaken for the plugin actually working.
 (Because 3ds Max caches plugin classes and demand-loads slot DLLs, "on load" means "when 3ds Max loads
-the slot": a freshly installed host loads every slot and shows all 22 reporting on load; on a later
+the slot": a freshly installed host loads every slot and shows all 23 reporting on load; on a later
 restart a demand-loaded slot reports when the host next loads it.)
 
 On top of that load-time proof the greeting is checked two ways, and **neither marker is a failure**:
@@ -76,6 +76,7 @@ On top of that load-time proof the greeting is checked two ways, and **neither m
 | exporter | `SCENE_EXPORT_CLASS_ID` | [exporter](../barebones/exporter/) | ✅ greeting driven |
 | renderer | `RENDERER_CLASS_ID` | [renderer](../barebones/renderer/) | ✅ greeting driven |
 | manipulator *(helper variant)* | `HELPER_CLASS_ID` | [manipulator](../barebones/manipulator/) | ✅ greeting driven |
+| helper *(plain)* | `HELPER_CLASS_ID` | [helper](../barebones/helper/) | ✅ greeting driven |
 | controller | `CTRL_FLOAT_CLASS_ID` | [controller](../barebones/controller/) | ✅ greeting driven |
 | uv-generator | `UVGEN_CLASS_ID` | [uv-generator](../barebones/uv-generator/) | ✅ greeting driven |
 | xyz-generator | `XYZGEN_CLASS_ID` | [xyz-generator](../barebones/xyz-generator/) | ✅ greeting driven |
@@ -134,7 +135,6 @@ legitimate roadmap item, not a type that was refused. What people ask for is wha
 | Camera | `CAMERA_CLASS_ID` |
 | Light | `LIGHT_CLASS_ID` |
 | Shape | `SHAPE_CLASS_ID` |
-| Helper *(plain — note `manipulator` & `pfoperator` already ship under this id)* | `HELPER_CLASS_ID` |
 | System plugin | `SYSTEM_CLASS_ID` |
 | World-space modifier | `WSM_CLASS_ID` |
 | World-space modifier object | `WSM_OBJECT_CLASS_ID` |
@@ -157,7 +157,7 @@ legitimate roadmap item, not a type that was refused. What people ask for is wha
 ### Controllers — the value-type matrix (roadmap)
 
 One controller family (`Control` base) serves every animatable value type, and **each value type is
-its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 22
+its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 23
 above). The other value-type super-classes are registerable and a controller slot could target them —
 they are on the roadmap, not excluded:
 
