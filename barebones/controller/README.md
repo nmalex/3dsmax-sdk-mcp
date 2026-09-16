@@ -31,6 +31,10 @@ Specializations under `Control`: `DRIVERBLOCK_SUPER_CLASS_ID` (0x9011),
 `POINTCTRLCONTAINER_SUPERCLASS_ID` (0x9010). Six older value types (`CTRL_SHORT`, `CTRL_INTEGER`,
 `CTRL_POINT2`, `CTRL_COLOR`, `CTRL_COLOR24`, `CTRL_USERTYPE`) the SDK marks obsolete.
 
+## Its panel
+
+The slot builds this cartridge's `describe_ui()` panel in Track View: right-click the track > **Properties** (a modal dialog); the Motion panel shows it for a transform controller, with the slot's own About (version, build, Refresh) beside it. This example declares a line and a **Hello World** button, so one click proves the crossing: read the line back with `cartridge_logs`. Values bound with `param=` reach `on_ui_event` but are not saved by this slot - see [docs/SLOTS.md](../../docs/SLOTS.md).
+
 ## Lanes
 
 | Lane | File | Deployed as |

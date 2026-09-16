@@ -9,7 +9,9 @@ Nothing in either lane touches the 3ds Max SDK. It is here because a barebones t
 read, repeatedly, as proof that a cartridge *could not* draw: an inert example is an argument, and it
 was making the wrong one.
 
-It still edits nothing in `ManipMouse`, on purpose — that is where your behaviour goes.
+It still edits nothing in `ManipMouse`, on purpose — that is where your behaviour goes. `ManipMouse` fires when the gizmo is dragged in **Select and Manipulate** mode, not on the creation click: the slot places a new Tetra Dummy where you click.
+
+**Its one parameter, `size`,** is declared by `describe_params()`, kept by the slot (saved with the scene, animatable, `$.size`), shown as a Size spinner in the Create and Modify panels, and handed back as `params` on every call.
 
 **Hello signal:** a log line on `ManipUpdateShapes` — fired when the gizmo is displayed, guarded to
 announce once per load — readable with `cartridge_logs -module slot_manipulator`. A second line
@@ -86,7 +88,10 @@ index and [`docs/SLOTS.md`](../../docs/SLOTS.md) for how a slot loads a payload 
 1. Copy this directory to `cartridges/<your-name>/` (or scaffold with `tools/new-cartridge.ps1`).
 2. Put your behaviour in `ManipUpdateShapes`: replace the tetrahedron with your handles, and edit
    the target in `ManipMouse`.
-3. Declare any parameter in `describe_params` — the slot keeps it, saved and animatable.
+3. Declare any parameter in `describe_params` — the slot keeps it, saved and animatable, and hands
+   it back as `params` to `ManipUpdateShapes`, `ManipMouse` and the panel. This example's
+   `size` is exactly that: drag the Size spinner and the tetrahedron follows; `$.size = 30` works
+   from MAXScript; the value survives a save.
 4. Create and select the **Tetra Dummy** helper (Create > Helpers) in a viewport, then confirm your
    log line with
    `cartridge_logs -module slot_manipulator`.

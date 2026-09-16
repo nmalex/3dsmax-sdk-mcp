@@ -3,7 +3,7 @@
      it in step with cartridge.json and the row in ../README.md. -->
 <Project>
   <PropertyGroup Label="Version">
-    <CartridgeVersion>0.1.0</CartridgeVersion>
-    <CartridgeVersionComma>0,1,0,0</CartridgeVersionComma>
+    <CartridgeVersion>0.2.0</CartridgeVersion>
+    <CartridgeVersionComma>0,2,0,0</CartridgeVersionComma>
   </PropertyGroup>
 </Project>

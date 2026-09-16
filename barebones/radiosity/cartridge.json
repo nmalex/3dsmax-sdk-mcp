@@ -2,7 +2,7 @@
     "schema": "cartridge/2",
     "name": "Barebones Radiosity",
     "slug": "barebones-radiosity",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "slot": "radiosity",
     "requires": {
         "max": [

@@ -28,14 +28,22 @@ THE GIZMO-BUILD ENTRIES USED BELOW, all of which are in the published facade:
 There are more (StartNewLine, AppendPoint, MakeCircle, MakeRect); `mcp_facade.has()` will tell you
 what this build actually carries.
 
+ITS ONE PARAMETER, `size`, and where it lives. describe_params() declares it; the slot keeps the value
+in its own parameter block - saved with the scene, animatable, `$.size` from MAXScript - and hands it
+back as `params` on every call, ManipUpdateShapes included. describe_ui() shows it as a Size spinner
+in the Create and Modify panels, beside the slot's About. Nothing here stores it: this module holds
+no value it would lose on the next reload. The cartridge that does the same for a modifier is
+cartridges/bend.
+
 THE HELLO. Logged once from `ManipUpdateShapes`, which fires when the gizmo is displayed. Trigger it
-by creating this manipulator helper and selecting it, then read
-`cartridge_logs -module slot_manipulator`.
+by creating a Tetra Dummy (Create > Helpers > MCP Cartridges, then click in a viewport - it lands
+where you click) and selecting it, then read `cartridge_logs -module slot_manipulator`.
 """
 
 import ctypes
 
 import mcp_bootstrap
+import mcp_ui as ui
 
 try:
     import mcp_facade
@@ -45,11 +53,10 @@ except ImportError:      # a build without the Python facade lane still loads an
 _said_hello = False
 _said_drew = False
 
-# Half-edge of the tetrahedron, in 3ds Max system units. Four alternate corners of a cube.
-SIZE = 15.0
-
-_APEX = (SIZE, SIZE, SIZE)
-_BASE = [(SIZE, -SIZE, -SIZE), (-SIZE, SIZE, -SIZE), (-SIZE, -SIZE, SIZE)]
+# Half-edge of the tetrahedron, in 3ds Max system units: four alternate corners of a cube. This is
+# the declared DEFAULT - the answer for a params dict that has not arrived - never a second copy of
+# the value, which lives in the slot.
+DEFAULT_SIZE = 15.0
 
 # Cyan, so it reads as "the cartridge drew this" rather than as the slot's own fallback circle.
 _COLOR = (0.2, 0.8, 1.0)
@@ -72,7 +79,7 @@ def _points(vectors):
     return array
 
 
-def _draw_tetrahedron(api, builder):
+def _draw_tetrahedron(api, builder, size):
     """Four polylines: the closed base triangle, then one edge up to the apex from each corner.
 
     Returns the number of runs appended, or refuses by returning 0 - a barebones never raises into
@@ -81,18 +88,66 @@ def _draw_tetrahedron(api, builder):
     ok = mcp_facade.MAXMCP_FACADE_OK
     runs = 0
 
-    base = _points(_BASE)
+    apex = (size, size, size)
+    base_corners = [(size, -size, -size), (-size, size, -size), (-size, -size, size)]
+
+    base = _points(base_corners)
     if api.GizmoShapeAppendPolyline(api.Context, builder, base, len(base), 1) == ok:
         runs += 1
 
-    for corner in _BASE:
-        edge = _points([_APEX, corner])
+    for corner in base_corners:
+        edge = _points([apex, corner])
         if api.GizmoShapeAppendPolyline(api.Context, builder, edge, len(edge), 0) == ok:
             runs += 1
 
     color = _points([_COLOR])
     api.GizmoBuildSetAppearance(api.Context, builder, color, 0)
     return runs
+
+
+def _size(params):
+    """The declared size from the slot's params, or the default when none has arrived."""
+    try:
+        return float((params or {}).get("size", DEFAULT_SIZE))
+    except (TypeError, ValueError):
+        return DEFAULT_SIZE
+
+
+def describe_params():
+    """One float: the tetrahedron's half-edge, the shape a Dummy's own single Size spinner takes."""
+    return {
+        "parameters": [
+            {"name": "size", "type": "float", "default": DEFAULT_SIZE},
+        ],
+    }
+
+
+def describe_ui(params=None, **kwargs):
+    """The Create/Modify panel rollout: the Size spinner, bound to the slot-held `size`.
+
+    `param="size"` is the whole binding: the slot writes the value into its block when the spinner
+    moves, before on_ui_event below is called, and hands it back as `params` everywhere.
+    """
+    return ui.build(
+        ui.VBox(
+            ui.Label("Tetra Dummy"),
+            ui.Spacer(),
+            ui.Field("Size:", ui.Spinner(value=_size(params), minimum=0.01, maximum=100000.0,
+                                         step=0.1, edit_type="universe", autoscale=True,
+                                         param="size")),
+        )
+    )
+
+
+def on_ui_event(control_id, value=None, ctrl=False, shift=False, alt=False, settled=True,
+                params=None):
+    """The spinner moved. The slot has already saved it; `invalidate` asks it to redraw the gizmo."""
+    outcome = ui.dispatch(control_id, value)
+    return {
+        "invalidate": True,
+        "rebuild": bool(outcome.get("rebuild")),
+        "updates": outcome.get("updates") or [],
+    }
 
 
 def ManipUpdateShapes(**event):
@@ -121,7 +176,8 @@ def ManipUpdateShapes(**event):
     if not active.value or not builder.value:
         return {"shapes": [], "lane": "python", "why": "gizmo build not active"}
 
-    runs = _draw_tetrahedron(api, builder.value)
+    size = _size(event.get("params"))
+    runs = _draw_tetrahedron(api, builder.value, size)
 
     # Said ONCE, on the first gizmo actually built. A drawing is evidence only to somebody looking
     # at the viewport; this line is the same fact in the log, where a verifier can read it.
@@ -130,19 +186,23 @@ def ManipUpdateShapes(**event):
         _said_drew = True
         mcp_bootstrap.log("display",
                           "Barebones Manipulator drew a wireframe tetrahedron: %d polyline run(s) "
-                          "appended to the borrowed GizmoShape through the facade, from Python."
-                          % runs)
+                          "appended to the borrowed GizmoShape through the facade, from Python, "
+                          "at size %g (params %s)."
+                          % (runs, size, "received" if event.get("params") else "absent"))
     return {"shapes": ["tetrahedron"], "runs": runs, "lane": "python"}
 
 
 def ManipMouse(**event):
-    """Called on mouse interaction with the gizmo. A real one edits a target; this one does nothing."""
+    """Called when the gizmo is pressed, dragged or released in SELECT AND MANIPULATE mode (the
+    main toolbar's manipulate toggle). It is NOT called for the creation click - placing the helper
+    is the host's, and the slot puts it where the user clicked. A real manipulator edits `params`
+    from here; this one does nothing."""
     _hello_once("mouse (ManipMouse)")
     return {"handled": False, "lane": "python"}
 
 
 def describe(params=None):
-    return {"payload": "slot_manipulator", "version": "0.2.0", "lane": "python",
+    return {"payload": "slot_manipulator", "version": "0.3.0", "lane": "python",
             "example": "barebones/manipulator", "draws": "tetrahedron"}
 
 
