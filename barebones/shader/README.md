@@ -53,6 +53,17 @@ python surface/max_facade_surface.py ShadeSample
 python surface/max_facade_surface.py --missing shader
 ```
 
+## Beyond one colour
+
+This barebones returns the simplest look: one colour. `ShaderUpdate` can return a whole **look** instead:
+- an image by UV;
+- a colour ramp by facing, light, u, v or world height (a banded ramp by light is toon shading);
+- a rim glow and emission;
+- opacity.
+
+The Slot shades it per sample, natively. See
+[docs/SLOTS.md — A managed look](../../docs/SLOTS.md#a-managed-look--what-a-python-material-or-shader-can-return).
+
 ## See it work
 
 **The quickest way:** run [`../material_family_demo.py`](../material_family_demo.py) in 3ds Max. It
