@@ -48,6 +48,11 @@ python surface/max_facade_surface.py --missing texmap
 
 ## See it work
 
+**The quickest way:** run [`../material_family_demo.py`](../material_family_demo.py) in 3ds Max. It
+builds one scene that uses all four material-family cartridges, animates them over three frames,
+and renders the result. See [the barebones index](../README.md) for what to look for. To try this
+one by hand:
+
 1. Material Editor → a material's **Diffuse** map button → *MCP Cartridges* → **Cartridge
    Texture Map**. The sample sphere turns into a checker.
 2. Or from Python/MAXScript: `renderMap (Cartridge_Texture_Map()) size:[64,64]` — alternate

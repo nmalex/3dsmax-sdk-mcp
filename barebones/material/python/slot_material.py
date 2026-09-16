@@ -110,7 +110,7 @@ def MtlUpdate(**event):
 
 
 def describe(params=None):
-    return {"payload": "slot_material", "version": "0.1.0", "lane": "python",
+    return {"payload": "slot_material", "version": "0.1.1", "lane": "python",
             "example": "barebones/material"}
 
 
