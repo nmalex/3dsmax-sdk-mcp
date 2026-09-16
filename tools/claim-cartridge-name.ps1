@@ -44,7 +44,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Name,
 
-    [ValidateSet('modifier', 'utility', 'exporter')]
+    # Any slot a barebones ships (new-cartridge.ps1 checks it); reported back, not decided on here.
     [string]$Flavour = 'modifier',
 
     # A JSON array of the names 3ds Max has REGISTERED, e.g. ["Bend","Twist","Skin","UVW Map"].

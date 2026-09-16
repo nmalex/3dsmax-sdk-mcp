@@ -101,9 +101,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools\new-cartridge.ps1 `
     -Name "<agreed>" -Flavour <slot> -ClassesJson <file> -Human
 ```
 
-It runs the name claim again itself, scaffolds the source into `cartridges/<slug>/`, deploys the
-payload into the slot, and records what went where. Exit `3` means that kind or that lane has no
-template yet — that is a real answer, not something to work around.
+It runs the name claim again itself, copies that slot's barebones (`barebones/<slot>`) into
+`cartridges/<slug>/` under the new name, deploys the payload into the slot, and records what went
+where. Exit `3` means that kind has no shipping slot, or its barebones has no native lane — that is a
+real answer, not something to work around.
 
 ## 6. Restart 3ds Max — and ask
 

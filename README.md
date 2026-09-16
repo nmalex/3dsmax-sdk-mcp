@@ -226,7 +226,7 @@ of that plugin kind, not a failure. Fork the one whose type matches what you are
 example is written to be copied, and each carries a README listing **all the SuperClassIDs that slot
 can bear**.
 
-**Twenty-two slots ship today**, each with a Python and a C++ lane:
+**Twenty-three slots ship today**, each with a Python and a C++ lane:
 
 | Plugin type | Python | C++ | What it is |
 | --- | --- | --- | --- |
@@ -234,6 +234,7 @@ can bear**.
 | Exporter | [python](barebones/exporter/python/slot_exporter.py) | [native](barebones/exporter/native/src/payload.cpp) | formats text the slot writes (`SCENE_EXPORT_CLASS_ID`) |
 | Renderer | [python](barebones/renderer/python/slot_renderer.py) | [native](barebones/renderer/native/src/payload.cpp) | a Choose-Renderer plugin (`RENDERER_CLASS_ID`) |
 | Manipulator | [python](barebones/manipulator/python/slot_manipulator.py) | [native](barebones/manipulator/native/src/payload.cpp) | a viewport gizmo (`HELPER_CLASS_ID`) |
+| Helper | [python](barebones/helper/python/slot_helper.py) | [native](barebones/helper/native/src/payload.cpp) | a plain helper that draws the lines it returns (`HELPER_CLASS_ID`) |
 | Controller | [python](barebones/controller/python/slot_controller.py) | [native](barebones/controller/native/src/payload.cpp) | an animation controller (`CTRL_FLOAT_CLASS_ID`) |
 | UV generator | [python](barebones/uv-generator/python/slot_uvgen.py) | [native](barebones/uv-generator/native/src/payload.cpp) | a texmap UV coordinate source (`UVGEN_CLASS_ID`) |
 | XYZ generator | [python](barebones/xyz-generator/python/slot_xyzgen.py) | [native](barebones/xyz-generator/native/src/payload.cpp) | a texmap XYZ coordinate source (`XYZGEN_CLASS_ID`) |
@@ -267,7 +268,7 @@ The full index is [`barebones/README.md`](barebones/README.md).
 [`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md) is the complete census of every plugin type
 the SDK declares — which have a slot, which are registerable with a slot on the roadmap, and which can
 never be a third-party slot and why — and [`docs/COVERAGE_MAP.md`](docs/COVERAGE_MAP.md) accounts for
-how each of the 22 is verified.
+how each of the 23 is verified.
 
 ## Limitations
 

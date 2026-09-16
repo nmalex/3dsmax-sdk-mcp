@@ -1,7 +1,7 @@
 # Barebones — a hello-world cartridge for every plugin type
 
 **This is the starting point.** Each folder here is the smallest cartridge for one 3ds Max plugin
-type. For the twenty-two types with a shipping slot it **registers, appears where that type appears, and
+type. For the twenty-three types with a shipping slot it **registers, appears where that type appears, and
 says hello** — a log line (and, for single-shot types, a message box) you read back with
 `cartridge_logs`; it does nothing else, on purpose, so an inert cartridge proves the whole crossing
 works *before* your behaviour is in the way of reading the result. A handful of other folders document
@@ -36,10 +36,11 @@ ship and run; read either with `cartridge_logs -module <deployedAs>`.
 | IK solver | `IKSolver` | log on solve | `IK_SOLVER_CLASS_ID` | [iksolver/python](iksolver/python/slot_iksolver.py) | [iksolver/native](iksolver/native/src/payload.cpp) | 🔵 |
 | Object snap | `Osnap` | log on snap | `OSNAP_CLASS_ID` | [osnap/python](osnap/python/slot_osnap.py) | [osnap/native](osnap/native/src/payload.cpp) | 🔵 |
 | Manipulator | `SimpleManipulator` | viewport gizmo + log | `HELPER_CLASS_ID` *(as a manipulator)* | [manipulator/python](manipulator/python/slot_manipulator.py) | [manipulator/native](manipulator/native/src/payload.cpp) | ✅ |
+| Helper | `HelperObject` | viewport lines + log | `HELPER_CLASS_ID` | [helper/python](helper/python/slot_helper.py) | [helper/native](helper/native/src/payload.cpp) | ✅ |
 | ParticleFlow operator | `PFSimpleOperator` | Particle View + log | `HELPER_CLASS_ID` *(as a PF operator)* | [pfoperator/python](pfoperator/python/slot_pfoperator.py) | [pfoperator/native](pfoperator/native/src/payload.cpp) | 🔵 |
 
 `·` marks a sibling SuperClassID the same payload shape can serve when deployed into that slot. All
-nine slots above **ship and run**. A `🔵` in *Verified* means the example reports its `init` on load —
+ten slots above **ship and run**. A `🔵` in *Verified* means the example reports its `init` on load —
 proof it is alive — while its `Hello World` **greeting** fires only under a host action a headless
 probe cannot synthesise, so that is the step to run by hand:
 
@@ -57,12 +58,12 @@ make its greeting fire by hand.
 `HELPER_CLASS_ID` is the clearest case that **plugin type ≠ SuperClassID**: a plain helper, a
 **manipulator**, and a **ParticleFlow operator** are all `HELPER_CLASS_ID`, distinguished only by
 extra interfaces and `ClassDesc` answers (`IsManipulator()`, `SubClassID() == PFOperatorSubClassID`).
-They are three different slots — three different barebones — under one superclass. The `manipulator`
+They are three different slots — three different barebones — under one superclass. [`tetra_demo.py`](tetra_demo.py) puts the helper and the manipulator side by side. The `manipulator`
 and `pfoperator` examples are that story.
 
 ## The rest of the census — the other plugin types
 
-The nine above are the core gallery, but **twenty-two slots ship and run** in all. The other
+The ten above are the core gallery, but **twenty-three slots ship and run** in all. The other
 thirteen shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
 `texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
 `videopost-filter`, and the four per-sample kinds below — each with its own `README.md` and both
@@ -106,7 +107,7 @@ The barebones directory also carries an example for plugin types that do **not**
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:
 
-- **Has a slot — ships and runs.** The twenty-two above.
+- **Has a slot — ships and runs.** The twenty-three above.
 - **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
   slot is not built yet — a legitimate roadmap request. These have no directory here; the census
   lists them.

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- THE version for this cartridge. The native payload project reads it to stamp its binary and its
+     About line. MSBuild cannot read JSON, so it lives here AND in cartridge.json: change both
+     together. tools\check-cartridges.ps1 refuses the two disagreeing. -->
+<Project>
+  <PropertyGroup Label="Version">
+    <CartridgeVersion>0.1.0</CartridgeVersion>
+    <CartridgeVersionComma>0,1,0,0</CartridgeVersionComma>
+  </PropertyGroup>
+</Project>
