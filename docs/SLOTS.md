@@ -202,8 +202,8 @@ never runs per sample**. Each of these Slots runs in one of two modes, chosen wh
 | Slot | Managed call | What it returns | How the Slot evaluates it | Unmanaged per-sample call |
 | --- | --- | --- | --- | --- |
 | `texmap` | `TexmapUpdate` | `image` — `{width, height, rgb[]}` | nearest texel by UV, tiled | `TexmapColor` / `TexmapMono` / `TexmapBump` |
-| `material` | `MtlUpdate` | `color` — `[r, g, b]` | lit by the scene's lights plus ambient (Lambert) | `MtlShade` |
-| `shader` | `ShaderUpdate` | `tint` — `[r, g, b]` | a Lambert term over the lights, times the tint | `ShaderIllum` |
+| `material` | `MtlUpdate` | a **look** (below); the simplest is `color` — `[r, g, b]` | the look per sample; a bare colour is lit by the lights plus ambient | `MtlShade` |
+| `shader` | `ShaderUpdate` | a **look** (below); the simplest is `tint` — `[r, g, b]` | the look on the material's diffuse input; a bare tint multiplies a Lambert term | `ShaderIllum` |
 | `sampler` | `SamplerRenderBegin` | `pattern` — `[[x, y], ...]`, up to 64 positions | takes exactly those samples in each pixel and averages | `SamplerSample` |
 
 **Unmanaged is not SDK access.** The payload includes no 3ds Max header, holds no Max pointer and never
@@ -218,6 +218,63 @@ Both modes are verified live in 3ds Max 2026 with the Scanline renderer. The bar
 ([texmap](../barebones/texmap/README.md), [material](../barebones/material/README.md),
 [shader](../barebones/shader/README.md), [sampler](../barebones/sampler/README.md)) ship one lane in
 each mode and say which `ShadeSample*` entries the native lane uses.
+
+#### A managed look — what a Python material or shader can return
+
+Since `0.8.0-alpha.8` the `material` and `shader` Slots take a whole **look** from their update call,
+not just one colour. The Slot evaluates it for every sample, natively. Every key is optional:
+
+```python
+def MtlUpdate(**event):
+    return {
+        "ok": True,
+        "color": [1.0, 0.9, 0.8],                      # base colour ("tint" also works for a shader)
+        "image": {"width": w, "height": h, "rgb": [...]},   # base colour by UV (channel 1), tiled
+        "ramp": {
+            "by": "light",                             # facing | light | u | v | height
+            "colors": [[0.1, 0.1, 0.3], [0.4, 0.4, 0.8], [0.9, 0.9, 1.0]],   # 2..256 stops
+            "range": [0.0, 1.0],                       # the input mapped onto the stops
+            "smooth": False,                           # False = hard bands
+        },
+        "lit": True,                                   # False = the base as is
+        "rim": {"color": [1, 1, 1], "power": 3.0},     # added where the surface turns away
+        "emit": [0.0, 0.0, 0.2],                       # added after lighting
+        "opacity": 1.0,                                # material only; 0..1
+    }
+```
+
+How the Slot shades a sample:
+
+1. **Base colour.** The product of whichever of `color`, the `image` texel under the sample's UV, and
+   the `ramp` colour are given. A shader starts from the Standard material's diffuse input, so
+   `color` acts as a tint.
+2. **Lighting.**
+   - A ramp `"by": "light"` replaces the lighting term: the ramp is looked up at the amount of light
+     the sample receives, plus the ambient light. With `"smooth": False` this is **toon shading**.
+   - Otherwise, when `lit` is true (the default), the base is lit by the scene's lights plus the
+     ambient light.
+3. **Additions.** `rim` adds its colour at grazing angles, weighted by (1 − facing)^power. `emit` is
+   added last.
+4. **Opacity.** `opacity` below 1 makes the material transparent. A shader ignores it, because its
+   transparency is the Standard material's own Opacity.
+
+What a ramp can read, each value mapped through `range` and clamped to 0..1:
+
+| `by` | the value |
+| --- | --- |
+| `facing` | 1 where the surface faces the camera, 0 edge-on |
+| `light` | the brightness of the light the sample receives (ambient not included) |
+| `u`, `v` | the UVs of map channel 1 |
+| `height` | the sample's world Z |
+
+**Compatibility and errors**
+- A reply with only `color` (or `tint`) still shades exactly as in `0.8.0-alpha.6`.
+- A reply with no base key (`color`, `image` or `ramp`) means "no look". The Slot then shades its
+  neutral default.
+- A look the Slot can't use is **refused whole**, never half-applied. The reason is logged once, as a
+  warning, in the cartridge's log, for example:
+  `MtlUpdate: the look was refused - 'color' must be [r, g, b] with three finite numbers`.
+- Limits: images up to 1024×1024; ramps of 2 to 256 stops.
 
 ### The exporter has a panel, but no events
 
