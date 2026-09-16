@@ -171,7 +171,7 @@ Notes: raised by the first end-to-end install. The `-32020` refusal is the serve
 gap is that this repository never says what to send.
 
 ### CTG-005 - [Feature] Templates for the utility and exporter kinds
-Status: Backlog
+Status: Done
 Type:   Feature
 Priority: Medium
 
@@ -181,6 +181,11 @@ Why: `new-cartridge.ps1` offers three kinds and can scaffold one. The other two 
 Done when:
 - `templates/utility/` and `templates/exporter/` scaffold a working Hello World of their kind.
 - Each is exercised the same way: created, deployed, seen in the host, clicked.
+
+Resolved differently: `new-cartridge.ps1` now scaffolds from `barebones/<slot>` — every shipping
+slot's working Hello World, kept current release by release — so the utility, the exporter and every
+other kind scaffold with no template of their own. `templates/` became `examples/`, for showcase
+cartridges.
 
 ### CTG-012 - [Feature] The kit carries what a native payload compiles and links against
 Status: Backlog

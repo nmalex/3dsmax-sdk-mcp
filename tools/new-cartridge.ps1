@@ -3,9 +3,11 @@
 #   powershell -NoProfile -ExecutionPolicy Bypass -File tools\new-cartridge.ps1 `
 #       -Name "Cool Bend" [-Flavour modifier] [-Lane python] [-Replace] [-Human]
 #
-# What comes out is a cartridge that already works: an entry in the host, a rollout in the command
-# panel, and a button that says Hello World. It changes no geometry, on purpose - see the comment at
-# the top of the generated payload for why an inert scaffold is worth more than a clever one.
+# WHAT COMES OUT IS A COPY OF THAT SLOT'S BAREBONES (barebones/<slot>), renamed: the same working
+# payload - both lanes where the barebones has them - under your cartridge's name, with its own
+# manifest and a README for you to fill in. The barebones is the template: it is the smallest thing
+# that registers, appears where its kind appears and says hello, and it is kept working release by
+# release, so a scaffold made from it starts from something that is known to run today.
 #
 # A SLOT IS A WORKBENCH STATION, NOT A HOME. A slot is a pre-compiled plugin that ships with the
 # release; its class identity, its visible name and the payload module name it loads are all
@@ -30,8 +32,9 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$Name,
 
-    # Which slot to occupy. One slot per plugin type.
-    [ValidateSet('modifier', 'utility', 'exporter')]
+    # Which slot to occupy. One slot per plugin type: any barebones with a shipping slot
+    # (barebones/<slot>/cartridge.json that is not marked "template"). Checked below, not here, so the
+    # list is read from the barebones instead of being kept by hand in a second place.
     [string]$Flavour = 'modifier',
 
     [ValidateSet('python', 'native')]
@@ -61,18 +64,28 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $KitRoot = Split-Path -Parent $PSScriptRoot
-$TemplateRoot = Join-Path $KitRoot "templates\$Flavour"
+$BarebonesRoot = Join-Path $KitRoot 'barebones'
+$SourceRoot = Join-Path $BarebonesRoot $Flavour
 $StateDir = Join-Path $env:LOCALAPPDATA '3dsmax-sdk-mcp'
 $DeployRoot = Join-Path $StateDir 'cartridges'
 $SlotsFile = Join-Path $StateDir 'slots.json'
 
-# The module name the slot for this flavour was compiled to load. Fixed, because everything about a
-# slot is fixed - this is the whole binding between a slot and the cartridge in it.
-$SlotModule = "slot_$Flavour"
-
 function Fail([string]$Message, [int]$Code = 2) {
     Write-Host "REFUSED: $Message" -ForegroundColor Red
     exit $Code
+}
+
+# The barebones this kit can scaffold from: a manifest, a Python payload, and not a "template"
+# (the shape-only examples for plugin kinds no slot can ever host).
+function Get-ScaffoldableSlot {
+    foreach ($Dir in (Get-ChildItem -LiteralPath $BarebonesRoot -Directory -ErrorAction SilentlyContinue)) {
+        $Path = Join-Path $Dir.FullName 'cartridge.json'
+        if (-not (Test-Path -LiteralPath $Path)) { continue }
+        try { $M = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json } catch { continue }
+        if ($M.template -or -not $M.payload -or -not $M.payload.deployedAs) { continue }
+        if (-not (Test-Path -LiteralPath (Join-Path $Dir.FullName ("python\{0}.py" -f $M.payload.deployedAs)))) { continue }
+        $Dir.Name
+    }
 }
 
 # -- Names, all derived from one input --------------------------------------------------------------
@@ -82,14 +95,22 @@ $Module = ($Slug -replace '-', '_')
 if ([string]::IsNullOrWhiteSpace($Slug)) { Fail "'$Name' has no letters or digits in it, so no directory name can be derived from it." }
 if ($Module -match '^[0-9]') { Fail "'$Name' starts with a digit, which cannot begin a Python module name. Start it with a letter." }
 
-if (-not (Test-Path -LiteralPath $TemplateRoot)) {
-    Write-Host "NOT SUPPORTED YET: there is no template for the '$Flavour' slot." -ForegroundColor Yellow
-    Write-Host "Templated today: $((Get-ChildItem -LiteralPath (Join-Path $KitRoot 'templates') -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name }) -join ', ')"
-    Write-Host 'The remaining slots are listed in ROADMAP.md. They are not forgotten; they are not built.'
+$Scaffoldable = @(Get-ScaffoldableSlot)
+if ($Scaffoldable -notcontains $Flavour) {
+    Write-Host "NOT SUPPORTED: there is no barebones with a shipping slot called '$Flavour'." -ForegroundColor Yellow
+    Write-Host "Slots you can scaffold: $($Scaffoldable -join ', ')"
+    Write-Host 'barebones\README.md says which plugin kinds have no slot, and why.'
     exit 3
 }
-if ($Lane -eq 'native' -and -not (Test-Path -LiteralPath (Join-Path $TemplateRoot 'native'))) {
-    Write-Host "NOT SUPPORTED YET: the '$Flavour' template has no native lane." -ForegroundColor Yellow
+$SourceManifest = Get-Content -LiteralPath (Join-Path $SourceRoot 'cartridge.json') -Raw | ConvertFrom-Json
+
+# The module name the slot for this flavour was compiled to load, as its barebones records it. Fixed,
+# because everything about a slot is fixed - this is the whole binding between a slot and the
+# cartridge in it. Not derived from the flavour: uv-generator loads slot_uvgen.
+$SlotModule = [string]$SourceManifest.payload.deployedAs
+
+if ($Lane -eq 'native' -and -not (Test-Path -LiteralPath (Join-Path $SourceRoot 'native'))) {
+    Write-Host "NOT SUPPORTED YET: the '$Flavour' barebones has no native lane." -ForegroundColor Yellow
     Write-Host 'Start in Python, then port the payload. See ROADMAP.md.'
     exit 3
 }
@@ -181,65 +202,103 @@ if ($MaxYears.Count -eq 0) {
     $PluginVersion = 'unknown'
 }
 
-$Tokens = @{
-    '@DISPLAY_NAME@'   = $Name.Trim()
-    '@SLUG@'           = $Slug
-    '@MODULE@'         = $Module
-    '@FLAVOUR@'        = $Flavour
-    '@SLOT_MODULE@'    = $SlotModule
-    # A fresh project GUID per cartridge. Never reused from a sibling: two projects sharing one guid
-    # confuse every tool that keys off it, and the confusion appears as builds that quietly do the
-    # wrong thing rather than as an error.
-    '@PROJECT_GUID@'   = [Guid]::NewGuid().ToString().ToUpperInvariant()
-    '@MAX_YEARS@'      = (($MaxYears | Sort-Object -Unique) -join ', ')
-    '@PLUGIN_VERSION@' = $PluginVersion
-    '@CREATED@'        = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
-    '@GENERATOR@'      = 'new-cartridge.ps1'
-}
-function Expand-Template([string]$Text) {
-    foreach ($Key in $Tokens.Keys) { $Text = $Text.Replace($Key, $Tokens[$Key]) }
-    return $Text
-}
-
+$Created = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+$Utf8 = New-Object System.Text.UTF8Encoding($false)
 $Written = New-Object System.Collections.ArrayList
 New-Item -ItemType Directory -Path (Join-Path $SourceDir 'python') -Force | Out-Null
 
+# THE MANIFEST, written fresh rather than copied: the barebones' own record describes the barebones.
+# Anything the slot or the kit reads beyond the common fields (an exporter's file type) is carried over.
+$Manifest = [ordered]@{
+    schema   = 'cartridge/2'
+    name     = $Name.Trim()
+    slug     = $Slug
+    version  = '0.1.0-dev'
+    slot     = $Flavour
+    requires = [ordered]@{ max = @($MaxYears | Sort-Object -Unique); plugin = $PluginVersion }
+    payload  = [ordered]@{ lane = $Lane; module = $Module; deployedAs = $SlotModule }
+}
+foreach ($Extra in $SourceManifest.PSObject.Properties) {
+    if (@('schema', 'name', 'slug', 'version', 'slot', 'requires', 'payload', 'created', 'generator', 'template') -notcontains $Extra.Name -and -not $Extra.Name.StartsWith('_')) {
+        $Manifest[$Extra.Name] = $Extra.Value
+    }
+}
+$Manifest['basedOn'] = "barebones/$Flavour"
+$Manifest['created'] = $Created
+$Manifest['generator'] = 'new-cartridge.ps1'
 $ManifestPath = Join-Path $SourceDir 'cartridge.json'
-[System.IO.File]::WriteAllText($ManifestPath, (Expand-Template (Get-Content -LiteralPath (Join-Path $TemplateRoot 'cartridge.json') -Raw)), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($ManifestPath, ($Manifest | ConvertTo-Json -Depth 8), $Utf8)
 [void]$Written.Add($ManifestPath)
 
+# THE PAYLOAD, the barebones' own, under your module name. A Python module's filename is its import
+# name; the copy the slot loads is renamed back at deploy time, below.
 $PayloadPath = Join-Path $SourceDir "python\$Module.py"
-[System.IO.File]::WriteAllText($PayloadPath, (Expand-Template (Get-Content -LiteralPath (Join-Path $TemplateRoot 'python\payload.py') -Raw)), (New-Object System.Text.UTF8Encoding($false)))
+Copy-Item -LiteralPath (Join-Path $SourceRoot "python\$SlotModule.py") -Destination $PayloadPath
 [void]$Written.Add($PayloadPath)
 
 # A README is required of every cartridge, so it is scaffolded rather than demanded: a rule that is
-# free to comply with is a rule people follow. The check refuses one that was never filled in.
+# free to comply with is a rule people follow. The barebones' README stays in the barebones - it
+# explains the slot; yours explains your cartridge.
 $ReadmePath = Join-Path $SourceDir 'README.md'
-[System.IO.File]::WriteAllText($ReadmePath, (Expand-Template (Get-Content -LiteralPath (Join-Path $TemplateRoot 'README.md') -Raw)), (New-Object System.Text.UTF8Encoding($false)))
+$Readme = @"
+# $($Name.Trim())
+
+*(Scaffolded from [barebones/$Flavour](../../barebones/$Flavour/README.md). Replace this file's contents
+before opening a pull request - see [docs/CARTRIDGE_PR.md](../../docs/CARTRIDGE_PR.md).)*
+
+**What it does:** for now, what the $Flavour barebones does - it registers, appears where its kind
+appears and says hello. That proves the whole crossing works before your behaviour is in the way.
+
+## What to write here
+
+- **What it does to a scene.** In plain words, not "a $Flavour cartridge".
+- **How to use it** - apply it to what, and what changes.
+- **What it does not do**, if that is not obvious. A stated limit saves a bug report.
+
+## Facts worth keeping current
+
+| | |
+| --- | --- |
+| Slot | ``$Flavour`` |
+| Lane | Python - ``python/$Module.py`` |
+| Version | see ``cartridge.json``, and the row in [``../README.md``](../README.md) |
+
+Both of those move together on every pull request. That is not optional.
+"@
+[System.IO.File]::WriteAllText($ReadmePath, $Readme, $Utf8)
 [void]$Written.Add($ReadmePath)
 
-# THE NATIVE LANE, scaffolded whenever the template has one - not only when -Lane native was asked
-# for. The two lanes are not alternatives that exclude each other: a native exporter still leaves
-# the options panel to Python, because composing a panel is where a language with closures earns its
-# keep. Scaffolding both means porting a hot function later is an edit rather than a new project.
-$TemplateNative = Join-Path $TemplateRoot 'native'
-if (Test-Path -LiteralPath $TemplateNative) {
+# THE NATIVE LANE, copied whenever the barebones has one - not only when -Lane native was asked
+# for. The two lanes are not alternatives that exclude each other, and scaffolding both means porting
+# a hot function later is an edit rather than a new project. The project keeps its target name
+# (<slot module>_native): that is the file name the slot looks for beside itself.
+$SourceNative = Join-Path $SourceRoot 'native'
+if (Test-Path -LiteralPath $SourceNative) {
     New-Item -ItemType Directory -Path (Join-Path $SourceDir 'native\src') -Force | Out-Null
 
-    $PropsPath = Join-Path $SourceDir 'Version.props'
-    [System.IO.File]::WriteAllText($PropsPath, (Expand-Template (Get-Content -LiteralPath (Join-Path $TemplateRoot 'Version.props') -Raw)), (New-Object System.Text.UTF8Encoding($false)))
-    [void]$Written.Add($PropsPath)
-
-    foreach ($Pair in @(
-        @{ From = 'native\Payload.vcxproj'; To = "native\$Module`_payload.vcxproj" },
-        # NOT renamed to the module name. A Python module's filename IS its import name and must
-        # match; a C++ source's filename is nothing to anybody, and renaming it only creates a second
-        # place for the project file to disagree with the disk.
-        @{ From = 'native\src\payload.cpp'; To = 'native\src\payload.cpp' })) {
-        $Target = Join-Path $SourceDir $Pair.To
-        [System.IO.File]::WriteAllText($Target, (Expand-Template (Get-Content -LiteralPath (Join-Path $TemplateRoot $Pair.From) -Raw)), (New-Object System.Text.UTF8Encoding($false)))
-        [void]$Written.Add($Target)
+    $PropsSource = Join-Path $SourceRoot 'Version.props'
+    if (Test-Path -LiteralPath $PropsSource) {
+        $PropsPath = Join-Path $SourceDir 'Version.props'
+        Copy-Item -LiteralPath $PropsSource -Destination $PropsPath
+        [void]$Written.Add($PropsPath)
     }
+
+    # A fresh project GUID. Never reused from the barebones: two projects sharing one guid confuse
+    # every tool that keys off it, and the confusion appears as builds that quietly do the wrong
+    # thing rather than as an error.
+    $Project = Get-Content -LiteralPath (Join-Path $SourceNative 'Payload.vcxproj') -Raw
+    $Guid = [Guid]::NewGuid().ToString().ToUpperInvariant()
+    $Project = [regex]::Replace($Project, '<ProjectGuid>\{[0-9A-Fa-f-]+\}</ProjectGuid>', "<ProjectGuid>{$Guid}</ProjectGuid>")
+    $Project = [regex]::Replace($Project, '<RootNamespace>[^<]*</RootNamespace>', "<RootNamespace>$($Module)_payload</RootNamespace>")
+    $ProjectPath = Join-Path $SourceDir "native\$Module`_payload.vcxproj"
+    [System.IO.File]::WriteAllText($ProjectPath, $Project, $Utf8)
+    [void]$Written.Add($ProjectPath)
+
+    # NOT renamed to the module name. A C++ source's filename is nothing to anybody, and renaming it
+    # only creates a second place for the project file to disagree with the disk.
+    $CppPath = Join-Path $SourceDir 'native\src\payload.cpp'
+    Copy-Item -LiteralPath (Join-Path $SourceNative 'src\payload.cpp') -Destination $CppPath
+    [void]$Written.Add($CppPath)
 }
 
 # -- Deploy into the slot ---------------------------------------------------------------------------------
@@ -273,13 +332,13 @@ try {
 if ($null -eq $Slots) { $Slots = [pscustomobject]@{ schema = 'slots/1'; slots = [pscustomobject]@{} } }
 if (-not $Slots.slots) { $Slots | Add-Member -NotePropertyName slots -NotePropertyValue ([pscustomobject]@{}) -Force }
 $Entry = [ordered]@{
-    name       = $Tokens['@DISPLAY_NAME@']
+    name       = $Name.Trim()
     slug       = $Slug
     module     = $Module
     deployedAs = "$SlotModule.py"
     source     = $SourceDir
     lane       = $Lane
-    since      = $Tokens['@CREATED@']
+    since      = $Created
 }
 $Slots.slots | Add-Member -NotePropertyName $Flavour -NotePropertyValue $Entry -Force
 $Slots | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $SlotsFile -Encoding UTF8
@@ -289,7 +348,7 @@ $MaxRunning = @(Get-Process -Name '3dsmax' -ErrorAction SilentlyContinue).Count 
 
 if ($Human) {
     Write-Host ''
-    Write-Host "'$($Tokens['@DISPLAY_NAME@'])' is now in the $Flavour slot." -ForegroundColor Green
+    Write-Host "'$($Name.Trim())' is now in the $Flavour slot." -ForegroundColor Green
     if ($Replaced) { Write-Host "  It replaced '$Replaced'. Scenes saved with that one will now evaluate this one." -ForegroundColor Yellow }
     Write-Host ''
     Write-Host "  Source      $SourceDir"
@@ -310,7 +369,7 @@ if ($Human) {
 } else {
     [ordered]@{
         schema      = 'new-cartridge/2'
-        name        = $Tokens['@DISPLAY_NAME@']
+        name        = $Name.Trim()
         slug        = $Slug
         slot        = $Flavour
         lane        = $Lane

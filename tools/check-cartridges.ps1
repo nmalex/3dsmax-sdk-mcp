@@ -34,12 +34,18 @@ $ErrorActionPreference = 'Stop'
 
 $KitRoot = Split-Path -Parent $PSScriptRoot
 $CartridgeRoot = Join-Path $KitRoot 'cartridges'
-$TemplateRoot = Join-Path $KitRoot 'templates'
+$BarebonesRoot = Join-Path $KitRoot 'barebones'
 
-# The slots a cartridge may claim. Derived from what this kit can actually scaffold, so adding a
-# template teaches this check about it with no second edit - a hand-kept mirror of another list is a
+# The slots a cartridge may claim: every barebones whose slot ships (its manifest is not marked
+# "template"). Derived from the barebones - which new-cartridge.ps1 scaffolds from - so a new slot's
+# barebones teaches this check about it with no second edit. A hand-kept mirror of another list is a
 # list that goes stale, and it goes stale silently.
-$KnownSlots = @(Get-ChildItem -LiteralPath $TemplateRoot -Directory -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
+$KnownSlots = @(foreach ($Dir in (Get-ChildItem -LiteralPath $BarebonesRoot -Directory -ErrorAction SilentlyContinue)) {
+    $Path = Join-Path $Dir.FullName 'cartridge.json'
+    if (-not (Test-Path -LiteralPath $Path)) { continue }
+    try { $M = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json } catch { continue }
+    if (-not $M.template -and $M.slot) { [string]$M.slot }
+})
 
 # Never committed inside a cartridge. Build output belongs to whoever built it.
 # NOT '.obj'. It was here to catch MSVC object files, and it would have rejected an OBJ exporter's
