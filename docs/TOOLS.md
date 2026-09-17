@@ -1,7 +1,7 @@
 # MCP tools
 
 The tools the 3ds Max SDK MCP server serves, as the server itself lists them (`tools/list`).
-**Generated** from maxsdk-mcp 0.8.0-alpha.8 (protocol 2026-07-28) by the release; do not edit by hand. The same list, machine-readable, is [`mcp-tools.json`](../mcp-tools.json).
+**Generated** from maxsdk-mcp 0.9.0-alpha.1 (protocol 2026-07-28) by the release; do not edit by hand. The same list, machine-readable, is [`mcp-tools.json`](../mcp-tools.json).
 
 Ask a running server for the live list at any time - `tools/list` over MCP, or `max_capabilities` for everything the build serves.
 

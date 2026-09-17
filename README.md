@@ -338,7 +338,7 @@ pull request beside PSScriptAnalyzer and the cartridge-structure check
 
 ## Status
 
-`0.8.0-alpha.8`. [STATUS.md](STATUS.md) says which parts work today and
+`0.9.0-alpha.1`. [STATUS.md](STATUS.md) says which parts work today and
 which do not; [ROADMAP.md](ROADMAP.md) says what is missing on purpose.
 
 ## Reporting a bug
