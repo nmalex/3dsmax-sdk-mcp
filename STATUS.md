@@ -19,7 +19,7 @@ This is being built in the open and the parts land in order. What is true **toda
 | The `install` skill and `.mcp.json` | works — a fork drives its own setup |
 | Connecting an agent | works — HTTP clients use `http://127.0.0.1:3000/mcp` directly; command-launched (stdio) clients run [`tools/mcp_bridge.py`](tools/mcp_bridge.py), verified end to end against 3ds Max 2026 (handshake, tools/list, a read call, and the destructive-call consent round-trip) |
 | The release asset it installs | `0.8.0-alpha.8` — every binary in it carries the release's own identifier; declared parameters arrived in [alpha.3](https://github.com/nmalex/3dsmax-sdk-mcp/releases/tag/v0.4.0-alpha.3) ([#7](https://github.com/nmalex/3dsmax-sdk-mcp/issues/7)) |
-| Slots shipping | 24 — a slot for every registerable plugin type it targets; every one reports itself on load (see [docs/SLOTS.md](docs/SLOTS.md), [docs/SUPERCLASS_CENSUS.md](docs/SUPERCLASS_CENSUS.md)) |
+| Slots shipping | 25 — a slot for every registerable plugin type it targets; every one reports itself on load (see [docs/SLOTS.md](docs/SLOTS.md), [docs/SUPERCLASS_CENSUS.md](docs/SUPERCLASS_CENSUS.md)) |
 | [`surface/`](surface/README.md) | works - all 5436 facade entries and every declared gap, enumerable from this checkout (`python surface/max_facade_surface.py --missing`), generated from the facade's own declaration and gated against drift |
 | [LAW.md](LAW.md) / [ESSENTIALS.md](ESSENTIALS.md) | the binding rules and the practice - read both before writing a Cartridge |
 | The `bootstrap` skill | works — interview, name claim, Slot, scaffold, verify |
