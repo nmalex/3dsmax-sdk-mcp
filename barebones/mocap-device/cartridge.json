@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones MoCap Device",
+    "slug": "barebones-mocap-device",
+    "version": "0.1.0",
+    "slot": "mocap-device",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.9"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_mcdev",
+        "deployedAs": "slot_mcdev"
+    },
+    "created": "2026-09-17",
+    "generator": "barebones"
+}
