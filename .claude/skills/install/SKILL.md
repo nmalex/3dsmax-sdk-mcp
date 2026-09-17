@@ -96,9 +96,13 @@ has not finished starting, the plugin did not load, or the port is held by somet
 
 ## 6. Connect this session
 
-`.mcp.json` in this repository declares the server, so the tools appear once it answers. If the
-client has not picked it up, the user may need to approve the project's MCP server or restart the
-session — tell them which, do not guess on their behalf.
+`.mcp.json` in this repository declares the server over HTTP (`http://127.0.0.1:3000/mcp`), so the
+tools appear once it answers. If the client has not picked it up, the user may need to approve the
+project's MCP server or restart the session — tell them which, do not guess on their behalf.
+
+For a client that only launches a server as a command (stdio), point it at the bridge instead:
+`{"command": "python", "args": ["<repo>/tools/mcp_bridge.py"]}`. It forwards to the same endpoint;
+see the README's *Connecting your agent*.
 
 **Then ask the server what it can do, and trust that over any document here.** A live capabilities
 answer is the only authority on what this build actually serves; every file in this repository can
