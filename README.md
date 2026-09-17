@@ -286,6 +286,15 @@ how each of the 23 is verified.
 The plugin serves its own documentation over MCP once installed — an agent driving it can read
 every rule over the protocol alone. The copies in `docs/` ship beside the binary.
 
+**The MCP tools** the server serves are listed in [docs/TOOLS.md](docs/TOOLS.md), with every
+argument, and machine-readable in [mcp-tools.json](mcp-tools.json). Both are the server's own
+`tools/list` answer, regenerated for each release.
+
+**Tests.** The kit's scripts are tested with Pester: [`tests/`](tests/) holds the suites, and CI
+runs them on every pull request beside PSScriptAnalyzer and the cartridge-structure check
+([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). Run the same three jobs locally with
+`tools/check-all.ps1`.
+
 ## Status
 
 `0.8.0-alpha.8`. [STATUS.md](STATUS.md) says which parts work today and

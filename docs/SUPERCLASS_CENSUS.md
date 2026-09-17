@@ -34,7 +34,7 @@ the whole point of this page** — from the outside they look alike (no differen
 either) but they are opposite in meaning.
 
 - **Has a slot — ✅ / 🔵** — a slot ships, so its [`barebones/`](../barebones/) example loads into
-  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Twenty-two** types are here.
+  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Twenty-three** types are here.
 - **Registerable, slot on the roadmap — ◻** — a real super-class a third party *can* register a
   plugin under, whose slot is simply **not built yet**. A feature request for one of these is
   **legitimate** and belongs on the [roadmap](../ROADMAP.md); it is work not yet done, not a door that
