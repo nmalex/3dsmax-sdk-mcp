@@ -1,19 +1,19 @@
 # Coverage map — every authored plugin type, and why each is where it is
 
-This kit authors a hello‑world barebone for **36** 3ds Max plugin types (the super‑class census, FR‑0002).
-Not all 36 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
+This kit authors a hello‑world barebone for **37** 3ds Max plugin types (the super‑class census, FR‑0002).
+Not all 37 receive a runnable slot, and that is a **deliberate, evidence‑based** outcome, not a gap: a
 slot can only exist for a super‑class a third party can register a `ClassDesc` under, and only ships
 once its hello is verifiable. This page accounts for all 32 so you never have to wonder why one is
 missing — every row is classified, and the classification is pinned to the super-class census and enforced by an anti-drift
 check in the factory, which fails the build if any of this drifts.
 
-**36 = 27 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
+**37 = 28 slots + 8 shelved (not third‑party registerable) + 1 deferred (registers, hello unreachable).**
 
 ---
 
-## 27 types with a shipped slot
+## 28 types with a shipped slot
 
-Each registers a real plugin under its super‑class. **Every one of the 27 reports itself on load**: the
+Each registers a real plugin under its super‑class. **Every one of the 28 reports itself on load**: the
 slot calls its cartridge’s `init(env)` the moment 3ds Max loads the slot — handing over the environment
 it alone can see (the running Max release, the slot’s own version, the cartridge ABI, whether the server
 is present) — and calls `shutdown` on unload. So a freshly installed host shows all 22 cartridges having
@@ -33,6 +33,7 @@ snap, a live particle sim, a panel, a modal, a Video Post execute); those ship *
 | shape | `SHAPE_CLASS_ID` | ✅ greeting driven |
 | light | `LIGHT_CLASS_ID` | ✅ greeting driven |
 | camera | `CAMERA_CLASS_ID` | ✅ greeting driven |
+| wsm-object | `WSM_OBJECT_CLASS_ID` | ✅ greeting driven |
 | modifier | `OSM_CLASS_ID` | ✅ greeting driven || exporter | `SCENE_EXPORT_CLASS_ID` | ✅ greeting driven |
 | renderer | `RENDERER_CLASS_ID` | ✅ greeting driven |
 | manipulator | `HELPER_CLASS_ID` (Manipulator) | ✅ greeting driven |
