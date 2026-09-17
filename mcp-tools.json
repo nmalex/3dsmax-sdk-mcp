@@ -3,7 +3,7 @@
   "generated": "tools/list of a running server; regenerate, do not edit",
   "server": {
     "name": "maxsdk-mcp",
-    "version": "0.8.0-alpha.8"
+    "version": "0.9.0-alpha.1"
   },
   "protocolVersion": "2026-07-28",
   "tools": [
