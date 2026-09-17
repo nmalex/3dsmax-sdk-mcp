@@ -21,7 +21,8 @@ Every plugin and cartridge you create with this kit belongs to you. You may sell
 or keep it private, under any licence you choose. We claim no rights in it, take no royalties, and
 require no credit or mention — including no disclosure that it was written with AI or with this
 MCP. The examples and barebones are released under MIT-0, so you can copy them into your work
-without keeping our notice.
+without keeping our notice. You may bundle the plugin and Slot binaries with what you ship, by any
+means — so your customers can run your cartridge without installing anything themselves.
 
 ## How it works
 
@@ -200,6 +201,25 @@ ships.
 Hello World button, deployed and proven in the running host.
 
 **author** — the loop after that: edit the payload, refresh, see it. No restart.
+
+### Connecting your agent
+
+The plugin serves MCP over HTTP on `127.0.0.1`. A client that speaks HTTP connects straight to it -
+point it at `http://127.0.0.1:3000/mcp`.
+
+Some MCP clients only launch a server as a command and talk to it over stdin/stdout. For those,
+run the **stdio bridge** ([`tools/mcp_bridge.py`](tools/mcp_bridge.py)), which speaks that and
+forwards to the plugin. It needs only Python — no packages — and, like the plugin, talks only to
+your own machine:
+
+```json
+{"mcpServers": {"3dsmax": {"command": "python",
+                           "args": ["C:/path/to/3dsmax-sdk-mcp/tools/mcp_bridge.py"]}}}
+```
+
+The bridge lists the tools even before 3ds Max is running, so a client can show them; a call made
+while 3ds Max is down returns a result that says to start it, rather than dropping the connection.
+Calls that would discard work still ask you first, through your client.
 
 ## Cartridge
 
