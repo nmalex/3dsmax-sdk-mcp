@@ -8,7 +8,7 @@ not hand-curated, and a build gate fails if a new SDK super-class ever appears w
 Read this to answer *"what are all the plugin types, which can I occupy today, and — if I cannot — is
 that a roadmap item or a fact of the SDK?"* That last distinction is the one that matters most, and it
 is spelled out below so a missing type is never mistaken for an oversight. For the per-type
-verification detail behind the 23 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
+verification detail behind the 24 that ship, see [COVERAGE_MAP.md](COVERAGE_MAP.md).
 
 ## `Class_ID` vs `SuperClassID` — the two numbers, and why people conflate them
 
@@ -34,7 +34,7 @@ the whole point of this page** — from the outside they look alike (no differen
 either) but they are opposite in meaning.
 
 - **Has a slot — ✅ / 🔵** — a slot ships, so its [`barebones/`](../barebones/) example loads into
-  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Twenty-three** types are here.
+  3ds Max and reports itself (read the greeting with `cartridge_logs`). **Twenty-four** types are here.
 - **Registerable, slot on the roadmap — ◻** — a real super-class a third party *can* register a
   plugin under, whose slot is simply **not built yet**. A feature request for one of these is
   **legitimate** and belongs on the [roadmap](../ROADMAP.md); it is work not yet done, not a door that
@@ -49,16 +49,16 @@ this page could be ambiguous, it says which of the two a type is.
 
 ---
 
-## Has a slot — the 23 that run today
+## Has a slot — the 24 that run today
 
 Each row registers a real plugin under its super-class; the [`barebones/`](../barebones/) example is
-the payload it loads. **Every one of the 23 reports itself on load:** the slot calls its cartridge's
+the payload it loads. **Every one of the 24 reports itself on load:** the slot calls its cartridge's
 `init(env)` the moment 3ds Max loads the slot — handing over the running Max release, the slot's own
 version, the cartridge ABI, and whether the server is present — and calls `shutdown` on unload. So
 `init` reports init and `shutdown` reports unload; the **`Hello World` greeting** is logged only by
 the cartridge's own behaviour, so a load report is never mistaken for the plugin actually working.
 (Because 3ds Max caches plugin classes and demand-loads slot DLLs, "on load" means "when 3ds Max loads
-the slot": a freshly installed host loads every slot and shows all 23 reporting on load; on a later
+the slot": a freshly installed host loads every slot and shows all 24 reporting on load; on a later
 restart a demand-loaded slot reports when the host next loads it.)
 
 On top of that load-time proof the greeting is checked two ways, and **neither marker is a failure**:
@@ -72,8 +72,8 @@ On top of that load-time proof the greeting is checked two ways, and **neither m
 
 | Type | `SuperClassID` | Barebones | Verification |
 | --- | --- | --- | :-: |
-| modifier | `OSM_CLASS_ID` | [modifier](../barebones/modifier/) | ✅ greeting driven |
-| exporter | `SCENE_EXPORT_CLASS_ID` | [exporter](../barebones/exporter/) | ✅ greeting driven |
+| geometry | `GEOMOBJECT_CLASS_ID` | [geometry](../barebones/geometry/) | ✅ greeting driven |
+| modifier | `OSM_CLASS_ID` | [modifier](../barebones/modifier/) | ✅ greeting driven || exporter | `SCENE_EXPORT_CLASS_ID` | [exporter](../barebones/exporter/) | ✅ greeting driven |
 | renderer | `RENDERER_CLASS_ID` | [renderer](../barebones/renderer/) | ✅ greeting driven |
 | manipulator *(helper variant)* | `HELPER_CLASS_ID` | [manipulator](../barebones/manipulator/) | ✅ greeting driven |
 | helper *(plain)* | `HELPER_CLASS_ID` | [helper](../barebones/helper/) | ✅ greeting driven |
@@ -157,7 +157,7 @@ legitimate roadmap item, not a type that was refused. What people ask for is wha
 ### Controllers — the value-type matrix (roadmap)
 
 One controller family (`Control` base) serves every animatable value type, and **each value type is
-its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 23
+its own super-class ID**. `CTRL_FLOAT_CLASS_ID` is the one that ships as a slot today (in the 24
 above). The other value-type super-classes are registerable and a controller slot could target them —
 they are on the roadmap, not excluded:
 
