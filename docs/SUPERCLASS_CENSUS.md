@@ -202,6 +202,12 @@ pseudo, or obsolete, and each verdict is checked against the 2026 SDK headers ra
 Listing them *with the reason* is what makes "we cover everything registerable" checkable instead of
 merely asserted — and it is what preempts "why not type Y?" for a type that can never be a slot.
 
+**These are a deliberate, permanent scope boundary — not a backlog, and the project never returns to
+them.** There is no registration path to build against, so "not yet" does not apply. The only thing that
+could ever move one off this list is a mechanical event, not a plan of ours: if a future 3ds Max SDK
+opens it to third-party registration, the regenerated census moves its bucket, `slot_coverage` demands a
+slot, and the build fails until it is addressed. Until that gate fires, every row here stays excluded.
+
 | `SuperClassID` | Why it is not a third-party slot |
 | --- | --- |
 | `SCHEMATICVIEW_UTILITY_CLASS_ID` | Nominally a plugin super-class (a sibling of the registerable `TRACKVIEW_UTILITY`), but the 2026 SDK ships **no base class, no sample, no plugin-wizard entry and no subclassing doc** for it — the id appears only at its own `#define`. There is no discoverable registration path. |
