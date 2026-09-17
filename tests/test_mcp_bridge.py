@@ -115,6 +115,75 @@ class ToolsList(unittest.TestCase):
         self.assertEqual(result["tools"], [{"name": "only_live"}])
 
 
+# Every tool the plugin serves, named as a literal so the coverage below reaches all of them by
+# name rather than by iterating the generated list. Adding, removing or renaming a served tool is a
+# change to what a client can call, so it is made here too, deliberately. Kept in step with
+# mcp-tools.json / docs/TOOLS.md, which are generated from the server's own tools/list.
+EVERY_TOOL = (
+    "cartridge_logs",
+    "max_capabilities",
+    "max_cartridge_probe",
+    "max_cartridge_refresh",
+    "max_cartridges",
+    "max_facade",
+    "max_job_cancel",
+    "max_job_result",
+    "max_job_start",
+    "max_job_status",
+    "max_jobs",
+    "max_python_probe",
+    "max_python_status",
+    "max_quit",
+    "max_restart",
+    "max_scene_open",
+    "max_scene_reset",
+    "max_scene_save",
+    "max_scene_save_as",
+    "max_scene_state",
+    "max_tools",
+)
+
+# Tools that change or discard scene or session state. Their declaration must set destructiveHint,
+# so a client can ask before calling them - a claim-vs-annotation check on each named tool.
+DESTRUCTIVE_TOOLS = (
+    "max_job_start",
+    "max_quit",
+    "max_restart",
+    "max_scene_open",
+    "max_scene_reset",
+)
+
+
+class ToolCoverage(unittest.TestCase):
+    """Each served tool, by name: declared once, with a description, an object input schema, and
+    all four MCP behaviour hints - and the state-changing ones flagged destructive."""
+
+    def setUp(self):
+        self.by_name = {t.name: t for t in bridge.TOOLS}
+
+    def test_every_named_tool_is_declared(self):
+        self.assertEqual(sorted(self.by_name), sorted(EVERY_TOOL))
+
+    def test_each_tool_declares_its_surface(self):
+        for name in EVERY_TOOL:
+            with self.subTest(tool=name):
+                tool = self.by_name[name]
+                self.assertTrue(tool.description, "%s has no description" % name)
+                self.assertEqual(tool.input_schema.get("type"), "object")
+                for hint in ("readOnlyHint", "destructiveHint", "idempotentHint", "openWorldHint"):
+                    self.assertIn(hint, tool.annotations)
+                    self.assertIsInstance(tool.annotations[hint], bool)
+                self.assertFalse(
+                    tool.annotations["readOnlyHint"] and tool.annotations["destructiveHint"],
+                    "%s is both read-only and destructive" % name)
+
+    def test_state_changing_tools_are_marked_destructive(self):
+        for name in DESTRUCTIVE_TOOLS:
+            with self.subTest(tool=name):
+                self.assertTrue(self.by_name[name].annotations["destructiveHint"],
+                                "%s changes state but is not flagged destructive" % name)
+
+
 class ToolsCall(unittest.TestCase):
 
     def test_forwards_and_strips_transport_fields(self):
