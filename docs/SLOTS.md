@@ -6,7 +6,7 @@ You never build one; you occupy one.
 That is the whole reason this kit needs no 3ds Max SDK, no C++ toolchain for a Python payload, and
 no compiler to produce a working plugin.
 
-## The Slots that ship — 24 today
+## The Slots that ship — 25 today
 
 Each Slot is a compiled 3ds Max plugin of one specific kind. **Twenty-two** ship today, so you can build
 a Cartridge for any of these:
@@ -18,6 +18,7 @@ a Cartridge for any of these:
 | `renderer` | a renderer | the Render Setup dialog |
 | `manipulator` | a viewport manipulator | a helper, editable on the viewport gizmo |
 | `geometry` | a parametric geometry object (a cube) | Create ▸ Geometry ▸ MCP Cartridges |
+| `shape` | a spline shape (a pentagon) | Create ▸ Shapes ▸ MCP Cartridges |
 | `helper` | a plain helper (Tetra Helper) | Create ▸ Helpers; draws the lines the Cartridge returns |
 | `controller` | an animation controller | Track View / Assign Controller |
 | `uv-generator` | a UV coordinate generator | a texmap's Coordinates |
@@ -43,7 +44,7 @@ super-class is a property of the class a Slot registers, not a bucket that owns 
 sharing one is normal. [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) is the complete map of every
 plugin type the SDK declares — which have a Slot, which are registerable with a Slot on the roadmap,
 and which can never be a third-party Slot and why; [docs/COVERAGE_MAP.md](COVERAGE_MAP.md) is the
-per-type accounting of how each of the 24 is verified.
+per-type accounting of how each of the 25 is verified.
 
 **The install is the check, and you can run it.** The release asset stages one module file per Slot
 into `Contents\Bin` — the modifier as `ModifierSlot.dlm`, the exporter as `ExporterSlot.dle`, and the
@@ -54,7 +55,7 @@ disk is right and this is a bug worth [reporting](../README.md#reporting-a-bug) 
 lists a Slot nobody built sends you looking for a bug in your payload.
 
 **More kinds are the roadmap, not the whole list.** 3ds Max can be extended in far more ways than the
-24 above — cameras, lights, shapes, atmospherics, more controller value types, and
+25 above — cameras, lights, shapes, atmospherics, more controller value types, and
 others. Those are **real, registerable types whose Slots are simply not built yet**, not a
 door that is closed: each is tracked in [docs/SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) and on
 [ROADMAP.md](../ROADMAP.md), and asking for one is a legitimate request — what people ask for is what
