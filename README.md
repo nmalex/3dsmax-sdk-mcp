@@ -1,3 +1,5 @@
+[![M8ven Verified](https://m8ven.ai/badge/mcp/nmalex/3dsmax-sdk-mcp?variant=verified)](https://m8ven.ai/mcp/nmalex/3dsmax-sdk-mcp)
+
 # 3ds Max SDK MCP
 
 **This is for building 3ds Max plugins with a coding agent** — Claude, Codex, or anything else that
