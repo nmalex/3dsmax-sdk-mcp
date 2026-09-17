@@ -68,7 +68,7 @@ and `pfoperator` examples are that story.
 
 ## The rest of the census — the other plugin types
 
-The fifteen above are the core gallery, but **twenty-nine slots ship and run** in all. The other
+The fifteen above are the core gallery, but **thirty slots ship and run** in all. The other
 thirteen shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
 `texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
 `videopost-filter`, and the four per-sample kinds below — each with its own `README.md` and both
@@ -112,7 +112,7 @@ The barebones directory also carries an example for plugin types that do **not**
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:
 
-- **Has a slot — ships and runs.** The twenty-nine above.
+- **Has a slot — ships and runs.** The thirty above.
 - **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
   slot is not built yet — a legitimate roadmap request. These have no directory here; the census
   lists them.
