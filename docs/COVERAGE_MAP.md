@@ -67,10 +67,16 @@ person can run it. Nothing ships claiming a greeting it did not produce.
 
 ## 8 types shelved — the super‑class is not open to a third‑party plugin
 
-These barebones exist as documentation of the *shape*, but no slot ships, because 3ds Max does not let a
-third party register a `ClassDesc` under the super‑class. Each verdict is checked against the 2026 SDK
-headers, not assumed (FR‑0003 N5). Shelving them is the honest alternative to shipping a slot that would
-never load.
+No slot ships for these, because 3ds Max does not let a third party register a `ClassDesc` under the
+super‑class. Each verdict is checked against the 2026 SDK headers, not assumed (FR‑0003 N5). Shelving
+them is the honest alternative to shipping a slot that would never load.
+
+**These 8 are a deliberate, permanent scope boundary — not a backlog.** "Not yet" is the wrong reading:
+the SDK gives a third party no way to register under them, so there is nothing to build and nothing to
+return to. The project does not track them as pending work. The one thing that could ever reopen one is
+not a decision of ours but a mechanical event — if a future 3ds Max SDK opens it to third‑party
+registration, the regenerated super‑class census moves its bucket, `slot_coverage` immediately demands a
+slot, and the build fails until it is addressed. Absent that gate firing, these stay closed for good.
 
 | Type | Super‑class | Why it is not a third‑party slot |
 |---|---|---|
