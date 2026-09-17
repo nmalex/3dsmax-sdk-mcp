@@ -1,7 +1,7 @@
 # Barebones — a hello-world cartridge for every plugin type
 
 **This is the starting point.** Each folder here is the smallest cartridge for one 3ds Max plugin
-type. For the twenty-seven types with a shipping slot it **registers, appears where that type appears, and
+type. For the twenty-eight types with a shipping slot it **registers, appears where that type appears, and
 says hello** — a log line (and, for single-shot types, a message box) you read back with
 `cartridge_logs`; it does nothing else, on purpose, so an inert cartridge proves the whole crossing
 works *before* your behaviour is in the way of reading the result. A handful of other folders document
@@ -67,7 +67,7 @@ and `pfoperator` examples are that story.
 
 ## The rest of the census — the other plugin types
 
-The fourteen above are the core gallery, but **twenty-seven slots ship and run** in all. The other
+The fourteen above are the core gallery, but **twenty-eight slots ship and run** in all. The other
 thirteen shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
 `texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
 `videopost-filter`, and the four per-sample kinds below — each with its own `README.md` and both
@@ -111,7 +111,7 @@ The barebones directory also carries an example for plugin types that do **not**
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:
 
-- **Has a slot — ships and runs.** The twenty-seven above.
+- **Has a slot — ships and runs.** The twenty-eight above.
 - **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
   slot is not built yet — a legitimate roadmap request. These have no directory here; the census
   lists them.
