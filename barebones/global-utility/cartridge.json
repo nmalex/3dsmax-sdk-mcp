@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Global Utility",
+    "slug": "barebones-global-utility",
+    "version": "0.1.0",
+    "slot": "global-utility",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.9"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_gup",
+        "deployedAs": "slot_gup"
+    },
+    "created": "2026-09-17",
+    "generator": "barebones"
+}
