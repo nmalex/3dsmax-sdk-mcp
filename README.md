@@ -1,4 +1,5 @@
 [![M8ven Verified](https://m8ven.ai/badge/mcp/nmalex/3dsmax-sdk-mcp?variant=verified)](https://m8ven.ai/mcp/nmalex/3dsmax-sdk-mcp)
+[![M8ven Verified](https://m8ven.ai/api/agent-verify/badge?score=58)](https://m8ven.ai/verified/verify?id=b2da99f31a8cd0f5)
 
 # 3ds Max SDK MCP
 
@@ -286,12 +287,17 @@ how each of the 23 is verified.
 The plugin serves its own documentation over MCP once installed — an agent driving it can read
 every rule over the protocol alone. The copies in `docs/` ship beside the binary.
 
+**Privacy and security.** The plugin collects nothing and tracks nothing - see
+[PRIVACY.md](PRIVACY.md). How the local server is protected, and how to report a vulnerability:
+[SECURITY.md](SECURITY.md).
+
 **The MCP tools** the server serves are listed in [docs/TOOLS.md](docs/TOOLS.md), with every
 argument, and machine-readable in [mcp-tools.json](mcp-tools.json). Both are the server's own
 `tools/list` answer, regenerated for each release.
 
-**Tests.** The kit's scripts are tested with Pester: [`tests/`](tests/) holds the suites, and CI
-runs them on every pull request beside PSScriptAnalyzer and the cartridge-structure check
+**Tests.** [`tests/`](tests/) holds the suites: Pester for the scripts, and Python `unittest`
+(`test_*.py`) for the cartridge payloads and the facade surface index. CI runs them all on every
+pull request beside PSScriptAnalyzer and the cartridge-structure check
 ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)). Run the same three jobs locally with
 `tools/check-all.ps1`.
 
