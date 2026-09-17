@@ -257,13 +257,14 @@ of that plugin kind, not a failure. Fork the one whose type matches what you are
 example is written to be copied, and each carries a README listing **all the SuperClassIDs that slot
 can bear**.
 
-**Twenty-six slots ship today**, each with a Python and a C++ lane:
+**Twenty-seven slots ship today**, each with a Python and a C++ lane:
 
 | Plugin type | Python | C++ | What it is |
 | --- | --- | --- | --- |
 | Geometry | [python](barebones/geometry/python/slot_geometry.py) | [native](barebones/geometry/native/src/payload.cpp) | a parametric object built as a mesh (`GEOMOBJECT_CLASS_ID`) |
 | Shape | [python](barebones/shape/python/slot_shape.py) | [native](barebones/shape/native/src/payload.cpp) | a spline shape built from polylines (`SHAPE_CLASS_ID`) |
 | Light | [python](barebones/light/python/slot_light.py) | [native](barebones/light/native/src/payload.cpp) | an omni light (`LIGHT_CLASS_ID`) |
+| Camera | [python](barebones/camera/python/slot_camera.py) | [native](barebones/camera/native/src/payload.cpp) | a free camera (`CAMERA_CLASS_ID`) |
 | Modifier | [python](barebones/modifier/python/slot_modifier.py) | [native](barebones/modifier/native/src/payload.cpp) | reads the mesh, hands it back (`OSM_CLASS_ID`) |
 | Exporter | [python](barebones/exporter/python/slot_exporter.py) | [native](barebones/exporter/native/src/payload.cpp) | formats text the slot writes (`SCENE_EXPORT_CLASS_ID`) |
 | Renderer | [python](barebones/renderer/python/slot_renderer.py) | [native](barebones/renderer/native/src/payload.cpp) | a Choose-Renderer plugin (`RENDERER_CLASS_ID`) |
@@ -302,7 +303,7 @@ The full index is [`barebones/README.md`](barebones/README.md).
 [`docs/SUPERCLASS_CENSUS.md`](docs/SUPERCLASS_CENSUS.md) is the complete census of every plugin type
 the SDK declares — which have a slot, which are registerable with a slot on the roadmap, and which can
 never be a third-party slot and why — and [`docs/COVERAGE_MAP.md`](docs/COVERAGE_MAP.md) accounts for
-how each of the 26 is verified.
+how each of the 27 is verified.
 
 ## Limitations
 
