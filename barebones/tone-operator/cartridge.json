@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Tone Operator",
+    "slug": "barebones-tone-operator",
+    "version": "0.1.0",
+    "slot": "tone-operator",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.9"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_toneop",
+        "deployedAs": "slot_toneop"
+    },
+    "created": "2026-09-17",
+    "generator": "barebones"
+}
