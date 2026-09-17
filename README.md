@@ -15,6 +15,14 @@ plugins, written as a payload and hosted by a Slot that ships as a binary.
 fork) and ask what it could build for you here — that answer costs you nothing and tells you more
 than a feature list will.
 
+## What you make is yours
+
+Every plugin and cartridge you create with this kit belongs to you. You may sell it, give it away,
+or keep it private, under any licence you choose. We claim no rights in it, take no royalties, and
+require no credit or mention — including no disclosure that it was written with AI or with this
+MCP. The examples and barebones are released under MIT-0, so you can copy them into your work
+without keeping our notice.
+
 ## How it works
 
 ### The server lives inside a running 3ds Max
@@ -460,4 +468,7 @@ is deliberately absent.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT — see [LICENSE](LICENSE). The code you copy from — [`barebones/`](barebones/) and
+[`examples/`](examples/) — is MIT-0 ([barebones/LICENSE](barebones/LICENSE),
+[examples/LICENSE](examples/LICENSE)): no notice to keep. What you build is yours; see
+[What you make is yours](#what-you-make-is-yours).
