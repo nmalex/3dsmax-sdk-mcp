@@ -1,0 +1,20 @@
+{
+    "schema": "cartridge/2",
+    "name": "Barebones Bake Element",
+    "slug": "barebones-bake-element",
+    "version": "0.1.0",
+    "slot": "bake-element",
+    "requires": {
+        "max": [
+            2026
+        ],
+        "plugin": "0.8.0-alpha.9"
+    },
+    "payload": {
+        "lane": "python",
+        "module": "slot_bakeelement",
+        "deployedAs": "slot_bakeelement"
+    },
+    "created": "2026-09-17",
+    "generator": "barebones"
+}
