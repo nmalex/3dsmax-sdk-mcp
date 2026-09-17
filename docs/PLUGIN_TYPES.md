@@ -3,17 +3,17 @@
 **Twenty-two Cartridge kinds ship today.** [SLOTS.md](SLOTS.md) lists the Slots and how each appears in
 3ds Max; [SUPERCLASS_CENSUS.md](SUPERCLASS_CENSUS.md) maps *every* plugin type the SDK declares into
 three states — has a Slot, registerable with a Slot on the roadmap, or not registerable at all (with
-the reason); [COVERAGE_MAP.md](COVERAGE_MAP.md) is the per-type accounting of how the 28 are verified.
+the reason); [COVERAGE_MAP.md](COVERAGE_MAP.md) is the per-type accounting of how the 29 are verified.
 
-The 28 that ship:
+The 29 that ship:
 
-`geometry` · `shape` · `light` · `camera` · `wsm-object` · `modifier` · `exporter` · `renderer` · `manipulator` · `helper` · `controller` · `uv-generator` ·
+`geometry` · `shape` · `light` · `camera` · `wsm-object` · `system` · `modifier` · `exporter` · `renderer` · `manipulator` · `helper` · `controller` · `uv-generator` ·
 `xyz-generator` · `texture-output` · `aa-filter-kernel` · `radiosity` · `datachannel-engine` ·
 `effect` · `iksolver` · `osnap` · `pfoperator` · `utility` · `color-picker` · `videopost-filter` ·
 `texmap` · `material` · `shader` · `sampler`.
 
 This page answers a different question: **for a kind that does not ship yet, how much of it is already
-done?** A large share of the 3ds Max plugin surface beyond these 28 is already mechanically proven,
+done?** A large share of the 3ds Max plugin surface beyond these 29 is already mechanically proven,
 which is what turns "why isn't type X covered?" into "type X is on the roadmap and most of the risk is
 already retired."
 
@@ -75,7 +75,7 @@ next. **Reference maker / target and GUP** (`REF_MAKER_CLASS_ID`, `REF_TARGET_CL
 An earlier version of this page listed five plugin kinds as "proven only as far as compiling and
 registering, not yet hosted against a live payload" — Object Snap, the viewport manipulator, the IK
 solver, the render-effect pipeline hook, and the Particle Flow operator. **All five now ship as Slots**
-(they are `osnap`, `manipulator`, `iksolver`, `effect` and `pfoperator` among the 28), which is the
+(they are `osnap`, `manipulator`, `iksolver`, `effect` and `pfoperator` among the 29), which is the
 transition this page describes actually happening: a kind proven to register becomes a kind you can
 occupy once its Slot is built and released. The [coverage map](COVERAGE_MAP.md) records how each is
 verified — several of them report alive on load and fire their `Hello World` under a host action a
