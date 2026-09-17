@@ -1,7 +1,7 @@
 # Barebones — a hello-world cartridge for every plugin type
 
 **This is the starting point.** Each folder here is the smallest cartridge for one 3ds Max plugin
-type. For the twenty-five types with a shipping slot it **registers, appears where that type appears, and
+type. For the twenty-six types with a shipping slot it **registers, appears where that type appears, and
 says hello** — a log line (and, for single-shot types, a message box) you read back with
 `cartridge_logs`; it does nothing else, on purpose, so an inert cartridge proves the whole crossing
 works *before* your behaviour is in the way of reading the result. A handful of other folders document
@@ -30,6 +30,7 @@ ship and run; read either with `cartridge_logs -module <deployedAs>`.
 | --- | --- | --- | --- | --- | --- | :-: |
 | Geometry | `SimpleObject2` | mesh + log on evaluation | `GEOMOBJECT_CLASS_ID` | [geometry/python](geometry/python/slot_geometry.py) | [geometry/native](geometry/native/src/payload.cpp) | ✅ |
 | Shape | `SimpleSpline` | spline + log on build | `SHAPE_CLASS_ID` | [shape/python](shape/python/slot_shape.py) | [shape/native](shape/native/src/payload.cpp) | ✅ |
+| Light | `GenLight` | gizmo + log on state | `LIGHT_CLASS_ID` | [light/python](light/python/slot_light.py) | [light/native](light/native/src/payload.cpp) | ✅ |
 | Modifier | `Modifier` | UI panel + log | `OSM_CLASS_ID` (·`WSM_CLASS_ID`) | [modifier/python](modifier/python/slot_modifier.py) | [modifier/native](modifier/native/src/payload.cpp) | ✅ |
 | Exporter | `SceneExport` | message box + log | `SCENE_EXPORT_CLASS_ID` (·`SCENE_IMPORT_CLASS_ID` ·`BMM_IO_CLASS_ID`) | [exporter/python](exporter/python/slot_exporter.py) | [exporter/native](exporter/native/src/payload.cpp) | ✅ |
 | Utility | `UtilityObj` | UI panel + log | `UTILITY_CLASS_ID` (·`TRACKVIEW_UTILITY_CLASS_ID`) | [utility/python](utility/python/slot_utility.py) | [utility/native](utility/native/src/payload.cpp) | 🔵 |
@@ -42,7 +43,7 @@ ship and run; read either with `cartridge_logs -module <deployedAs>`.
 | ParticleFlow operator | `PFSimpleOperator` | Particle View + log | `HELPER_CLASS_ID` *(as a PF operator)* | [pfoperator/python](pfoperator/python/slot_pfoperator.py) | [pfoperator/native](pfoperator/native/src/payload.cpp) | 🔵 |
 
 `·` marks a sibling SuperClassID the same payload shape can serve when deployed into that slot. All
-twelve slots above **ship and run**. A `🔵` in *Verified* means the example reports its `init` on load —
+thirteen slots above **ship and run**. A `🔵` in *Verified* means the example reports its `init` on load —
 proof it is alive — while its `Hello World` **greeting** fires only under a host action a headless
 probe cannot synthesise, so that is the step to run by hand:
 
@@ -65,7 +66,7 @@ and `pfoperator` examples are that story.
 
 ## The rest of the census — the other plugin types
 
-The twelve above are the core gallery, but **twenty-five slots ship and run** in all. The other
+The thirteen above are the core gallery, but **twenty-six slots ship and run** in all. The other
 thirteen shipping types have a barebones here too — `controller`, `uv-generator`, `xyz-generator`,
 `texture-output`, `aa-filter-kernel`, `radiosity`, `datachannel-engine`, `color-picker`,
 `videopost-filter`, and the four per-sample kinds below — each with its own `README.md` and both
@@ -109,7 +110,7 @@ The barebones directory also carries an example for plugin types that do **not**
 shape is documented whatever its state. The [super-class census](../docs/SUPERCLASS_CENSUS.md) is the
 authoritative map and sorts every type into three states:
 
-- **Has a slot — ships and runs.** The twenty-five above.
+- **Has a slot — ships and runs.** The twenty-six above.
 - **Registerable, slot on the roadmap.** Real types a third party can register a plugin under, whose
   slot is not built yet — a legitimate roadmap request. These have no directory here; the census
   lists them.
