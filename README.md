@@ -1,4 +1,4 @@
-[![M8ven Verified](https://m8ven.ai/badge/mcp/nmalex-3dsmax-sdk-mcp-1eda2v?variant=verified&v=2bf5bafd9ed10b2ae7bd04fae4c8ad19)](https://m8ven.ai/mcp/nmalex-3dsmax-sdk-mcp-1eda2v)
+[![M8ven Verified](https://m8ven.ai/badge/mcp/nmalex/3dsmax-sdk-mcp?variant=verified)](https://m8ven.ai/mcp/nmalex/3dsmax-sdk-mcp)
 
 # 3ds Max SDK MCP
 
