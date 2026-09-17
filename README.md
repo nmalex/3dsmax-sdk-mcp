@@ -3,13 +3,19 @@
 
 # 3ds Max SDK MCP
 
-**This is for building 3ds Max plugins with a coding agent** — Claude, Codex, or anything else that
-speaks MCP — writing the code, running it against your live session, and iterating on what actually
-happened, instead of you hand-writing C++ against the SDK yourself.
+**Build real 3ds Max plugins with Claude, Codex, or any coding agent — in Python or C++, live inside
+Max, without writing against the Max SDK.**
 
-Mechanically: a 3ds Max plugin that serves a local [Model Context Protocol](https://modelcontextprotocol.io/)
-server from inside a running 3ds Max — and the kit for building **Cartridges**: your own 3ds Max
-plugins, written as a payload and hosted by a Slot that ships as a binary.
+The agent writes the plugin, deploys it into your running 3ds Max, runs it on your actual scene, and
+iterates on what actually happened — instead of you hand-writing C++ against the SDK yourself. What
+you get out is a real, registered 3ds Max plugin *class* — a geometry object, a modifier, a renderer,
+a texture — not a script pasted into the listener. What you never touch is the SDK: a pre-compiled
+host (the **Slot**) links it once and stays stable, and your behaviour (the **Cartridge**) rides on
+top as a hot-swappable Python or C++ payload with no SDK dependency of its own.
+
+Under the hood it is a local [Model Context Protocol](https://modelcontextprotocol.io/) server served
+from inside a running 3ds Max — that is how the agent reaches your session — but the point is the
+plugin you get out, not the protocol.
 
 **Not sure this fits what you're doing? Ask your agent.** Paste it this README (or point it at your
 fork) and ask what it could build for you here — that answer costs you nothing and tells you more
