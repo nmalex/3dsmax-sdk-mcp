@@ -1,5 +1,5 @@
 [![M8ven Verified](https://m8ven.ai/badge/mcp/nmalex/3dsmax-sdk-mcp?variant=verified)](https://m8ven.ai/mcp/nmalex/3dsmax-sdk-mcp)
-[![M8ven Verified](https://m8ven.ai/api/agent-verify/badge?score=58)](https://m8ven.ai/verified/verify?id=b2da99f31a8cd0f5)
+[![M8ven Verified](https://m8ven.ai/api/agent-verify/badge?score=60)](https://m8ven.ai/verified/verify?id=6d047eb9ac1e350a)
 
 # 3ds Max SDK MCP
 
